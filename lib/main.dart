@@ -15,7 +15,8 @@ class MathLingoApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
         scaffoldBackgroundColor: Colors.lightBlue[50],
-        fontFamily: 'Comic Sans MS', // A fun font for kids if available
+        fontFamily: 'Comic Sans MS',
+        useMaterial3: true,
       ),
       home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
@@ -31,6 +32,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
   final List<String> funFacts = [
     // Interesting Math Facts
     "A e dinit se zeroja (0) është i vetmi numër që nuk ka shifër romake?",
