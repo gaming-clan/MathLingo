@@ -92,5 +92,6 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/stich_icon.png"
-  min_sdk_android: 21 # Required for newer Android versions
+  image_path: "assets/icons/stich_icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icons/stich_icon.png"
