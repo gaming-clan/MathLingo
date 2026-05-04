@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>MathLingo - Progresi</title>
+<link href="../../../assets/icons/stich_icon.png" rel="icon" type="image/png">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500&amp;family=Space+Grotesk:wght@600;700;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#74009f",
+                        "on-secondary-container": "#00686f",
+                        "on-tertiary-fixed": "#3a0033",
+                        "surface-tint": "#ebb2ff",
+                        "outline": "#9d8ba0",
+                        "surface-dim": "#101126",
+                        "surface-container-lowest": "#0b0c21",
+                        "on-primary-container": "#ffffff",
+                        "on-tertiary": "#5e0053",
+                        "inverse-primary": "#9800d0",
+                        "on-secondary-fixed-variant": "#004f54",
+                        "primary-fixed-dim": "#ebb2ff",
+                        "surface": "#101126",
+                        "surface-container-high": "#27283e",
+                        "on-secondary-fixed": "#002022",
+                        "inverse-surface": "#e1e0fe",
+                        "on-secondary": "#00363a",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#fface8",
+                        "surface-container-highest": "#32334a",
+                        "background": "#101126",
+                        "on-tertiary-fixed-variant": "#840076",
+                        "on-primary-fixed": "#320047",
+                        "outline-variant": "#504254",
+                        "secondary-fixed": "#7df4ff",
+                        "secondary-container": "#00eefc",
+                        "on-error": "#690005",
+                        "primary-fixed": "#f8d8ff",
+                        "on-background": "#e1e0fe",
+                        "primary": "#ebb2ff",
+                        "surface-container": "#1d1e33",
+                        "tertiary-container": "#d700c1",
+                        "on-tertiary-container": "#ffffff",
+                        "tertiary-fixed-dim": "#fface8",
+                        "surface-variant": "#32334a",
+                        "error": "#ffb4ab",
+                        "on-surface": "#e1e0fe",
+                        "secondary-fixed-dim": "#00dbe9",
+                        "surface-container-low": "#191a2f",
+                        "tertiary-fixed": "#ffd7f0",
+                        "on-surface-variant": "#d4c0d7",
+                        "secondary": "#d3fbff",
+                        "primary-container": "#bc13fe",
+                        "surface-bright": "#36374e",
+                        "error-container": "#93000a",
+                        "on-primary": "#520072",
+                        "inverse-on-surface": "#2e2e45"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-lg": "32px",
+                        "gutter": "16px",
+                        "container-padding": "16px",
+                        "unit": "8px",
+                        "margin-mobile": "24px",
+                        "stack-md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Space Grotesk"],
+                        "body-md": ["Lexend"],
+                        "label-sm": ["Lexend"],
+                        "label-lg": ["Lexend"],
+                        "body-lg": ["Lexend"],
+                        "headline-lg": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-image: linear-gradient(to bottom right, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+        }
+
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<nav aria-label="Top navigation" class="bg-slate-950/80 backdrop-blur-xl flex justify-between items-center w-full px-6 py-4 sticky top-0 z-50 shadow-none">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+<div class="text-2xl font-black text-purple-500 tracking-tighter font-['Space_Grotesk']">MathLingo</div>
+<button type="button" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-purple-500 hover:opacity-80 transition-opacity active:scale-95 duration-200">notifications</span>
+</button>
+</nav>
+<main class="flex-1 w-full max-w-md mx-auto px-margin-mobile py-stack-lg flex flex-col items-center justify-center gap-stack-lg pb-32">
+<div class="text-center w-full relative">
+<div class="absolute inset-0 bg-primary-container/20 blur-[60px] rounded-full w-32 h-32 mx-auto top-1/2 -translate-y-1/2 -z-10"></div>
+<h1 class="font-headline-lg text-headline-lg text-primary drop-shadow-[0_0_15px_rgba(188,19,254,0.4)]">Bravo!</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Përfundove me sukses sfidën.</p>
+</div>
+<div class="w-full aspect-square max-w-[280px] relative flex items-center justify-center">
+<img alt="MathLingo Stitch AI tutor app icon" class="w-full h-full object-contain p-4 drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] z-10" data-alt="Local MathLingo Stitch AI tutor app icon used as the celebration mascot across all app screen sizes." src="../../../assets/icons/stich_icon.png">
+<div class="absolute inset-0 bg-secondary-container/10 blur-[40px] rounded-full z-0"></div>
+</div>
+<div class="grid grid-cols-2 gap-gutter w-full z-10">
+<div class="glass-panel rounded-xl p-stack-md flex flex-col items-center justify-center text-center gap-stack-sm relative overflow-hidden group hover:bg-white/[0.08] transition-colors">
+<div class="absolute -top-4 -right-4 w-16 h-16 bg-tertiary-container/20 rounded-full blur-xl group-hover:bg-tertiary-container/30 transition-colors"></div>
+<div class="w-12 h-12 rounded-full bg-surface-bright flex items-center justify-center shadow-inner border border-white/5">
+<span class="material-symbols-outlined filled text-tertiary text-[28px]">workspace_premium</span>
+</div>
+<div class="flex flex-col mt-1">
+<span class="font-headline-md text-headline-md text-on-surface">+150</span>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider mt-1">Pikët</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-stack-md flex flex-col items-center justify-center text-center gap-stack-sm relative overflow-hidden group hover:bg-white/[0.08] transition-colors">
+<div class="absolute -top-4 -left-4 w-16 h-16 bg-secondary-container/20 rounded-full blur-xl group-hover:bg-secondary-container/30 transition-colors"></div>
+<div class="w-12 h-12 rounded-full bg-surface-bright flex items-center justify-center shadow-inner border border-white/5">
+<span class="material-symbols-outlined filled text-secondary text-[28px]">my_location</span>
+</div>
+<div class="flex flex-col mt-1">
+<span class="font-headline-md text-headline-md text-on-surface">95%</span>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider mt-1">Saktësia</span>
+</div>
+</div>
+</div>
+<button type="button" class="w-full mt-stack-md bg-primary-container text-on-primary-container font-label-lg text-label-lg py-4 px-6 rounded-full shadow-[0_4px_20px_rgba(188,19,254,0.25)] hover:shadow-[0_6px_25px_rgba(188,19,254,0.4)] hover:bg-primary-container/90 transition-all flex justify-center items-center gap-2">
+<span>Vazhdo</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</main>
+<nav aria-label="Bottom navigation" class="bg-slate-950/70 backdrop-blur-2xl shadow-[0_-4px_20px_rgba(188,19,254,0.1)] fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 md:hidden rounded-t-[32px]">
+<button type="button" class="flex flex-col items-center justify-center text-slate-500 hover:text-purple-300 transition-colors active:scale-90 duration-150 gap-1 min-w-[64px]">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="font-['Space_Grotesk'] text-xs font-medium">Sfida e Ditës</span>
+</button>
+<button type="button" class="flex flex-col items-center justify-center text-slate-500 hover:text-purple-300 transition-colors active:scale-90 duration-150 gap-1 min-w-[64px]">
+<span class="material-symbols-outlined text-[24px]">school</span>
+<span class="font-['Space_Grotesk'] text-xs font-medium">Mësime</span>
+</button>
+<button type="button" class="flex flex-col items-center justify-center text-purple-400 bg-purple-500/10 rounded-full px-4 py-1 hover:text-purple-300 transition-colors active:scale-90 duration-150 gap-1 min-w-[64px]">
+<span class="material-symbols-outlined filled text-[24px]">trending_up</span>
+<span class="font-['Space_Grotesk'] text-xs font-medium">Progresi</span>
+</button>
+</nav>
+</body></html>

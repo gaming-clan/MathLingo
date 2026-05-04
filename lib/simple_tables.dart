@@ -1,0 +1,451 @@
+import 'package:flutter/material.dart';
+
+import 'colors.dart';
+
+// Simple Operation Tables Screen
+class OperationTablesScreen extends StatefulWidget {
+  const OperationTablesScreen({super.key});
+
+  @override
+  State<OperationTablesScreen> createState() => _OperationTablesScreenState();
+}
+
+class _OperationTablesScreenState extends State<OperationTablesScreen> {
+  int selectedTable = 1;
+  String selectedOperation = 'Shumëzim';
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 4,
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(24, 24, 24, 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Tabelat Matematikore',
+                style: TextStyle(
+                  color: CosmicColors.primaryContainer,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: CosmicColors.surfaceHigh,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: CosmicColors.primaryContainer.withValues(alpha: 0.25),
+              ),
+            ),
+            child: const TabBar(
+              dividerColor: Colors.transparent,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicator: BoxDecoration(
+                color: CosmicColors.primaryContainer,
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.white70,
+              tabs: [
+                Tab(text: 'Mbledhje +'),
+                Tab(text: 'Zbritje -'),
+                Tab(text: 'Shumëzim ×'),
+                Tab(text: 'Pjesëtim ÷'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          Expanded(
+            child: TabBarView(
+              children: [
+                _buildOperationTable('Mbledhje', (a, b) => a + b, Colors.green),
+                _buildOperationTable('Zbritje', (a, b) => a - b, Colors.red),
+                _buildOperationTable(
+                  'Shumëzim',
+                  (a, b) => a * b,
+                  Colors.orange,
+                ),
+                _buildOperationTable('Pjesëtim', (a, b) => a ~/ b, Colors.blue),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOperationTable(
+    String title,
+    int Function(int, int) calculate,
+    Color color,
+  ) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Text(
+                '$title - Tabela e ${selectedTable.toString()}',
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: CosmicColors.primaryContainer,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Zgjidh numrin',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 50,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 12,
+            itemBuilder: (context, index) {
+              int num = index + 1;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: ElevatedButton(
+                  onPressed: () => setState(() => selectedTable = num),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: selectedTable == num
+                        ? color
+                        : CosmicColors.surfaceHigh,
+                    foregroundColor: selectedTable == num
+                        ? Colors.white
+                        : CosmicColors.onSurfaceVariant,
+                  ),
+                  child: Text(num.toString()),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: GridView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 1,
+            ),
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              int num = index + 1;
+              int result = calculate(selectedTable, num);
+              String op = title == 'Mbledhje'
+                  ? '+'
+                  : title == 'Zbritje'
+                  ? '−'
+                  : title == 'Shumëzim'
+                  ? '×'
+                  : '÷';
+              return Card(
+                color: color.withValues(alpha: 0.15),
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: InkWell(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('$selectedTable $op $num = $result'),
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
+                  },
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '$selectedTable $op $num',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '= $result',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: color,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Simple Geometry Challenge (Easier)
+class SimpleGeometryChallenge extends StatefulWidget {
+  const SimpleGeometryChallenge({super.key});
+
+  @override
+  State<SimpleGeometryChallenge> createState() =>
+      _SimpleGeometryChallengeState();
+}
+
+class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
+  int score = 0;
+  int question = 0;
+  late List<GeometryProblem> problems;
+
+  @override
+  void initState() {
+    super.initState();
+    _generateProblems();
+  }
+
+  void _generateProblems() {
+    problems = [
+      GeometryProblem(
+        shape: 'Drejtkëndësh',
+        width: 5,
+        height: 3,
+        question: 'Sa është perimetri?',
+        answer: 16,
+        options: [14, 16, 18, 20],
+      ),
+      GeometryProblem(
+        shape: 'Katror',
+        width: 4,
+        height: 4,
+        question: 'Sa është sipërfaqja?',
+        answer: 16,
+        options: [12, 14, 16, 18],
+      ),
+      GeometryProblem(
+        shape: 'Trekëndësh',
+        width: 6,
+        height: 4,
+        question: 'Sa është sipërfaqja?',
+        answer: 12,
+        options: [10, 12, 14, 16],
+      ),
+      GeometryProblem(
+        shape: 'Drejtkëndësh',
+        width: 8,
+        height: 2,
+        question: 'Sa është perimetri?',
+        answer: 20,
+        options: [16, 18, 20, 22],
+      ),
+      GeometryProblem(
+        shape: 'Katror',
+        width: 5,
+        height: 5,
+        question: 'Sa është perimetri?',
+        answer: 20,
+        options: [18, 20, 22, 24],
+      ),
+    ];
+  }
+
+  void _checkAnswer(int selected) {
+    if (selected == problems[question].answer) {
+      setState(() => score++);
+      _nextQuestion();
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('E gabuar, provo përsëri!')));
+    }
+  }
+
+  void _nextQuestion() {
+    if (question < problems.length - 1) {
+      setState(() => question++);
+    } else {
+      _showResults();
+    }
+  }
+
+  void _showResults() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Përfundim!'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Pikët: $score/${problems.length}',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              score >= 3 ? '👏 Bravo!' : 'Përpiqu përsëri!',
+              style: const TextStyle(fontSize: 20),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: const Text('Mbaroj'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final problem = problems[question];
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Pyetja ${question + 1}/${problems.length}'),
+        backgroundColor: Colors.deepPurple,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Pikët: $score',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+            ),
+            const SizedBox(height: 30),
+            Text(
+              problem.question,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 40),
+            _buildShape(problem),
+            const SizedBox(height: 40),
+            Text(
+              '${problem.shape} (${problem.width} × ${problem.height})',
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            const SizedBox(height: 40),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: problem.options.map((option) {
+                return ElevatedButton(
+                  onPressed: () => _checkAnswer(option),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                  ),
+                  child: Text(
+                    option.toString(),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShape(GeometryProblem problem) {
+    final width = problem.width.toDouble();
+    final height = problem.height.toDouble();
+    final scale = 40.0 / (width > height ? width : height);
+
+    if (problem.shape == 'Drejtkëndësh') {
+      return Container(
+        width: width * scale,
+        height: height * scale,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.purple, width: 3),
+          color: Colors.purple[50],
+        ),
+      );
+    } else if (problem.shape == 'Katror') {
+      return Container(
+        width: width * scale,
+        height: height * scale,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.orange, width: 3),
+          color: Colors.orange[50],
+        ),
+      );
+    } else {
+      return CustomPaint(
+        size: Size(width * scale, height * scale),
+        painter: TrianglePainter(),
+      );
+    }
+  }
+}
+
+class TrianglePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.blue
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
+    final path = Path()
+      ..moveTo(size.width / 2, 0)
+      ..lineTo(0, size.height)
+      ..lineTo(size.width, size.height)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(TrianglePainter oldDelegate) => false;
+}
+
+class GeometryProblem {
+  final String shape;
+  final int width;
+  final int height;
+  final String question;
+  final int answer;
+  final List<int> options;
+
+  GeometryProblem({
+    required this.shape,
+    required this.width,
+    required this.height,
+    required this.question,
+    required this.answer,
+    required this.options,
+  });
+}
