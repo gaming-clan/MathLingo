@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mathlingo/main.dart';
+import 'package:math_lingo/main.dart';
 
 void main() {
   testWidgets('dashboard loads with Stitch Cosmic Logic content', (

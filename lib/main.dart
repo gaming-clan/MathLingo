@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
+import 'gamify_exercise.dart';
+import 'responsive.dart';
 import 'simple_tables.dart';
 
 void main() {
@@ -15,7 +17,7 @@ class MathLingoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MathLingo',
+      title: 'MathLingo - Math Learning Adventure',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -147,16 +149,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  void _startGamifyExercise() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const GamifyExerciseScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final pages = [
       _DashboardPage(
         onStartChallenge: _startChallenge,
         onStartGeometryChallenge: _startGeometryChallenge,
+        onStartGamifyExercise: _startGamifyExercise,
       ),
       _LessonsPage(
         onStartChallenge: _startChallenge,
         onStartGeometryChallenge: _startGeometryChallenge,
+        onStartGamifyExercise: _startGamifyExercise,
       ),
       const OperationTablesScreen(),
       const _ProgressPage(),
@@ -181,70 +191,82 @@ class _DashboardPage extends StatelessWidget {
   const _DashboardPage({
     required this.onStartChallenge,
     required this.onStartGeometryChallenge,
+    required this.onStartGamifyExercise,
   });
 
   final ValueChanged<Operation> onStartChallenge;
   final VoidCallback onStartGeometryChallenge;
+  final VoidCallback onStartGamifyExercise;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 920),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Mirësevini!',
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    color: CosmicColors.primaryContainer,
-                  ),
+    return ResponsivePage(
+      maxWidth: 1120,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth >= 900;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Mirësevini!',
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  color: CosmicColors.primaryContainer,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Sistemi gati. Le të fillojmë eksplorimin matematikor.',
-                  style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Zgjedh një mënyrë për të mësuar matematikën - më lehtë ose më sfiduese.',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 28),
+              if (isWide) ...[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: _GamifyCard(onStart: onStartGamifyExercise),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(flex: 4, child: const _ProgressModuleCard()),
+                  ],
                 ),
-                const SizedBox(height: 28),
-                _DailyChallengeCard(onStart: onStartGeometryChallenge),
-                const SizedBox(height: 32),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isWide = constraints.maxWidth >= 720;
-                    final children = [
-                      const _ProgressModuleCard(),
-                      _QuickActionsCard(
+                const SizedBox(height: 24),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: _QuickActionsCard(
                         onStartChallenge: onStartChallenge,
-                        onStartGeometryChallenge: onStartGeometryChallenge,
+                        onStartGamifyExercise: onStartGamifyExercise,
                       ),
-                    ];
-                    if (!isWide) {
-                      return Column(
-                        children: [
-                          children[0],
-                          const SizedBox(height: 24),
-                          children[1],
-                        ],
-                      );
-                    }
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: children[0]),
-                        const SizedBox(width: 24),
-                        Expanded(child: children[1]),
-                      ],
-                    );
-                  },
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      flex: 4,
+                      child: _DailyChallengeCard(
+                        onStart: onStartGeometryChallenge,
+                      ),
+                    ),
+                  ],
                 ),
+              ] else ...[
+                _GamifyCard(onStart: onStartGamifyExercise),
+                const SizedBox(height: 24),
+                _QuickActionsCard(
+                  onStartChallenge: onStartChallenge,
+                  onStartGamifyExercise: onStartGamifyExercise,
+                ),
+                const SizedBox(height: 24),
+                const _ProgressModuleCard(),
+                const SizedBox(height: 24),
+                _DailyChallengeCard(onStart: onStartGeometryChallenge),
               ],
-            ),
-          ),
-        ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -315,6 +337,45 @@ class _DailyChallengeCard extends StatelessWidget {
   }
 }
 
+class _GamifyCard extends StatelessWidget {
+  const _GamifyCard({required this.onStart});
+
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassPanel(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _NeonChip(
+            icon: Icons.camera_alt,
+            label: 'Argëto Ushtrimet',
+            color: CosmicColors.primaryContainer,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Fotografo ose Shkruaj Ushtrimin',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Fotografo ekuacionin që nuk e kupton, shkruaje direkt, dhe merrni zgjidhje argëtuese që të bëjnë matematikën më të lehtë për të kuptuar!',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 22),
+          CosmicButton(
+            label: 'Filloi Aventurën',
+            icon: Icons.camera_alt,
+            onPressed: onStart,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ProgressModuleCard extends StatelessWidget {
   const _ProgressModuleCard();
 
@@ -354,11 +415,11 @@ class _ProgressModuleCard extends StatelessWidget {
 class _QuickActionsCard extends StatelessWidget {
   const _QuickActionsCard({
     required this.onStartChallenge,
-    required this.onStartGeometryChallenge,
+    required this.onStartGamifyExercise,
   });
 
   final ValueChanged<Operation> onStartChallenge;
-  final VoidCallback onStartGeometryChallenge;
+  final VoidCallback onStartGamifyExercise;
 
   @override
   Widget build(BuildContext context) {
@@ -370,31 +431,45 @@ class _QuickActionsCard extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         const SizedBox(height: 16),
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
-          childAspectRatio: 1.15,
-          children: [
-            _ActionTile(
-              icon: Icons.category,
-              label: 'Gjeometria',
-              color: CosmicColors.secondaryContainer,
-              onTap: onStartGeometryChallenge,
-            ),
-            for (final operation in Operation.values)
-              _OperationTile(
-                operation: operation,
-                color:
-                    operation == Operation.division ||
-                        operation == Operation.multiplication
-                    ? CosmicColors.secondaryContainer
-                    : CosmicColors.primaryContainer,
-                onTap: () => onStartChallenge(operation),
-              ),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final columns = AdaptiveLayout.columnsForWidth(
+              constraints.maxWidth,
+              compact: 2,
+              medium: 2,
+              expanded: 4,
+            );
+            return GridView.count(
+              crossAxisCount: columns,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: AdaptiveLayout.gridAspectForColumns(columns),
+              children: [
+                _OperationTile(
+                  operation: Operation.addition,
+                  color: CosmicColors.primaryContainer,
+                  onTap: () => onStartChallenge(Operation.addition),
+                ),
+                _OperationTile(
+                  operation: Operation.subtraction,
+                  color: CosmicColors.primaryContainer,
+                  onTap: () => onStartChallenge(Operation.subtraction),
+                ),
+                _OperationTile(
+                  operation: Operation.multiplication,
+                  color: CosmicColors.secondaryContainer,
+                  onTap: () => onStartChallenge(Operation.multiplication),
+                ),
+                _OperationTile(
+                  operation: Operation.division,
+                  color: CosmicColors.secondaryContainer,
+                  onTap: () => onStartChallenge(Operation.division),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
@@ -405,73 +480,72 @@ class _LessonsPage extends StatelessWidget {
   const _LessonsPage({
     required this.onStartChallenge,
     required this.onStartGeometryChallenge,
+    required this.onStartGamifyExercise,
   });
 
   final ValueChanged<Operation> onStartChallenge;
   final VoidCallback onStartGeometryChallenge;
+  final VoidCallback onStartGamifyExercise;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _SectionHeader(
-              kicker: 'ALGJEBRA BAZË',
-              title: 'Zgjidh ekuacionin',
-            ),
-            const SizedBox(height: 24),
-            const GlassPanel(
-              padding: EdgeInsets.all(22),
-              child: SizedBox(
-                height: 260,
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Text(
-                        '√x² + y²',
-                        style: TextStyle(
-                          color: CosmicColors.secondaryContainer,
-                          fontSize: 46,
-                          fontWeight: FontWeight.w900,
-                        ),
+    return ResponsivePage(
+      maxWidth: 960,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _SectionHeader(
+            kicker: 'ALGJEBRA BAZË',
+            title: 'Zgjidh ekuacionin',
+          ),
+          const SizedBox(height: 24),
+          const GlassPanel(
+            padding: EdgeInsets.all(22),
+            child: SizedBox(
+              height: 260,
+              child: Stack(
+                children: [
+                  Center(
+                    child: Text(
+                      '√x² + y²',
+                      style: TextStyle(
+                        color: CosmicColors.secondaryContainer,
+                        fontSize: 46,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
-                    Positioned(
-                      right: -18,
-                      bottom: -24,
-                      child: _MascotFrame(size: 170),
-                    ),
-                  ],
-                ),
+                  ),
+                  Positioned(
+                    right: -18,
+                    bottom: -24,
+                    child: _MascotFrame(size: 170),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 28),
-            Text(
-              'Mjetet e Llogaritjes',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                _MathTool(label: '√x'),
-                _MathTool(label: 'π'),
-                _MathTool(label: 'x²'),
-                _MathTool(icon: Icons.lightbulb, selected: true),
-              ],
-            ),
-            const SizedBox(height: 32),
-            CosmicButton(
-              label: 'Vazhdo',
-              icon: Icons.arrow_forward,
-              onPressed: onStartGeometryChallenge,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 28),
+          Text(
+            'Mjetet e Llogaritjes',
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              _MathTool(label: '√x'),
+              _MathTool(label: 'π'),
+              _MathTool(label: 'x²'),
+              _MathTool(icon: Icons.lightbulb, selected: true),
+            ],
+          ),
+          const SizedBox(height: 32),
+          CosmicButton(
+            label: 'Vazhdo',
+            icon: Icons.arrow_forward,
+            onPressed: onStartGeometryChallenge,
+          ),
+        ],
       ),
     );
   }
@@ -482,50 +556,47 @@ class _ProgressPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-        child: Column(
-          children: [
-            Text(
-              'Bravo!',
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                color: CosmicColors.primary,
-                fontSize: 42,
+    return ResponsivePage(
+      maxWidth: 820,
+      child: Column(
+        children: [
+          Text(
+            'Bravo!',
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+              color: CosmicColors.primary,
+              fontSize: 42,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Progresi yt po rritet çdo ditë.',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 32),
+          const _MascotFrame(size: 260),
+          const SizedBox(height: 32),
+          const Row(
+            children: [
+              Expanded(
+                child: _ScoreCard(
+                  value: '+150',
+                  label: 'Pikët',
+                  icon: Icons.workspace_premium,
+                  color: CosmicColors.tertiary,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Progresi yt po rritet çdo ditë.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 32),
-            const _MascotFrame(size: 260),
-            const SizedBox(height: 32),
-            const Row(
-              children: [
-                Expanded(
-                  child: _ScoreCard(
-                    value: '+150',
-                    label: 'Pikët',
-                    icon: Icons.workspace_premium,
-                    color: CosmicColors.tertiary,
-                  ),
+              SizedBox(width: 16),
+              Expanded(
+                child: _ScoreCard(
+                  value: '95%',
+                  label: 'Saktësia',
+                  icon: Icons.my_location,
+                  color: CosmicColors.secondary,
                 ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: _ScoreCard(
-                    value: '95%',
-                    label: 'Saktësia',
-                    icon: Icons.my_location,
-                    color: CosmicColors.secondary,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -659,90 +730,92 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     return Scaffold(
       backgroundColor: CosmicColors.background,
       appBar: const _CosmicTopBar(showBackButton: true),
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const _SectionHeader(
-                kicker: 'ALGJEBRA BAZË',
-                title: 'Zgjidh ekuacionin',
-              ),
-              const SizedBox(height: 18),
-              _CosmicProgress(
-                label: 'Pikët: $_score',
-                value: progress,
-                color: CosmicColors.secondaryContainer,
-              ),
-              const SizedBox(height: 24),
-              GlassPanel(
-                padding: const EdgeInsets.all(22),
-                child: SizedBox(
-                  height: 260,
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Text(
-                          '${_question.num1} ${widget.operation.displaySymbol} ${_question.num2} = ?',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: CosmicColors.secondaryContainer,
-                            fontSize: 44,
-                            fontWeight: FontWeight.w900,
-                          ),
+      body: ResponsivePage(
+        maxWidth: 960,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _SectionHeader(
+              kicker: 'ALGJEBRA BAZË',
+              title: 'Zgjidh ekuacionin',
+            ),
+            const SizedBox(height: 18),
+            _CosmicProgress(
+              label: 'Pikët: $_score',
+              value: progress,
+              color: CosmicColors.secondaryContainer,
+            ),
+            const SizedBox(height: 24),
+            GlassPanel(
+              padding: const EdgeInsets.all(22),
+              child: SizedBox(
+                height: 260,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Text(
+                        '${_question.num1} ${widget.operation.displaySymbol} ${_question.num2} = ?',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: CosmicColors.secondaryContainer,
+                          fontSize: 44,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 24),
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                childAspectRatio: 1.9,
-                mainAxisSpacing: 14,
-                crossAxisSpacing: 14,
-                children: _question.options.map((option) {
-                  final isSelected = _selectedAnswer == option;
-                  final isCorrect = option == _question.answer;
-                  final color = isSelected && isCorrect
-                      ? CosmicColors.secondaryContainer
-                      : isSelected
-                      ? CosmicColors.error
-                      : CosmicColors.primaryContainer;
-                  return _AnswerButton(
-                    key: isCorrect
-                        ? const ValueKey('correct-answer')
-                        : ValueKey('answer-$option'),
-                    value: option,
-                    color: color,
-                    onPressed: () => _checkAnswer(option),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 18),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 180),
-                child: _feedback.isEmpty
-                    ? const SizedBox(height: 28)
-                    : Text(
-                        _feedback,
-                        key: ValueKey(_feedback),
-                        style: TextStyle(
-                          color: _selectedAnswer == _question.answer
-                              ? CosmicColors.secondaryContainer
-                              : CosmicColors.error,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                        ),
+            ),
+            const SizedBox(height: 24),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final columns = constraints.maxWidth >= 720 ? 4 : 2;
+                return GridView.count(
+                  crossAxisCount: columns,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  childAspectRatio: columns == 4 ? 1.65 : 1.9,
+                  mainAxisSpacing: 14,
+                  crossAxisSpacing: 14,
+                  children: _question.options.map((option) {
+                    final isSelected = _selectedAnswer == option;
+                    final isCorrect = option == _question.answer;
+                    final color = isSelected && isCorrect
+                        ? CosmicColors.secondaryContainer
+                        : isSelected
+                        ? CosmicColors.error
+                        : CosmicColors.primaryContainer;
+                    return _AnswerButton(
+                      key: isCorrect
+                          ? const ValueKey('correct-answer')
+                          : ValueKey('answer-$option'),
+                      value: option,
+                      color: color,
+                      onPressed: () => _checkAnswer(option),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+            const SizedBox(height: 18),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+              child: _feedback.isEmpty
+                  ? const SizedBox(height: 28)
+                  : Text(
+                      _feedback,
+                      key: ValueKey(_feedback),
+                      style: TextStyle(
+                        color: _selectedAnswer == _question.answer
+                            ? CosmicColors.secondaryContainer
+                            : CosmicColors.error,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
                       ),
-              ),
-            ],
-          ),
+                    ),
+            ),
+          ],
         ),
       ),
     );
@@ -879,103 +952,105 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
     return Scaffold(
       backgroundColor: CosmicColors.background,
       appBar: const _CosmicTopBar(showBackButton: true),
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const _SectionHeader(
-                kicker: 'GJEOMETRIA BAZË',
-                title: 'Sfida Gjeometrike',
-              ),
-              const SizedBox(height: 18),
-              _CosmicProgress(
-                label: 'Pikët: $_score',
-                value: progress,
-                color: CosmicColors.secondaryContainer,
-              ),
-              const SizedBox(height: 24),
-              GlassPanel(
-                padding: const EdgeInsets.all(22),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 210,
-                      child: CustomPaint(
-                        painter: GeometryShapePainter(_question),
-                        child: Center(
-                          child: Icon(
-                            _question.shape.icon,
-                            color: CosmicColors.secondaryContainer.withValues(
-                              alpha: 0.2,
-                            ),
-                            size: 96,
+      body: ResponsivePage(
+        maxWidth: 960,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _SectionHeader(
+              kicker: 'GJEOMETRIA BAZË',
+              title: 'Sfida Gjeometrike',
+            ),
+            const SizedBox(height: 18),
+            _CosmicProgress(
+              label: 'Pikët: $_score',
+              value: progress,
+              color: CosmicColors.secondaryContainer,
+            ),
+            const SizedBox(height: 24),
+            GlassPanel(
+              padding: const EdgeInsets.all(22),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 210,
+                    child: CustomPaint(
+                      painter: GeometryShapePainter(_question),
+                      child: Center(
+                        child: Icon(
+                          _question.shape.icon,
+                          color: CosmicColors.secondaryContainer.withValues(
+                            alpha: 0.2,
                           ),
+                          size: 96,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 18),
-                    Text(
-                      _question.prompt,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _question.measurement,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    _question.prompt,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _question.measurement,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
               ),
-              const SizedBox(height: 24),
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                childAspectRatio: 1.9,
-                mainAxisSpacing: 14,
-                crossAxisSpacing: 14,
-                children: _question.options.map((option) {
-                  final isSelected = _selectedAnswer == option;
-                  final isCorrect = option == _question.answer;
-                  final color = isSelected && isCorrect
-                      ? CosmicColors.secondaryContainer
-                      : isSelected
-                      ? CosmicColors.error
-                      : CosmicColors.primaryContainer;
-                  return _AnswerButton(
-                    key: isCorrect
-                        ? const ValueKey('correct-geometry-answer')
-                        : ValueKey('geometry-answer-$option'),
-                    value: option,
-                    color: color,
-                    onPressed: () => _checkAnswer(option),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 18),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 180),
-                child: _feedback.isEmpty
-                    ? const SizedBox(height: 28)
-                    : Text(
-                        _feedback,
-                        key: ValueKey(_feedback),
-                        style: TextStyle(
-                          color: _selectedAnswer == _question.answer
-                              ? CosmicColors.secondaryContainer
-                              : CosmicColors.error,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                        ),
+            ),
+            const SizedBox(height: 24),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final columns = constraints.maxWidth >= 720 ? 4 : 2;
+                return GridView.count(
+                  crossAxisCount: columns,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  childAspectRatio: columns == 4 ? 1.65 : 1.9,
+                  mainAxisSpacing: 14,
+                  crossAxisSpacing: 14,
+                  children: _question.options.map((option) {
+                    final isSelected = _selectedAnswer == option;
+                    final isCorrect = option == _question.answer;
+                    final color = isSelected && isCorrect
+                        ? CosmicColors.secondaryContainer
+                        : isSelected
+                        ? CosmicColors.error
+                        : CosmicColors.primaryContainer;
+                    return _AnswerButton(
+                      key: isCorrect
+                          ? const ValueKey('correct-geometry-answer')
+                          : ValueKey('geometry-answer-$option'),
+                      value: option,
+                      color: color,
+                      onPressed: () => _checkAnswer(option),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+            const SizedBox(height: 18),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+              child: _feedback.isEmpty
+                  ? const SizedBox(height: 28)
+                  : Text(
+                      _feedback,
+                      key: ValueKey(_feedback),
+                      style: TextStyle(
+                        color: _selectedAnswer == _question.answer
+                            ? CosmicColors.secondaryContainer
+                            : CosmicColors.error,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
                       ),
-              ),
-            ],
-          ),
+                    ),
+            ),
+          ],
         ),
       ),
     );
@@ -997,61 +1072,58 @@ class ResultsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: CosmicColors.background,
       appBar: const _CosmicTopBar(),
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
-          child: Column(
-            children: [
-              Text(
-                'Bravo!',
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  color: CosmicColors.primary,
-                  fontSize: 46,
+      body: ResponsivePage(
+        maxWidth: 760,
+        child: Column(
+          children: [
+            Text(
+              'Bravo!',
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                color: CosmicColors.primary,
+                fontSize: 46,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Përfundove me sukses sfidën.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 30),
+            const _MascotFrame(size: 280, celebratory: true),
+            const SizedBox(height: 30),
+            Row(
+              children: [
+                Expanded(
+                  child: _ScoreCard(
+                    value: '+$points',
+                    label: 'Pikët',
+                    icon: Icons.workspace_premium,
+                    color: CosmicColors.tertiary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Përfundove me sukses sfidën.',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 30),
-              const _MascotFrame(size: 280, celebratory: true),
-              const SizedBox(height: 30),
-              Row(
-                children: [
-                  Expanded(
-                    child: _ScoreCard(
-                      value: '+$points',
-                      label: 'Pikët',
-                      icon: Icons.workspace_premium,
-                      color: CosmicColors.tertiary,
-                    ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _ScoreCard(
+                    value: '$accuracy%',
+                    label: 'Saktësia',
+                    icon: Icons.my_location,
+                    color: CosmicColors.secondary,
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _ScoreCard(
-                      value: '$accuracy%',
-                      label: 'Saktësia',
-                      icon: Icons.my_location,
-                      color: CosmicColors.secondary,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-              CosmicButton(
-                label: 'Vazhdo',
-                icon: Icons.arrow_forward,
-                onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const DashboardScreen(),
-                  ),
-                  (_) => false,
                 ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            CosmicButton(
+              label: 'Vazhdo',
+              icon: Icons.arrow_forward,
+              onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute<void>(
+                  builder: (_) => const DashboardScreen(),
+                ),
+                (_) => false,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -1277,17 +1349,22 @@ class _CosmicBottomNav extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            for (var i = 0; i < items.length; i++)
-              _BottomNavItem(
-                icon: items[i].$1,
-                label: items[i].$2,
-                selected: i == selectedIndex,
-                onTap: () => onSelected(i),
-              ),
-          ],
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 820),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                for (var i = 0; i < items.length; i++)
+                  _BottomNavItem(
+                    icon: items[i].$1,
+                    label: items[i].$2,
+                    selected: i == selectedIndex,
+                    onTap: () => onSelected(i),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -1395,48 +1472,117 @@ class _NeonChip extends StatelessWidget {
   }
 }
 
-class _MascotFrame extends StatelessWidget {
+class _MascotFrame extends StatefulWidget {
   const _MascotFrame({required this.size, this.celebratory = false});
 
   final double size;
   final bool celebratory;
 
   @override
+  State<_MascotFrame> createState() => _MascotFrameState();
+}
+
+class _MascotFrameState extends State<_MascotFrame>
+    with TickerProviderStateMixin {
+  late AnimationController _bounceController;
+  late AnimationController _swayController;
+  late AnimationController _celebrationController;
+  late Animation<double> _bounceAnimation;
+  late Animation<double> _swayAnimation;
+  late Animation<double> _celebrationAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Bouncing animation (up and down)
+    _bounceController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _bounceAnimation = Tween<double>(begin: 0, end: 20).animate(
+      CurvedAnimation(parent: _bounceController, curve: Curves.easeInOut),
+    );
+
+    // Swaying animation (side to side)
+    _swayController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _swayAnimation = Tween<double>(begin: -8, end: 8).animate(
+      CurvedAnimation(parent: _swayController, curve: Curves.easeInOut),
+    );
+
+    // Celebration animation (for when winning)
+    _celebrationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _celebrationAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _celebrationController, curve: Curves.elasticOut),
+    );
+
+    if (widget.celebratory) {
+      _celebrationController.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _bounceController.dispose();
+    _swayController.dispose();
+    _celebrationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: size,
-      height: size,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  (celebratory
-                          ? CosmicColors.tertiaryContainer
-                          : CosmicColors.primaryContainer)
-                      .withValues(alpha: 0.35),
-                  CosmicColors.secondaryContainer.withValues(alpha: 0.12),
-                  Colors.transparent,
-                ],
+      width: widget.size,
+      height: widget.size,
+      child: AnimatedBuilder(
+        animation: Listenable.merge([
+          _bounceAnimation,
+          _swayAnimation,
+          _celebrationAnimation,
+        ]),
+        builder: (context, child) {
+          // Calculate animation values
+          final bounceOffset = widget.celebratory
+              ? _celebrationAnimation.value * 20
+              : _bounceAnimation.value;
+          final swayOffset = widget.celebratory ? 0.0 : _swayAnimation.value;
+          final scale = widget.celebratory
+              ? 0.8 + (_celebrationAnimation.value * 0.2)
+              : 1.0;
+          final rotation = widget.celebratory
+              ? _celebrationAnimation.value * 0.1
+              : 0.0;
+
+          return Center(
+            child: Transform.translate(
+              offset: Offset(swayOffset, -bounceOffset),
+              child: Transform.rotate(
+                angle: rotation,
+                child: Transform.scale(
+                  scale: scale,
+                  child: Image.asset(
+                    'assets/icons/stich_icon.png',
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => Icon(
+                      Icons.smart_toy,
+                      color: CosmicColors.secondaryContainer,
+                      size: widget.size * 0.6,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(size * 0.08),
-            child: Image.asset(
-              'assets/icons/stich_icon.png',
-              fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => Icon(
-                Icons.smart_toy,
-                color: CosmicColors.secondaryContainer,
-                size: size * 0.42,
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
