@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
+import 'responsive.dart';
 
 // Simple Operation Tables Screen
 class OperationTablesScreen extends StatefulWidget {
@@ -20,44 +21,79 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
       length: 4,
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(24, 24, 24, 12),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Tabelat Matematikore',
-                style: TextStyle(
-                  color: CosmicColors.primaryContainer,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              AdaptiveLayout.pagePadding(context).left,
+              AdaptiveLayout.pagePadding(context).top,
+              AdaptiveLayout.pagePadding(context).right,
+              12,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1120),
+                child: const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Tabelat Matematikore',
+                        style: TextStyle(
+                          color: CosmicColors.primaryContainer,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Praktiko dhe zotëro të gjitha operacionet',
+                        style: TextStyle(
+                          color: CosmicColors.onSurfaceVariant,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: CosmicColors.surfaceHigh,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: CosmicColors.primaryContainer.withValues(alpha: 0.25),
-              ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AdaptiveLayout.pagePadding(context).left,
             ),
-            child: const TabBar(
-              dividerColor: Colors.transparent,
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicator: BoxDecoration(
-                color: CosmicColors.primaryContainer,
-                borderRadius: BorderRadius.all(Radius.circular(16)),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1120),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: CosmicColors.surfaceHigh,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(
+                      color: CosmicColors.primaryContainer.withValues(
+                        alpha: 0.25,
+                      ),
+                    ),
+                  ),
+                  child: const TabBar(
+                    dividerColor: Colors.transparent,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicator: BoxDecoration(
+                      color: CosmicColors.primaryContainer,
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.white70,
+                    tabs: [
+                      Tab(text: 'Mbledhje +'),
+                      Tab(text: 'Zbritje -'),
+                      Tab(text: 'Shumëzim ×'),
+                      Tab(text: 'Pjesëtim ÷'),
+                    ],
+                  ),
+                ),
               ),
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.white70,
-              tabs: [
-                Tab(text: 'Mbledhje +'),
-                Tab(text: 'Zbritje -'),
-                Tab(text: 'Shumëzim ×'),
-                Tab(text: 'Pjesëtim ÷'),
-              ],
             ),
           ),
           const SizedBox(height: 12),
@@ -108,89 +144,149 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
           ),
         ),
         SizedBox(
-          height: 50,
+          height: 60,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: 12,
             itemBuilder: (context, index) {
               int num = index + 1;
+              final isSelected = selectedTable == num;
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                padding: const EdgeInsets.symmetric(horizontal: 6.0),
                 child: ElevatedButton(
                   onPressed: () => setState(() => selectedTable = num),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedTable == num
+                    backgroundColor: isSelected
                         ? color
                         : CosmicColors.surfaceHigh,
-                    foregroundColor: selectedTable == num
+                    foregroundColor: isSelected
                         ? Colors.white
                         : CosmicColors.onSurfaceVariant,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    elevation: isSelected ? 8 : 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(
+                        color: isSelected
+                            ? color
+                            : color.withValues(alpha: 0.2),
+                        width: 2,
+                      ),
+                    ),
                   ),
-                  child: Text(num.toString()),
+                  child: Text(
+                    '$num',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               );
             },
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
         Expanded(
-          child: GridView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 1,
-            ),
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              int num = index + 1;
-              int result = calculate(selectedTable, num);
-              String op = title == 'Mbledhje'
-                  ? '+'
-                  : title == 'Zbritje'
-                  ? '−'
-                  : title == 'Shumëzim'
-                  ? '×'
-                  : '÷';
-              return Card(
-                color: color.withValues(alpha: 0.15),
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth >= 1000
+                  ? 5
+                  : (constraints.maxWidth >= 700 ? 4 : 3);
+              return GridView.builder(
+                padding: EdgeInsets.fromLTRB(
+                  AdaptiveLayout.pagePadding(context).left,
+                  16,
+                  AdaptiveLayout.pagePadding(context).right,
+                  32,
                 ),
-                child: InkWell(
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('$selectedTable $op $num = $result'),
-                        duration: const Duration(seconds: 1),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  childAspectRatio: constraints.maxWidth >= 700 ? 1.25 : 1,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                ),
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  int num = index + 1;
+                  int result = calculate(selectedTable, num);
+                  String op = title == 'Mbledhje'
+                      ? '+'
+                      : title == 'Zbritje'
+                      ? '−'
+                      : title == 'Shumëzim'
+                      ? '×'
+                      : '÷';
+                  return Card(
+                    color: color.withValues(alpha: 0.1),
+                    elevation: 6,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(
+                        color: color.withValues(alpha: 0.4),
+                        width: 2,
                       ),
-                    );
-                  },
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '$selectedTable $op $num',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '= $result',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: color,
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
-                ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('$selectedTable $op $num = $result'),
+                            duration: const Duration(seconds: 1),
+                            backgroundColor: color,
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              color.withValues(alpha: 0.15),
+                              color.withValues(alpha: 0.05),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '$selectedTable $op $num',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: color.withValues(alpha: 0.8),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: color.withValues(alpha: 0.25),
+                              ),
+                              child: Text(
+                                '$result',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: color,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               );
             },
           ),
