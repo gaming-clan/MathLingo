@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
+
+import 'colors.dart';
+import 'simple_tables.dart';
 
 void main() {
   runApp(const MathLingoApp());
@@ -12,510 +16,1752 @@ class MathLingoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MathLingo',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        scaffoldBackgroundColor: Colors.lightBlue[50],
-        fontFamily: 'Comic Sans MS',
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: CosmicColors.background,
+        colorScheme: const ColorScheme.dark(
+          primary: CosmicColors.primary,
+          onPrimary: CosmicColors.onPrimaryContainer,
+          secondary: CosmicColors.secondary,
+          surface: CosmicColors.surface,
+          onSurface: CosmicColors.onSurface,
+          error: CosmicColors.error,
+        ),
+        fontFamily: 'Lexend',
+        textTheme: const TextTheme(
+          headlineLarge: TextStyle(
+            color: CosmicColors.onSurface,
+            fontSize: 32,
+            fontWeight: FontWeight.w800,
+            height: 1.2,
+          ),
+          headlineMedium: TextStyle(
+            color: CosmicColors.onSurface,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            height: 1.25,
+          ),
+          bodyMedium: TextStyle(
+            color: CosmicColors.onSurfaceVariant,
+            fontSize: 16,
+            height: 1.5,
+          ),
+          labelLarge: TextStyle(
+            color: CosmicColors.onSurface,
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      home: const DashboardScreen(),
     );
   }
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+enum Operation {
+  addition('+', 'Mbledhje', Icons.add),
+  subtraction('-', 'Zbritje', Icons.remove),
+  multiplication('*', 'Shumëzim', Icons.close),
+  division('/', 'Pjesëtim', Icons.percent);
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  const Operation(this.symbol, this.label, this.icon);
+
+  final String symbol;
+  final String label;
+  final IconData icon;
+
+  String get displaySymbol {
+    if (this == Operation.multiplication) return 'x';
+    if (this == Operation.division) return '÷';
+    return symbol;
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-  final List<String> funFacts = [
-    // Interesting Math Facts
-    "A e dinit se zeroja (0) është i vetmi numër që nuk ka shifër romake?",
-    "Shenja e barazimit (=) u shpik në vitin 1557 nga Robert Recorde!",
-    "Fjala 'Matematikë' vjen nga greqishtja e lashtë dhe do të thotë 'të mësosh'.",
-    "Numri 8 konsiderohet numër me fat në shumë kultura aziatike.",
-    "Numri π (pi) nuk përfundon kurrë dhe përsëritet përgjithmonë!",
-    "Numri 9 ka veti të mahnitshme: 9+9=18, dhe 1+8=9!",
-    "Numri 1 nuk është numër i thjeshtë sipas përkufizimit matematikor.",
-    "Numri më i vogël i thjeshtë është 2, dhe është i vetmi çift!",
-    
-    // Addition Table Facts (1-10)
-    "1 + 1 = 2",
-    "2 + 2 = 4",
-    "3 + 3 = 6",
-    "4 + 4 = 8",
-    "5 + 5 = 10",
-    "6 + 6 = 12",
-    "7 + 7 = 14",
-    "8 + 8 = 16",
-    "9 + 9 = 18",
-    "10 + 10 = 20",
-    "1 + 2 = 3",
-    "2 + 3 = 5",
-    "3 + 4 = 7",
-    "4 + 5 = 9",
-    "5 + 6 = 11",
-    "6 + 7 = 13",
-    "7 + 8 = 15",
-    "8 + 9 = 17",
-    "9 + 10 = 19",
-    
-    // Subtraction Table Facts (1-10)
-    "5 - 1 = 4",
-    "5 - 2 = 3",
-    "5 - 3 = 2",
-    "5 - 4 = 1",
-    "5 - 5 = 0",
-    "10 - 1 = 9",
-    "10 - 2 = 8",
-    "10 - 3 = 7",
-    "10 - 4 = 6",
-    "10 - 5 = 5",
-    "10 - 6 = 4",
-    "10 - 7 = 3",
-    "10 - 8 = 2",
-    "10 - 9 = 1",
-    "10 - 10 = 0",
-    "8 - 3 = 5",
-    "9 - 4 = 5",
-    "7 - 2 = 5",
-    "6 - 1 = 5",
-    
-    // Multiplication Table Facts (1-10)
-    "1 × 1 = 1",
-    "1 × 2 = 2",
-    "1 × 3 = 3",
-    "1 × 4 = 4",
-    "1 × 5 = 5",
-    "2 × 2 = 4",
-    "2 × 3 = 6",
-    "2 × 4 = 8",
-    "2 × 5 = 10",
-    "2 × 6 = 12",
-    "2 × 7 = 14",
-    "2 × 8 = 16",
-    "2 × 9 = 18",
-    "2 × 10 = 20",
-    "3 × 3 = 9",
-    "3 × 4 = 12",
-    "3 × 5 = 15",
-    "3 × 6 = 18",
-    "3 × 7 = 21",
-    "3 × 8 = 24",
-    "3 × 9 = 27",
-    "3 × 10 = 30",
-    "4 × 4 = 16",
-    "4 × 5 = 20",
-    "4 × 6 = 24",
-    "4 × 7 = 28",
-    "4 × 8 = 32",
-    "4 × 9 = 36",
-    "4 × 10 = 40",
-    "5 × 5 = 25",
-    "5 × 6 = 30",
-    "5 × 7 = 35",
-    "5 × 8 = 40",
-    "5 × 9 = 45",
-    "5 × 10 = 50",
-    "6 × 6 = 36",
-    "6 × 7 = 42",
-    "6 × 8 = 48",
-    "6 × 9 = 54",
-    "6 × 10 = 60",
-    "7 × 7 = 49",
-    "7 × 8 = 56",
-    "7 × 9 = 63",
-    "7 × 10 = 70",
-    "8 × 8 = 64",
-    "8 × 9 = 72",
-    "8 × 10 = 80",
-    "9 × 9 = 81",
-    "9 × 10 = 90",
-    "10 × 10 = 100",
-    
-    // Division Table Facts (1-10)
-    "2 ÷ 1 = 2",
-    "4 ÷ 2 = 2",
-    "6 ÷ 2 = 3",
-    "8 ÷ 2 = 4",
-    "10 ÷ 2 = 5",
-    "6 ÷ 3 = 2",
-    "9 ÷ 3 = 3",
-    "12 ÷ 3 = 4",
-    "15 ÷ 3 = 5",
-    "18 ÷ 3 = 6",
-    "21 ÷ 3 = 7",
-    "24 ÷ 3 = 8",
-    "27 ÷ 3 = 9",
-    "30 ÷ 3 = 10",
-    "8 ÷ 4 = 2",
-    "12 ÷ 4 = 3",
-    "16 ÷ 4 = 4",
-    "20 ÷ 4 = 5",
-    "24 ÷ 4 = 6",
-    "28 ÷ 4 = 7",
-    "32 ÷ 4 = 8",
-    "36 ÷ 4 = 9",
-    "40 ÷ 4 = 10",
-    "10 ÷ 5 = 2",
-    "15 ÷ 5 = 3",
-    "20 ÷ 5 = 4",
-    "25 ÷ 5 = 5",
-    "30 ÷ 5 = 6",
-    "35 ÷ 5 = 7",
-    "40 ÷ 5 = 8",
-    "45 ÷ 5 = 9",
-    "50 ÷ 5 = 10",
-    "12 ÷ 6 = 2",
-    "18 ÷ 6 = 3",
-    "24 ÷ 6 = 4",
-    "30 ÷ 6 = 5",
-    "36 ÷ 6 = 6",
-    "42 ÷ 6 = 7",
-    "48 ÷ 6 = 8",
-    "54 ÷ 6 = 9",
-    "60 ÷ 6 = 10",
-    "14 ÷ 7 = 2",
-    "21 ÷ 7 = 3",
-    "28 ÷ 7 = 4",
-    "35 ÷ 7 = 5",
-    "42 ÷ 7 = 6",
-    "49 ÷ 7 = 7",
-    "56 ÷ 7 = 8",
-    "63 ÷ 7 = 9",
-    "70 ÷ 7 = 10",
-    "16 ÷ 8 = 2",
-    "24 ÷ 8 = 3",
-    "32 ÷ 8 = 4",
-    "40 ÷ 8 = 5",
-    "48 ÷ 8 = 6",
-    "56 ÷ 8 = 7",
-    "64 ÷ 8 = 8",
-    "72 ÷ 8 = 9",
-    "80 ÷ 8 = 10",
-    "18 ÷ 9 = 2",
-    "27 ÷ 9 = 3",
-    "36 ÷ 9 = 4",
-    "45 ÷ 9 = 5",
-    "54 ÷ 9 = 6",
-    "63 ÷ 9 = 7",
-    "72 ÷ 9 = 8",
-    "81 ÷ 9 = 9",
-    "90 ÷ 9 = 10",
-    "20 ÷ 10 = 2",
-    "30 ÷ 10 = 3",
-    "40 ÷ 10 = 4",
-    "50 ÷ 10 = 5",
-    "60 ÷ 10 = 6",
-    "70 ÷ 10 = 7",
-    "80 ÷ 10 = 8",
-    "90 ÷ 10 = 9",
-    "100 ÷ 10 = 10",
-  ];
+class MathQuestion {
+  const MathQuestion({
+    required this.num1,
+    required this.num2,
+    required this.answer,
+    required this.options,
+  });
 
-  String currentFact = "";
+  final int num1;
+  final int num2;
+  final int answer;
+  final List<int> options;
+}
+
+enum GeometryShape {
+  rectangle('Drejtkëndësh', Icons.crop_square),
+  triangle('Trekëndësh', Icons.change_history),
+  square('Katror', Icons.square_outlined);
+
+  const GeometryShape(this.label, this.icon);
+
+  final String label;
+  final IconData icon;
+}
+
+class GeometryQuestion {
+  const GeometryQuestion({
+    required this.shape,
+    required this.prompt,
+    required this.measurement,
+    required this.answer,
+    required this.options,
+    required this.width,
+    required this.height,
+  });
+
+  final GeometryShape shape;
+  final String prompt;
+  final String measurement;
+  final int answer;
+  final List<int> options;
+  final int width;
+  final int height;
+}
+
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    _generateRandomFact();
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int _selectedIndex = 0;
+
+  void _startChallenge([Operation operation = Operation.addition]) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ChallengeScreen(operation: operation),
+      ),
+    );
   }
 
-  void _generateRandomFact() {
-    final random = Random();
-    setState(() {
-      currentFact = funFacts[random.nextInt(funFacts.length)];
-    });
+  void _startGeometryChallenge() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const GeometryChallengeScreen()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('MathLingo - Mëso Matematikë!'),
-        centerTitle: true,
+    final pages = [
+      _DashboardPage(
+        onStartChallenge: _startChallenge,
+        onStartGeometryChallenge: _startGeometryChallenge,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Zgjidh një lojë!',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.deepPurple),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                children: [
-                  _buildMenuCard(context, 'Mbledhje (+)', '+', Colors.green),
-                  _buildMenuCard(context, 'Zbritje (-)', '-', Colors.redAccent),
-                  _buildMenuCard(context, 'Shumëzim (x)', '*', Colors.orange),
-                  _buildMenuCard(context, 'Pjesëtim (÷)', '/', Colors.blue),
-                ],
-              ),
-            ),
-            Card(
-              color: Colors.yellow[100],
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Text(
-                      '💡 Fakt Interesant',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      currentFact,
-                      style: const TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
-                    ),
-                    TextButton(
-                      onPressed: _generateRandomFact,
-                      child: const Text('Trego një tjetër'),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
+      _LessonsPage(
+        onStartChallenge: _startChallenge,
+        onStartGeometryChallenge: _startGeometryChallenge,
+      ),
+      const OperationTablesScreen(),
+      const _ProgressPage(),
+    ];
+
+    return Scaffold(
+      backgroundColor: CosmicColors.background,
+      appBar: const _CosmicTopBar(),
+      body: SafeArea(
+        top: false,
+        child: IndexedStack(index: _selectedIndex, children: pages),
+      ),
+      bottomNavigationBar: _CosmicBottomNav(
+        selectedIndex: _selectedIndex,
+        onSelected: (index) => setState(() => _selectedIndex = index),
       ),
     );
   }
+}
 
-  Widget _buildMenuCard(BuildContext context, String title, String operation, Color color) {
-    return InkWell(
-      onTap: () {
-        _showLevelDialog(context, title, operation);
-      },
-      child: Card(
-        color: color,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+class _DashboardPage extends StatelessWidget {
+  const _DashboardPage({
+    required this.onStartChallenge,
+    required this.onStartGeometryChallenge,
+  });
+
+  final ValueChanged<Operation> onStartChallenge;
+  final VoidCallback onStartGeometryChallenge;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
         child: Center(
-          child: Text(
-            title,
-            style: const TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 920),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Mirësevini!',
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    color: CosmicColors.primaryContainer,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Sistemi gati. Le të fillojmë eksplorimin matematikor.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 28),
+                _DailyChallengeCard(onStart: onStartGeometryChallenge),
+                const SizedBox(height: 32),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isWide = constraints.maxWidth >= 720;
+                    final children = [
+                      const _ProgressModuleCard(),
+                      _QuickActionsCard(
+                        onStartChallenge: onStartChallenge,
+                        onStartGeometryChallenge: onStartGeometryChallenge,
+                      ),
+                    ];
+                    if (!isWide) {
+                      return Column(
+                        children: [
+                          children[0],
+                          const SizedBox(height: 24),
+                          children[1],
+                        ],
+                      );
+                    }
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: children[0]),
+                        const SizedBox(width: 24),
+                        Expanded(child: children[1]),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
 
-  void _showLevelDialog(BuildContext context, String title, String operation) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Zgjidh Nivelin për $title'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+class _DailyChallengeCard extends StatelessWidget {
+  const _DailyChallengeCard({required this.onStart});
+
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassPanel(
+      padding: const EdgeInsets.all(18),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth >= 620;
+          final mascot = const _MascotFrame(size: 220);
+          final content = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton(
-                onPressed: () => _startQuiz(context, operation, 1),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const Text('Niveli 1 (I Lehtë)'),
+              const _NeonChip(
+                icon: Icons.local_fire_department,
+                label: 'Sfida e Ditës',
+                color: CosmicColors.secondaryContainer,
               ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () => _startQuiz(context, operation, 2),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-                child: const Text('Niveli 2 (Mesatar)'),
+              const SizedBox(height: 16),
+              Text(
+                'Gjeometria Hapësinore',
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () => _startQuiz(context, operation, 3),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text('Niveli 3 (I Vështirë)'),
+              const SizedBox(height: 12),
+              Text(
+                'Llogarit sipërfaqe dhe perimetra me sfida të shkurtra vizuale. Ndihmësi juaj AI është gati.',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 22),
+              CosmicButton(
+                key: const ValueKey('start-challenge'),
+                label: 'Fillo Sfidën',
+                icon: Icons.arrow_forward,
+                onPressed: onStart,
+              ),
+            ],
+          );
+
+          if (!isWide) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(child: mascot),
+                const SizedBox(height: 18),
+                content,
+              ],
+            );
+          }
+
+          return Row(
+            children: [
+              Expanded(child: Center(child: mascot)),
+              const SizedBox(width: 24),
+              Expanded(child: content),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ProgressModuleCard extends StatelessWidget {
+  const _ProgressModuleCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Progresi i Modulit',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        const SizedBox(height: 16),
+        const GlassPanel(
+          padding: EdgeInsets.all(18),
+          child: Column(
+            children: [
+              _CosmicProgress(
+                label: 'Algjebra Abstrakte',
+                value: 0.85,
+                color: CosmicColors.secondaryContainer,
+              ),
+              SizedBox(height: 18),
+              _CosmicProgress(
+                label: 'Analiza Matematike',
+                value: 0.42,
+                color: CosmicColors.primaryContainer,
               ),
             ],
           ),
-        );
-      },
-    );
-  }
-
-  void _startQuiz(BuildContext context, String operation, int level) {
-    Navigator.pop(context); // Close dialog
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => QuizScreen(operation: operation, level: level),
-      ),
+        ),
+      ],
     );
   }
 }
 
-class QuizScreen extends StatefulWidget {
-  final String operation;
-  final int level;
+class _QuickActionsCard extends StatelessWidget {
+  const _QuickActionsCard({
+    required this.onStartChallenge,
+    required this.onStartGeometryChallenge,
+  });
 
-  const QuizScreen({super.key, required this.operation, required this.level});
-
-  @override
-  State<QuizScreen> createState() => _QuizScreenState();
-}
-
-class _QuizScreenState extends State<QuizScreen> {
-  int num1 = 0;
-  int num2 = 0;
-  int correctAnswer = 0;
-  List<int> options = [];
-  int score = 0;
-  String feedback = "";
-  Color feedbackColor = Colors.transparent;
-
-  @override
-  void initState() {
-    super.initState();
-    _generateQuestion();
-  }
-
-  void _generateQuestion() {
-    final random = Random();
-    int maxNumber = widget.level == 1 ? 10 : (widget.level == 2 ? 50 : 100);
-
-    setState(() {
-      feedback = "";
-      feedbackColor = Colors.transparent;
-
-      if (widget.operation == '+') {
-        num1 = random.nextInt(maxNumber) + 1;
-        num2 = random.nextInt(maxNumber) + 1;
-        correctAnswer = num1 + num2;
-      } else if (widget.operation == '-') {
-        num1 = random.nextInt(maxNumber) + 5; // Ensure it's big enough
-        num2 = random.nextInt(num1) + 1; // Ensure no negative results for kids
-        correctAnswer = num1 - num2;
-      } else if (widget.operation == '*') {
-        int multMax = widget.level == 1 ? 5 : (widget.level == 2 ? 10 : 20);
-        num1 = random.nextInt(multMax) + 1;
-        num2 = random.nextInt(multMax) + 1;
-        correctAnswer = num1 * num2;
-      } else if (widget.operation == '/') {
-        int divMax = widget.level == 1 ? 5 : (widget.level == 2 ? 10 : 20);
-        correctAnswer = random.nextInt(divMax) + 1;
-        num2 = random.nextInt(divMax) + 1;
-        num1 = correctAnswer * num2; // Ensures clean whole-number division
-      }
-
-      _generateOptions(random);
-    });
-  }
-
-  void _generateOptions(Random random) {
-    options = [correctAnswer];
-    while (options.length < 4) {
-      // Generate plausible wrong answers
-      int offset = random.nextInt(10) - 5;
-      if (offset == 0) offset = 1;
-      int wrongAnswer = correctAnswer + offset;
-      
-      if (wrongAnswer >= 0 && !options.contains(wrongAnswer)) {
-        options.add(wrongAnswer);
-      }
-    }
-    options.shuffle(); // Randomize button positions
-  }
-
-  void _checkAnswer(int selectedAnswer) {
-    if (selectedAnswer == correctAnswer) {
-      setState(() {
-        score += 10;
-        feedback = "Të lumtë! E saktë! 🎉";
-        feedbackColor = Colors.green;
-      });
-      Future.delayed(const Duration(seconds: 1), () {
-        _generateQuestion();
-      });
-    } else {
-      setState(() {
-        feedback = "E gabuar. Provo përsëri! 🤔";
-        feedbackColor = Colors.red;
-      });
-    }
-  }
+  final ValueChanged<Operation> onStartChallenge;
+  final VoidCallback onStartGeometryChallenge;
 
   @override
   Widget build(BuildContext context) {
-    String opSymbol = widget.operation == '*' ? 'x' : (widget.operation == '/' ? '÷' : widget.operation);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pikët: $score'),
-        backgroundColor: Colors.deepPurple,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Veprime të Shpejta',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        const SizedBox(height: 16),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          childAspectRatio: 1.15,
           children: [
-            Text(
-              'Niveli ${widget.level}',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.grey),
-              textAlign: TextAlign.center,
+            _ActionTile(
+              icon: Icons.category,
+              label: 'Gjeometria',
+              color: CosmicColors.secondaryContainer,
+              onTap: onStartGeometryChallenge,
             ),
-            const SizedBox(height: 40),
-            Container(
-              padding: const EdgeInsets.all(30),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 5)
-                ],
+            for (final operation in Operation.values)
+              _OperationTile(
+                operation: operation,
+                color:
+                    operation == Operation.division ||
+                        operation == Operation.multiplication
+                    ? CosmicColors.secondaryContainer
+                    : CosmicColors.primaryContainer,
+                onTap: () => onStartChallenge(operation),
               ),
-              child: Text(
-                '$num1 $opSymbol $num2 = ?',
-                style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _LessonsPage extends StatelessWidget {
+  const _LessonsPage({
+    required this.onStartChallenge,
+    required this.onStartGeometryChallenge,
+  });
+
+  final ValueChanged<Operation> onStartChallenge;
+  final VoidCallback onStartGeometryChallenge;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _SectionHeader(
+              kicker: 'ALGJEBRA BAZË',
+              title: 'Zgjidh ekuacionin',
             ),
-            const SizedBox(height: 40),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                childAspectRatio: 1.5,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                children: options.map((option) {
-                  return ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurpleAccent,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            const SizedBox(height: 24),
+            const GlassPanel(
+              padding: EdgeInsets.all(22),
+              child: SizedBox(
+                height: 260,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Text(
+                        '√x² + y²',
+                        style: TextStyle(
+                          color: CosmicColors.secondaryContainer,
+                          fontSize: 46,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
                     ),
-                    onPressed: () => _checkAnswer(option),
-                    child: Text(
-                      option.toString(),
-                      style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                    Positioned(
+                      right: -18,
+                      bottom: -24,
+                      child: _MascotFrame(size: 170),
                     ),
-                  );
-                }).toList(),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 28),
             Text(
-              feedback,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: feedbackColor),
-              textAlign: TextAlign.center,
+              'Mjetet e Llogaritjes',
+              style: Theme.of(context).textTheme.labelLarge,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                _MathTool(label: '√x'),
+                _MathTool(label: 'π'),
+                _MathTool(label: 'x²'),
+                _MathTool(icon: Icons.lightbulb, selected: true),
+              ],
+            ),
+            const SizedBox(height: 32),
+            CosmicButton(
+              label: 'Vazhdo',
+              icon: Icons.arrow_forward,
+              onPressed: onStartGeometryChallenge,
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+class _ProgressPage extends StatelessWidget {
+  const _ProgressPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+        child: Column(
+          children: [
+            Text(
+              'Bravo!',
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                color: CosmicColors.primary,
+                fontSize: 42,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Progresi yt po rritet çdo ditë.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 32),
+            const _MascotFrame(size: 260),
+            const SizedBox(height: 32),
+            const Row(
+              children: [
+                Expanded(
+                  child: _ScoreCard(
+                    value: '+150',
+                    label: 'Pikët',
+                    icon: Icons.workspace_premium,
+                    color: CosmicColors.tertiary,
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: _ScoreCard(
+                    value: '95%',
+                    label: 'Saktësia',
+                    icon: Icons.my_location,
+                    color: CosmicColors.secondary,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ChallengeScreen extends StatefulWidget {
+  const ChallengeScreen({
+    super.key,
+    this.operation = Operation.addition,
+    this.level = 1,
+    this.sessionLength = 5,
+    Random? random,
+  }) : random = random ?? const _DefaultRandom();
+
+  final Operation operation;
+  final int level;
+  final int sessionLength;
+  final Random random;
+
+  @override
+  State<ChallengeScreen> createState() => _ChallengeScreenState();
+}
+
+class _ChallengeScreenState extends State<ChallengeScreen> {
+  late MathQuestion _question;
+  int _score = 0;
+  int _answered = 0;
+  int _correct = 0;
+  int? _selectedAnswer;
+  String _feedback = '';
+  bool _isAdvancing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _question = _generateQuestion();
+  }
+
+  MathQuestion _generateQuestion() {
+    final random = widget.random;
+    final maxNumber = widget.level == 1 ? 10 : (widget.level == 2 ? 50 : 100);
+    late int num1;
+    late int num2;
+    late int answer;
+
+    switch (widget.operation) {
+      case Operation.addition:
+        num1 = random.nextInt(maxNumber) + 1;
+        num2 = random.nextInt(maxNumber) + 1;
+        answer = num1 + num2;
+      case Operation.subtraction:
+        num1 = random.nextInt(maxNumber) + 5;
+        num2 = random.nextInt(num1) + 1;
+        answer = num1 - num2;
+      case Operation.multiplication:
+        final multMax = widget.level == 1 ? 5 : (widget.level == 2 ? 10 : 20);
+        num1 = random.nextInt(multMax) + 1;
+        num2 = random.nextInt(multMax) + 1;
+        answer = num1 * num2;
+      case Operation.division:
+        final divMax = widget.level == 1 ? 5 : (widget.level == 2 ? 10 : 20);
+        answer = random.nextInt(divMax) + 1;
+        num2 = random.nextInt(divMax) + 1;
+        num1 = answer * num2;
+    }
+
+    return MathQuestion(
+      num1: num1,
+      num2: num2,
+      answer: answer,
+      options: _generateOptions(answer),
+    );
+  }
+
+  List<int> _generateOptions(int correctAnswer) {
+    final random = widget.random;
+    final options = <int>{correctAnswer};
+    while (options.length < 4) {
+      var offset = random.nextInt(12) - 6;
+      if (offset == 0) offset = 1;
+      final wrongAnswer = correctAnswer + offset;
+      if (wrongAnswer >= 0) options.add(wrongAnswer);
+    }
+    final shuffled = options.toList()..shuffle(random);
+    return shuffled;
+  }
+
+  void _checkAnswer(int answer) {
+    if (_isAdvancing) return;
+
+    final isCorrect = answer == _question.answer;
+    setState(() {
+      _selectedAnswer = answer;
+      _feedback = isCorrect
+          ? 'Saktë! Vazhdon fluturimi.'
+          : 'Provo përsëri. Je shumë afër.';
+      if (isCorrect) {
+        _score += 10;
+        _correct += 1;
+        _answered += 1;
+        _isAdvancing = true;
+      }
+    });
+
+    if (!isCorrect) return;
+
+    Future<void>.delayed(const Duration(milliseconds: 450), () {
+      if (!mounted) return;
+      if (_answered >= widget.sessionLength) {
+        final accuracy = ((_correct / widget.sessionLength) * 100).round();
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute<void>(
+            builder: (_) => ResultsScreen(points: _score, accuracy: accuracy),
+          ),
+        );
+        return;
+      }
+      setState(() {
+        _question = _generateQuestion();
+        _selectedAnswer = null;
+        _feedback = '';
+        _isAdvancing = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = _answered / widget.sessionLength;
+
+    return Scaffold(
+      backgroundColor: CosmicColors.background,
+      appBar: const _CosmicTopBar(showBackButton: true),
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const _SectionHeader(
+                kicker: 'ALGJEBRA BAZË',
+                title: 'Zgjidh ekuacionin',
+              ),
+              const SizedBox(height: 18),
+              _CosmicProgress(
+                label: 'Pikët: $_score',
+                value: progress,
+                color: CosmicColors.secondaryContainer,
+              ),
+              const SizedBox(height: 24),
+              GlassPanel(
+                padding: const EdgeInsets.all(22),
+                child: SizedBox(
+                  height: 260,
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Text(
+                          '${_question.num1} ${widget.operation.displaySymbol} ${_question.num2} = ?',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: CosmicColors.secondaryContainer,
+                            fontSize: 44,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                childAspectRatio: 1.9,
+                mainAxisSpacing: 14,
+                crossAxisSpacing: 14,
+                children: _question.options.map((option) {
+                  final isSelected = _selectedAnswer == option;
+                  final isCorrect = option == _question.answer;
+                  final color = isSelected && isCorrect
+                      ? CosmicColors.secondaryContainer
+                      : isSelected
+                      ? CosmicColors.error
+                      : CosmicColors.primaryContainer;
+                  return _AnswerButton(
+                    key: isCorrect
+                        ? const ValueKey('correct-answer')
+                        : ValueKey('answer-$option'),
+                    value: option,
+                    color: color,
+                    onPressed: () => _checkAnswer(option),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 18),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: _feedback.isEmpty
+                    ? const SizedBox(height: 28)
+                    : Text(
+                        _feedback,
+                        key: ValueKey(_feedback),
+                        style: TextStyle(
+                          color: _selectedAnswer == _question.answer
+                              ? CosmicColors.secondaryContainer
+                              : CosmicColors.error,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class GeometryChallengeScreen extends StatefulWidget {
+  const GeometryChallengeScreen({
+    super.key,
+    this.sessionLength = 4,
+    Random? random,
+  }) : random = random ?? const _DefaultRandom();
+
+  final int sessionLength;
+  final Random random;
+
+  @override
+  State<GeometryChallengeScreen> createState() =>
+      _GeometryChallengeScreenState();
+}
+
+class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
+  late GeometryQuestion _question;
+  int _score = 0;
+  int _answered = 0;
+  int _correct = 0;
+  int? _selectedAnswer;
+  String _feedback = '';
+  bool _isAdvancing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _question = _generateQuestion();
+  }
+
+  GeometryQuestion _generateQuestion() {
+    final random = widget.random;
+    final shape =
+        GeometryShape.values[random.nextInt(GeometryShape.values.length)];
+    late int width;
+    late int height;
+    late int answer;
+    late String prompt;
+    late String measurement;
+
+    switch (shape) {
+      case GeometryShape.rectangle:
+        width = random.nextInt(7) + 3;
+        height = random.nextInt(6) + 2;
+        answer = width * height;
+        prompt = 'Sa është sipërfaqja e drejtkëndëshit?';
+        measurement = 'gjerësi $width, lartësi $height';
+      case GeometryShape.triangle:
+        width = (random.nextInt(5) + 3) * 2;
+        height = random.nextInt(6) + 2;
+        answer = (width * height) ~/ 2;
+        prompt = 'Sa është sipërfaqja e trekëndëshit?';
+        measurement = 'bazë $width, lartësi $height';
+      case GeometryShape.square:
+        width = random.nextInt(8) + 3;
+        height = width;
+        answer = width * 4;
+        prompt = 'Sa është perimetri i katrorit?';
+        measurement = 'brinja $width';
+    }
+
+    return GeometryQuestion(
+      shape: shape,
+      prompt: prompt,
+      measurement: measurement,
+      answer: answer,
+      options: _generateOptions(answer),
+      width: width,
+      height: height,
+    );
+  }
+
+  List<int> _generateOptions(int correctAnswer) {
+    final random = widget.random;
+    final options = <int>{correctAnswer};
+    while (options.length < 4) {
+      var offset = random.nextInt(14) - 7;
+      if (offset == 0) offset = 2;
+      final wrongAnswer = correctAnswer + offset;
+      if (wrongAnswer > 0) options.add(wrongAnswer);
+    }
+    return options.toList()..shuffle(random);
+  }
+
+  void _checkAnswer(int answer) {
+    if (_isAdvancing) return;
+
+    final isCorrect = answer == _question.answer;
+    setState(() {
+      _selectedAnswer = answer;
+      _feedback = isCorrect
+          ? 'Saktë! Forma u analizua.'
+          : 'Jo ende. Shiko matjet dhe provo përsëri.';
+      if (isCorrect) {
+        _score += 15;
+        _correct += 1;
+        _answered += 1;
+        _isAdvancing = true;
+      }
+    });
+
+    if (!isCorrect) return;
+
+    Future<void>.delayed(const Duration(milliseconds: 500), () {
+      if (!mounted) return;
+      if (_answered >= widget.sessionLength) {
+        final accuracy = ((_correct / widget.sessionLength) * 100).round();
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute<void>(
+            builder: (_) => ResultsScreen(points: _score, accuracy: accuracy),
+          ),
+        );
+        return;
+      }
+      setState(() {
+        _question = _generateQuestion();
+        _selectedAnswer = null;
+        _feedback = '';
+        _isAdvancing = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = _answered / widget.sessionLength;
+
+    return Scaffold(
+      backgroundColor: CosmicColors.background,
+      appBar: const _CosmicTopBar(showBackButton: true),
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const _SectionHeader(
+                kicker: 'GJEOMETRIA BAZË',
+                title: 'Sfida Gjeometrike',
+              ),
+              const SizedBox(height: 18),
+              _CosmicProgress(
+                label: 'Pikët: $_score',
+                value: progress,
+                color: CosmicColors.secondaryContainer,
+              ),
+              const SizedBox(height: 24),
+              GlassPanel(
+                padding: const EdgeInsets.all(22),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 210,
+                      child: CustomPaint(
+                        painter: GeometryShapePainter(_question),
+                        child: Center(
+                          child: Icon(
+                            _question.shape.icon,
+                            color: CosmicColors.secondaryContainer.withValues(
+                              alpha: 0.2,
+                            ),
+                            size: 96,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    Text(
+                      _question.prompt,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _question.measurement,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                childAspectRatio: 1.9,
+                mainAxisSpacing: 14,
+                crossAxisSpacing: 14,
+                children: _question.options.map((option) {
+                  final isSelected = _selectedAnswer == option;
+                  final isCorrect = option == _question.answer;
+                  final color = isSelected && isCorrect
+                      ? CosmicColors.secondaryContainer
+                      : isSelected
+                      ? CosmicColors.error
+                      : CosmicColors.primaryContainer;
+                  return _AnswerButton(
+                    key: isCorrect
+                        ? const ValueKey('correct-geometry-answer')
+                        : ValueKey('geometry-answer-$option'),
+                    value: option,
+                    color: color,
+                    onPressed: () => _checkAnswer(option),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 18),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: _feedback.isEmpty
+                    ? const SizedBox(height: 28)
+                    : Text(
+                        _feedback,
+                        key: ValueKey(_feedback),
+                        style: TextStyle(
+                          color: _selectedAnswer == _question.answer
+                              ? CosmicColors.secondaryContainer
+                              : CosmicColors.error,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ResultsScreen extends StatelessWidget {
+  const ResultsScreen({
+    super.key,
+    required this.points,
+    required this.accuracy,
+  });
+
+  final int points;
+  final int accuracy;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: CosmicColors.background,
+      appBar: const _CosmicTopBar(),
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
+          child: Column(
+            children: [
+              Text(
+                'Bravo!',
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  color: CosmicColors.primary,
+                  fontSize: 46,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Përfundove me sukses sfidën.',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 30),
+              const _MascotFrame(size: 280, celebratory: true),
+              const SizedBox(height: 30),
+              Row(
+                children: [
+                  Expanded(
+                    child: _ScoreCard(
+                      value: '+$points',
+                      label: 'Pikët',
+                      icon: Icons.workspace_premium,
+                      color: CosmicColors.tertiary,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _ScoreCard(
+                      value: '$accuracy%',
+                      label: 'Saktësia',
+                      icon: Icons.my_location,
+                      color: CosmicColors.secondary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              CosmicButton(
+                label: 'Vazhdo',
+                icon: Icons.arrow_forward,
+                onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const DashboardScreen(),
+                  ),
+                  (_) => false,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class GlassPanel extends StatelessWidget {
+  const GlassPanel({
+    super.key,
+    required this.child,
+    this.padding = const EdgeInsets.all(16),
+  });
+
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: padding,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white.withValues(alpha: 0.08),
+            CosmicColors.surface.withValues(alpha: 0.68),
+            Colors.white.withValues(alpha: 0.02),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: CosmicColors.primaryContainer.withValues(alpha: 0.12),
+            blurRadius: 28,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+}
+
+class CosmicButton extends StatelessWidget {
+  const CosmicButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.icon,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(999),
+          gradient: const LinearGradient(
+            colors: [
+              CosmicColors.primaryContainer,
+              CosmicColors.tertiaryContainer,
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: CosmicColors.primaryContainer.withValues(alpha: 0.38),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            shape: const StadiumBorder(),
+          ),
+          onPressed: onPressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              if (icon != null) ...[
+                const SizedBox(width: 8),
+                Icon(icon, size: 20),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AnswerButton extends StatelessWidget {
+  const _AnswerButton({
+    super.key,
+    required this.value,
+    required this.color,
+    required this.onPressed,
+  });
+
+  final int value;
+  final Color color;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: CosmicColors.onSurface,
+        side: BorderSide(color: color.withValues(alpha: 0.7), width: 1.4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+        backgroundColor: color.withValues(alpha: 0.14),
+      ),
+      onPressed: onPressed,
+      child: Text(
+        value.toString(),
+        style: TextStyle(
+          color: color,
+          fontSize: 28,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+    );
+  }
+}
+
+class _CosmicTopBar extends StatelessWidget implements PreferredSizeWidget {
+  const _CosmicTopBar({this.showBackButton = false});
+
+  final bool showBackButton;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(76);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: const Color(0xCC0B0C21),
+      elevation: 0,
+      toolbarHeight: 76,
+      automaticallyImplyLeading: false,
+      titleSpacing: 24,
+      title: Row(
+        children: [
+          _RoundIconButton(
+            icon: showBackButton ? Icons.arrow_back : Icons.person,
+            onPressed: showBackButton
+                ? () => Navigator.maybePop(context)
+                : null,
+          ),
+          const Spacer(),
+          const Text(
+            'MathLingo',
+            style: TextStyle(
+              color: CosmicColors.primaryContainer,
+              fontSize: 24,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const Spacer(),
+          const _RoundIconButton(icon: Icons.notifications),
+        ],
+      ),
+    );
+  }
+}
+
+class _CosmicBottomNav extends StatelessWidget {
+  const _CosmicBottomNav({
+    required this.selectedIndex,
+    required this.onSelected,
+  });
+
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    const items = [
+      (Icons.dashboard, 'Sfida e Ditës'),
+      (Icons.school, 'Mësime'),
+      (Icons.grid_3x3, 'Tabelat'),
+      (Icons.trending_up, 'Progresi'),
+    ];
+
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
+        decoration: BoxDecoration(
+          color: const Color(0xCC0B0C21),
+          border: Border(
+            top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          ),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          boxShadow: [
+            BoxShadow(
+              color: CosmicColors.primaryContainer.withValues(alpha: 0.12),
+              blurRadius: 22,
+              offset: const Offset(0, -6),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            for (var i = 0; i < items.length; i++)
+              _BottomNavItem(
+                icon: items[i].$1,
+                label: items[i].$2,
+                selected: i == selectedIndex,
+                onTap: () => onSelected(i),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BottomNavItem extends StatelessWidget {
+  const _BottomNavItem({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = selected ? CosmicColors.primary : CosmicColors.outline;
+    return Flexible(
+      child: TextButton(
+        style: TextButton.styleFrom(
+          foregroundColor: color,
+          backgroundColor: selected
+              ? CosmicColors.primaryContainer.withValues(alpha: 0.12)
+              : Colors.transparent,
+          shape: const StadiumBorder(),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        ),
+        onPressed: onTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 22),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RoundIconButton extends StatelessWidget {
+  const _RoundIconButton({required this.icon, this.onPressed});
+
+  final IconData icon;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      style: IconButton.styleFrom(
+        fixedSize: const Size(44, 44),
+        backgroundColor: Colors.white.withValues(alpha: 0.05),
+        foregroundColor: CosmicColors.onSurface,
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+      ),
+      onPressed: onPressed ?? () {},
+      icon: Icon(icon, size: 22),
+    );
+  }
+}
+
+class _NeonChip extends StatelessWidget {
+  const _NeonChip({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: color.withValues(alpha: 0.55)),
+        color: color.withValues(alpha: 0.1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: color),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: TextStyle(color: color, fontWeight: FontWeight.w800),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MascotFrame extends StatelessWidget {
+  const _MascotFrame({required this.size, this.celebratory = false});
+
+  final double size;
+  final bool celebratory;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  (celebratory
+                          ? CosmicColors.tertiaryContainer
+                          : CosmicColors.primaryContainer)
+                      .withValues(alpha: 0.35),
+                  CosmicColors.secondaryContainer.withValues(alpha: 0.12),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(size * 0.08),
+            child: Image.asset(
+              'assets/icons/stich_icon.png',
+              fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) => Icon(
+                Icons.smart_toy,
+                color: CosmicColors.secondaryContainer,
+                size: size * 0.42,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CosmicProgress extends StatelessWidget {
+  const _CosmicProgress({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  final String label;
+  final double value;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final percent = (value * 100).round();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: CosmicColors.onSurface,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              '$percent%',
+              style: TextStyle(color: color, fontWeight: FontWeight.w900),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(999),
+          child: LinearProgressIndicator(
+            minHeight: 8,
+            value: value.clamp(0, 1),
+            backgroundColor: CosmicColors.surfaceHighest,
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _OperationTile extends StatelessWidget {
+  const _OperationTile({
+    required this.operation,
+    required this.color,
+    required this.onTap,
+  });
+
+  final Operation operation;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return _ActionTile(
+      icon: operation.icon,
+      label: operation.label,
+      color: color,
+      onTap: onTap,
+    );
+  }
+}
+
+class _ActionTile extends StatelessWidget {
+  const _ActionTile({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: onTap,
+      child: GlassPanel(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 54,
+              height: 54,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: color.withValues(alpha: 0.12),
+                border: Border.all(color: color.withValues(alpha: 0.35)),
+              ),
+              child: Icon(icon, color: color),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: CosmicColors.onSurface,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class GeometryShapePainter extends CustomPainter {
+  GeometryShapePainter(this.question);
+
+  final GeometryQuestion question;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = CosmicColors.secondaryContainer.withValues(alpha: 0.16)
+      ..style = PaintingStyle.fill;
+    final stroke = Paint()
+      ..color = CosmicColors.secondaryContainer
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round;
+    final glow = Paint()
+      ..color = CosmicColors.primaryContainer.withValues(alpha: 0.28)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 18);
+    final center = Offset(size.width / 2, size.height / 2);
+    final shapeWidth = size.width * 0.62;
+    final shapeHeight = size.height * 0.58;
+    final rect = Rect.fromCenter(
+      center: center,
+      width: question.shape == GeometryShape.square
+          ? min(shapeWidth, shapeHeight)
+          : shapeWidth,
+      height: question.shape == GeometryShape.square
+          ? min(shapeWidth, shapeHeight)
+          : shapeHeight,
+    );
+
+    switch (question.shape) {
+      case GeometryShape.rectangle:
+      case GeometryShape.square:
+        final rounded = RRect.fromRectAndRadius(
+          rect,
+          const Radius.circular(18),
+        );
+        canvas.drawRRect(rounded, glow);
+        canvas.drawRRect(rounded, paint);
+        canvas.drawRRect(rounded, stroke);
+      case GeometryShape.triangle:
+        final path = Path()
+          ..moveTo(center.dx, rect.top)
+          ..lineTo(rect.right, rect.bottom)
+          ..lineTo(rect.left, rect.bottom)
+          ..close();
+        canvas.drawPath(path, glow);
+        canvas.drawPath(path, paint);
+        canvas.drawPath(path, stroke);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant GeometryShapePainter oldDelegate) {
+    return oldDelegate.question != question;
+  }
+}
+
+class _MathTool extends StatelessWidget {
+  const _MathTool({this.label, this.icon, this.selected = false});
+
+  final String? label;
+  final IconData? icon;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = selected
+        ? CosmicColors.primary
+        : CosmicColors.secondaryContainer;
+    return Container(
+      width: 58,
+      height: 58,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color.withValues(alpha: selected ? 0.22 : 0.08),
+        border: Border.all(
+          color: color.withValues(alpha: selected ? 0.9 : 0.3),
+        ),
+        boxShadow: [
+          if (selected)
+            BoxShadow(
+              color: CosmicColors.primaryContainer.withValues(alpha: 0.25),
+              blurRadius: 16,
+            ),
+        ],
+      ),
+      child: Center(
+        child: icon == null
+            ? Text(
+                label ?? '',
+                style: TextStyle(
+                  color: color,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                ),
+              )
+            : Icon(icon, color: color),
+      ),
+    );
+  }
+}
+
+class _ScoreCard extends StatelessWidget {
+  const _ScoreCard({
+    required this.value,
+    required this.label,
+    required this.icon,
+    required this.color,
+  });
+
+  final String value;
+  final String label;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassPanel(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: CosmicColors.surfaceHigh,
+              border: Border.all(color: color.withValues(alpha: 0.42)),
+            ),
+            child: Icon(icon, color: color, size: 26),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label.toUpperCase(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: CosmicColors.outline,
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({required this.kicker, required this.title});
+
+  final String kicker;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          kicker,
+          style: const TextStyle(
+            color: CosmicColors.secondaryContainer,
+            fontSize: 12,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 1.2,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(title, style: Theme.of(context).textTheme.headlineLarge),
+      ],
+    );
+  }
+}
+
+class _DefaultRandom implements Random {
+  const _DefaultRandom();
+
+  Random get _random => Random();
+
+  @override
+  bool nextBool() => _random.nextBool();
+
+  @override
+  double nextDouble() => _random.nextDouble();
+
+  @override
+  int nextInt(int max) => _random.nextInt(max);
 }

@@ -58,6 +58,9 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - assets/icons/stich_icon.png
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -93,5 +96,17 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/icons/stich_icon.png"
-  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_background: "#101126"
   adaptive_icon_foreground: "assets/icons/stich_icon.png"
+  web:
+    generate: true
+    image_path: "assets/icons/stich_icon.png"
+    background_color: "#101126"
+    theme_color: "#BC13FE"
+  windows:
+    generate: true
+    image_path: "assets/icons/stich_icon.png"
+    icon_size: 256
+  macos:
+    generate: true
+    image_path: "assets/icons/stich_icon.png"
