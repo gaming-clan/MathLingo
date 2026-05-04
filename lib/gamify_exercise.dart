@@ -258,6 +258,8 @@ Përpiquni përsëri! 💪
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).width >= 760;
+    
     return Scaffold(
       backgroundColor: CosmicColors.background,
       appBar: AppBar(
@@ -277,278 +279,277 @@ Përpiquni përsëri! 💪
       body: ResponsivePage(
         maxWidth: 920,
         topSafeArea: true,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Fotografo ose Shkruaj Ushtrimin',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: CosmicColors.primaryContainer,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Zgjedh çfarëdo mënyre që të preferosh për të futur ushtrimin matematikor.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 24),
-
-            // Image section
-            Container(
-              decoration: BoxDecoration(
-                color: CosmicColors.surfaceHigh,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: CosmicColors.primaryContainer.withValues(alpha: 0.3),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Fotografo ose Shkruaj Ushtrimin',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: CosmicColors.primaryContainer,
                 ),
               ),
-              child: Column(
+              const SizedBox(height: 8),
+              Text(
+                'Zgjedh çfarëdo mënyre që të preferosh për të futur ushtrimin matematikor.',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 24),
+
+              // Responsive layout: side-by-side on tablets, stacked on phones
+              if (isTablet)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(flex: 1, child: _buildImageSection()),
+                    const SizedBox(width: 24),
+                    Expanded(flex: 1, child: _buildInputSection()),
+                  ],
+                )
+              else ...[
+                _buildImageSection(),
+                const SizedBox(height: 24),
+                _buildInputSection(),
+              ],
+
+              const SizedBox(height: 24),
+
+              // Action buttons
+              Row(
                 children: [
-                  if (_selectedImage != null)
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CosmicColors.error.withValues(
+                          alpha: 0.2,
+                        ),
+                        foregroundColor: CosmicColors.error,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                      child: Image.file(
-                        _selectedImage!,
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+                      onPressed: _clearInputs,
+                      child: const Text(
+                        'Fshij',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (_recognizedText != null) ...[
-                          Text(
-                            'Teksti i Njohur:',
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: CosmicColors.background,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              _recognizedText!,
-                              style: const TextStyle(
-                                color: CosmicColors.onSurface,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                icon: const Icon(Icons.camera_alt),
-                                label: const Text('Fotografo'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      CosmicColors.primaryContainer,
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
-                                ),
-                                onPressed: _pickImage,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                icon: const Icon(Icons.image),
-                                label: const Text('Galeria'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      CosmicColors.secondaryContainer,
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
-                                ),
-                                onPressed: _pickImageFromGallery,
-                              ),
-                            ),
-                          ],
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CosmicColors.secondaryContainer,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      ],
+                      ),
+                      onPressed: _isProcessing ? null : _generateSolution,
+                      child: _isProcessing
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          : const Text(
+                              'Zgjidh',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                     ),
                   ),
                 ],
               ),
-            ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // OR divider
-            Row(
-              children: [
-                const Expanded(
-                  child: Divider(color: CosmicColors.onSurfaceVariant),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    'OSE',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: CosmicColors.onSurfaceVariant,
+              // Solution display
+              if (_solution != null) ...[
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: CosmicColors.surfaceHigh,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: CosmicColors.secondaryContainer.withValues(
+                        alpha: 0.5,
+                      ),
                     ),
                   ),
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '✨ Zgjidhja Argëtuese ✨',
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(color: CosmicColors.secondaryContainer),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        _solution!,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 15,
+                          height: 1.6,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const Expanded(
-                  child: Divider(color: CosmicColors.onSurfaceVariant),
-                ),
+                const SizedBox(height: 20),
               ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // Text input section
-            Text(
-              'Shkruaj Ushtrimin Drejtpërdrejt',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _exerciseController,
-              style: const TextStyle(color: CosmicColors.onSurface),
-              decoration: InputDecoration(
-                hintText: 'Shembull: 15 + 7, 20 - 5, 6 * 3, 24 / 4',
-                hintStyle: const TextStyle(
-                  color: CosmicColors.onSurfaceVariant,
-                ),
-                filled: true,
-                fillColor: CosmicColors.surfaceHigh,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: CosmicColors.primaryContainer,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: CosmicColors.primaryContainer.withValues(alpha: 0.3),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: CosmicColors.primaryContainer,
-                    width: 2,
-                  ),
-                ),
-                contentPadding: const EdgeInsets.all(16),
-              ),
-              maxLines: 3,
-              minLines: 1,
-            ),
-
-            const SizedBox(height: 24),
-
-            // Action buttons
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: CosmicColors.error.withValues(
-                        alpha: 0.2,
-                      ),
-                      foregroundColor: CosmicColors.error,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: _clearInputs,
-                    child: const Text(
-                      'Fshij',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: CosmicColors.secondaryContainer,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: _isProcessing ? null : _generateSolution,
-                    child: _isProcessing
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
-                              ),
-                            ),
-                          )
-                        : const Text(
-                            'Zgjidh',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // Solution display
-            if (_solution != null) ...[
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: CosmicColors.surfaceHigh,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: CosmicColors.secondaryContainer.withValues(
-                      alpha: 0.5,
-                    ),
-                  ),
-                ),
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '✨ Zgjidhja Argëtuese ✨',
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(color: CosmicColors.secondaryContainer),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      _solution!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 15,
-                        height: 1.6,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
             ],
-          ],
+          ),
         ),
       ),
     );
   }
-}
+
+  Widget _buildImageSection() {
+    return Container(
+      decoration: BoxDecoration(
+        color: CosmicColors.surfaceHigh,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: CosmicColors.primaryContainer.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        children: [
+          if (_selectedImage != null)
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+              child: Image.file(
+                _selectedImage!,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (_recognizedText != null) ...[
+                  Text(
+                    'Teksti i Njohur:',
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: CosmicColors.background,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      _recognizedText!,
+                      style: const TextStyle(
+                        color: CosmicColors.onSurface,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.camera_alt),
+                        label: const Text('Fotografo'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              CosmicColors.primaryContainer,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                          ),
+                        ),
+                        onPressed: _pickImage,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.image),
+                        label: const Text('Galeria'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              CosmicColors.secondaryContainer,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                          ),
+                        ),
+                        onPressed: _pickImageFromGallery,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInputSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Shkruaj Ushtrimin',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _exerciseController,
+          style: const TextStyle(color: CosmicColors.onSurface),
+          decoration: InputDecoration(
+            hintText: 'Shembull: 15 + 7',
+            hintStyle: const TextStyle(
+              color: CosmicColors.onSurfaceVariant,
+            ),
+            filled: true,
+            fillColor: CosmicColors.surfaceHigh,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: CosmicColors.primaryContainer,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: CosmicColors.primaryContainer.withValues(alpha: 0.3),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: CosmicColors.primaryContainer,
+                width: 2,
+              ),
+            ),
+            contentPadding: const EdgeInsets.all(16),
+          ),
+          maxLines: 3,
+          minLines: 1,
+        ),
+      ],
+    );
+  }

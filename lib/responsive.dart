@@ -10,9 +10,14 @@ class AdaptiveLayout {
     return size.shortestSide >= 600 || size.width >= 760;
   }
 
+  static bool isLargeTablet(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    return size.width >= 1000;
+  }
+
   static EdgeInsets pagePadding(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    final horizontal = width >= 1100 ? 56.0 : (width >= 760 ? 40.0 : 24.0);
+    final horizontal = width >= 1100 ? 56.0 : (width >= 900 ? 48.0 : (width >= 760 ? 40.0 : 24.0));
     final top = width >= 760 ? 32.0 : 24.0;
     return EdgeInsets.fromLTRB(horizontal, top, horizontal, 36);
   }
@@ -32,6 +37,30 @@ class AdaptiveLayout {
     if (columns >= 4) return 1.35;
     if (columns == 3) return 1.25;
     return compact;
+  }
+
+  static double scaleFontSize(
+    BuildContext context,
+    double baseSize, {
+    double tabletMultiplier = 1.1,
+    double largeTabletMultiplier = 1.2,
+  }) {
+    final width = MediaQuery.sizeOf(context).width;
+    if (width >= 1000) return baseSize * largeTabletMultiplier;
+    if (width >= 760) return baseSize * tabletMultiplier;
+    return baseSize;
+  }
+
+  static double scalePadding(
+    BuildContext context,
+    double basePadding, {
+    double tabletMultiplier = 1.15,
+    double largeTabletMultiplier = 1.3,
+  }) {
+    final width = MediaQuery.sizeOf(context).width;
+    if (width >= 1000) return basePadding * largeTabletMultiplier;
+    if (width >= 760) return basePadding * tabletMultiplier;
+    return basePadding;
   }
 }
 

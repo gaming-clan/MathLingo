@@ -748,34 +748,58 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             const SizedBox(height: 24),
             GlassPanel(
               padding: const EdgeInsets.all(22),
-              child: SizedBox(
-                height: 260,
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Text(
-                        '${_question.num1} ${widget.operation.displaySymbol} ${_question.num2} = ?',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: CosmicColors.secondaryContainer,
-                          fontSize: 44,
-                          fontWeight: FontWeight.w900,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isTablet = constraints.maxWidth >= 720;
+                  final height = isTablet ? 300.0 : 260.0;
+                  final fontSize = isTablet ? 52.0 : 44.0;
+                  return SizedBox(
+                    height: height,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Text(
+                            '${_question.num1} ${widget.operation.displaySymbol} ${_question.num2} = ?',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: CosmicColors.secondaryContainer,
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 24),
             LayoutBuilder(
               builder: (context, constraints) {
-                final columns = constraints.maxWidth >= 720 ? 4 : 2;
+                final width = constraints.maxWidth;
+                final isTablet = width >= 720;
+                final isLargeTablet = width >= 1000;
+                
+                late int columns;
+                late double childAspectRatio;
+                
+                if (isLargeTablet) {
+                  columns = 4;
+                  childAspectRatio = 1.8;
+                } else if (isTablet) {
+                  columns = 3;
+                  childAspectRatio = 1.7;
+                } else {
+                  columns = 2;
+                  childAspectRatio = 1.9;
+                }
+                
                 return GridView.count(
                   crossAxisCount: columns,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  childAspectRatio: columns == 4 ? 1.65 : 1.9,
+                  childAspectRatio: childAspectRatio,
                   mainAxisSpacing: 14,
                   crossAxisSpacing: 14,
                   children: _question.options.map((option) {
@@ -972,20 +996,26 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
               padding: const EdgeInsets.all(22),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 210,
-                    child: CustomPaint(
-                      painter: GeometryShapePainter(_question),
-                      child: Center(
-                        child: Icon(
-                          _question.shape.icon,
-                          color: CosmicColors.secondaryContainer.withValues(
-                            alpha: 0.2,
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final isTablet = constraints.maxWidth >= 720;
+                      final height = isTablet ? 260.0 : 210.0;
+                      return SizedBox(
+                        height: height,
+                        child: CustomPaint(
+                          painter: GeometryShapePainter(_question),
+                          child: Center(
+                            child: Icon(
+                              _question.shape.icon,
+                              color: CosmicColors.secondaryContainer.withValues(
+                                alpha: 0.2,
+                              ),
+                              size: isTablet ? 120 : 96,
+                            ),
                           ),
-                          size: 96,
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 18),
                   Text(
@@ -1005,12 +1035,29 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
             const SizedBox(height: 24),
             LayoutBuilder(
               builder: (context, constraints) {
-                final columns = constraints.maxWidth >= 720 ? 4 : 2;
+                final width = constraints.maxWidth;
+                final isTablet = width >= 720;
+                final isLargeTablet = width >= 1000;
+                
+                late int columns;
+                late double childAspectRatio;
+                
+                if (isLargeTablet) {
+                  columns = 4;
+                  childAspectRatio = 1.8;
+                } else if (isTablet) {
+                  columns = 3;
+                  childAspectRatio = 1.7;
+                } else {
+                  columns = 2;
+                  childAspectRatio = 1.9;
+                }
+                
                 return GridView.count(
                   crossAxisCount: columns,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  childAspectRatio: columns == 4 ? 1.65 : 1.9,
+                  childAspectRatio: childAspectRatio,
                   mainAxisSpacing: 14,
                   crossAxisSpacing: 14,
                   children: _question.options.map((option) {
