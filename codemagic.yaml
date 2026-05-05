@@ -1,0 +1,60 @@
+workflows:
+  android-release:
+    name: Android Release Build
+    instance_type: linux_default
+    max_build_duration: 120
+    environment:
+      java: default
+      ndk: r21e
+    triggering:
+      events:
+        - push
+        - pull_request
+      branch:
+        patterns:
+          - pattern: 'main'
+            include: true
+          - pattern: 'copilot/**'
+            include: true
+    scripts:
+      - name: Set up local.properties
+        script: |
+          echo "flutter.sdk=$HOME/programs/flutter" > "$ANDROID_HOME/local.properties"
+      - name: Get Flutter packages
+        script: |
+          flutter pub get
+      - name: Build APK
+        script: |
+          flutter build apk --debug --verbose
+    artifacts:
+      - build/app/outputs/apk/debug/app-debug.apk
+    publishing:
+      github_releases:
+        release: true
+
+  android-release-signed:
+    name: Android Release Build (Signed)
+    instance_type: linux_default
+    max_build_duration: 120
+    environment:
+      java: default
+      ndk: r21e
+    triggering:
+      events:
+        - push
+      branch:
+        patterns:
+          - pattern: 'main'
+            include: true
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter pub get
+      - name: Build signed APK
+        script: |
+          flutter build apk --release --verbose
+    artifacts:
+      - build/app/outputs/apk/release/app-release.apk
+    publishing:
+      github_releases:
+        release: true
