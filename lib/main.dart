@@ -295,12 +295,12 @@ class _DailyChallengeCard extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Gjeometria Hapësinore',
+                'Gjeometria Bazë',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 12),
               Text(
-                'Llogarit sipërfaqe dhe perimetra me sfida të shkurtra vizuale. Ndihmësi juaj AI është gati.',
+                'Mësoni format dhe llogaritni sipërfaqe të thjeshta me ndihmën e mikut tuaj AI.',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 22),
@@ -507,7 +507,7 @@ class _LessonsPage extends StatelessWidget {
                 children: [
                   Center(
                     child: Text(
-                      '√x² + y²',
+                      '5 + 3 = 8',
                       style: TextStyle(
                         color: CosmicColors.secondaryContainer,
                         fontSize: 46,
@@ -637,7 +637,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
 
   MathQuestion _generateQuestion() {
     final random = widget.random;
-    final maxNumber = widget.level == 1 ? 10 : (widget.level == 2 ? 50 : 100);
+    // Level 1: 1-10, Level 2: 1-20, Level 3: 1-50
+    final maxNumber = widget.level == 1 ? 10 : (widget.level == 2 ? 20 : 50);
     late int num1;
     late int num2;
     late int answer;
@@ -648,16 +649,16 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         num2 = random.nextInt(maxNumber) + 1;
         answer = num1 + num2;
       case Operation.subtraction:
-        num1 = random.nextInt(maxNumber) + 5;
-        num2 = random.nextInt(num1) + 1;
+        num1 = random.nextInt(maxNumber) + 2;
+        num2 = random.nextInt(num1 - 1) + 1;
         answer = num1 - num2;
       case Operation.multiplication:
-        final multMax = widget.level == 1 ? 5 : (widget.level == 2 ? 10 : 20);
+        final multMax = widget.level == 1 ? 5 : (widget.level == 2 ? 10 : 12);
         num1 = random.nextInt(multMax) + 1;
         num2 = random.nextInt(multMax) + 1;
         answer = num1 * num2;
       case Operation.division:
-        final divMax = widget.level == 1 ? 5 : (widget.level == 2 ? 10 : 20);
+        final divMax = widget.level == 1 ? 5 : (widget.level == 2 ? 10 : 12);
         answer = random.nextInt(divMax) + 1;
         num2 = random.nextInt(divMax) + 1;
         num1 = answer * num2;
