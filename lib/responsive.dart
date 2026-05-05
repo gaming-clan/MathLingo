@@ -7,12 +7,14 @@ class AdaptiveLayout {
 
   static bool isTablet(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return size.shortestSide >= 600 || size.width >= 760;
+    // Shortest side >= 600 is the standard for 7-inch tablets
+    return size.shortestSide >= 600;
   }
 
   static bool isLargeTablet(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return size.width >= 1000;
+    // 10-inch tablets typically have a shortest side >= 720 or 800
+    return size.shortestSide >= 800 || size.width >= 1000;
   }
 
   static EdgeInsets pagePadding(BuildContext context) {
@@ -26,10 +28,11 @@ class AdaptiveLayout {
     double width, {
     int compact = 2,
     int medium = 3,
-    int expanded = 4,
+    int expanded = 5,
   }) {
-    if (width >= 1000) return expanded;
-    if (width >= 680) return medium;
+    if (width >= 1100) return expanded;
+    if (width >= 800) return 4;
+    if (width >= 600) return medium;
     return compact;
   }
 
