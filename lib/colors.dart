@@ -6,11 +6,11 @@ class CosmicColors {
   static const surfaceLow = Color(0xFF191A2F);
   static const surfaceHigh = Color(0xFF27283E);
   static const surfaceHighest = Color(0xFF32334A);
-  static const onSurface = Color(0xFFE1E0FE);
-  static const onSurfaceVariant = Color(0xFFD4C0D7);
-  static const outline = Color(0xFF9D8BA0);
-  static const outlineVariant = Color(0xFF504254);
-  static const primary = Color(0xFFEBB2FF);
+  static const onSurface = Color(0xFFFFFFFF);
+  static const onSurfaceVariant = Color(0xFFEEEBFF);
+  static const outline = Color(0xFFB9A7BC);
+  static const outlineVariant = Color(0xFF6C5E70);
+  static const primary = Color(0xFFF3D6FF);
   static const primaryContainer = Color(0xFFBC13FE);
   static const onPrimaryContainer = Color(0xFFFFFFFF);
   static const secondary = Color(0xFFD3FBFF);

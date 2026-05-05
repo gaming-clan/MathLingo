@@ -68,12 +68,11 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                 constraints: const BoxConstraints(maxWidth: 1120),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: CosmicColors.surfaceHigh,
+                    color: CosmicColors.surfaceHighest,
                     borderRadius: BorderRadius.circular(18),
                     border: Border.all(
-                      color: CosmicColors.primaryContainer.withValues(
-                        alpha: 0.25,
-                      ),
+                      color: CosmicColors.primaryContainer,
+                      width: 2,
                     ),
                   ),
                   child: const TabBar(
@@ -84,7 +83,8 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(16)),
                     ),
                     labelColor: Colors.white,
-                    unselectedLabelColor: Colors.white70,
+                    labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    unselectedLabelColor: Colors.white,
                     tabs: [
                       Tab(text: 'Mbledhje +'),
                       Tab(text: 'Zbritje -'),
@@ -130,15 +130,15 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
               Text(
                 '$title - Tabela e ${selectedTable.toString()}',
                 style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: CosmicColors.primaryContainer,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  color: CosmicColors.onSurface,
                 ),
               ),
               const SizedBox(height: 16),
               const Text(
                 'Zgjidh numrin',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
+                style: TextStyle(fontSize: 18, color: CosmicColors.onSurfaceVariant, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -159,21 +159,19 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isSelected
                         ? color
-                        : CosmicColors.surfaceHigh,
-                    foregroundColor: isSelected
-                        ? Colors.white
-                        : CosmicColors.onSurfaceVariant,
+                        : CosmicColors.surfaceHighest,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
+                      horizontal: 24,
+                      vertical: 14,
                     ),
-                    elevation: isSelected ? 8 : 2,
+                    elevation: isSelected ? 12 : 4,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                       side: BorderSide(
                         color: isSelected
-                            ? color
-                            : color.withValues(alpha: 0.2),
+                            ? Colors.white
+                            : color,
                         width: 2,
                       ),
                     ),
@@ -181,8 +179,8 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                   child: Text(
                     '$num',
                     style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                 ),
@@ -222,13 +220,13 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                       ? '×'
                       : '÷';
                   return Card(
-                    color: color.withValues(alpha: 0.1),
-                    elevation: 6,
+                    color: color.withValues(alpha: 0.2),
+                    elevation: 10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                       side: BorderSide(
-                        color: color.withValues(alpha: 0.4),
-                        width: 2,
+                        color: color,
+                        width: 3,
                       ),
                     ),
                     child: InkWell(
@@ -260,24 +258,24 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                             Text(
                               '$selectedTable $op $num',
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: color.withValues(alpha: 0.8),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900,
+                                color: CosmicColors.onSurface,
                               ),
                             ),
                             const SizedBox(height: 12),
                             Container(
-                              padding: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: color.withValues(alpha: 0.25),
+                                color: color,
                               ),
                               child: Text(
                                 '$result',
-                                style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: color,
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
