@@ -1,0 +1,51 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, copilot/** ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.6'
+        channel: 'stable'
+
+    - name: Get dependencies
+      run: flutter pub get
+
+    - name: Build APK Debug
+      run: flutter build apk --debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: mathlingo-debug.apk
+        path: build/app/outputs/apk/debug/app-debug.apk
+        retention-days: 30
+
+    - name: Build APK Release
+      run: flutter build apk --release
+
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: mathlingo-release.apk
+        path: build/app/outputs/apk/release/app-release.apk
+        retention-days: 30
