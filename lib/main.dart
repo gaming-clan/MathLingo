@@ -30,7 +30,6 @@ class MathLingoApp extends StatelessWidget {
           onSurface: CosmicColors.onSurface,
           error: CosmicColors.error,
         ),
-        fontFamily: 'Lexend',
         textTheme: const TextTheme(
           headlineLarge: TextStyle(
             color: CosmicColors.onSurface,

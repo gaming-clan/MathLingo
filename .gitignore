@@ -16,6 +16,9 @@ captures/
 *.apk
 output-metadata.json
 
+# Flutter tools
+.dart_tool/
+
 # IntelliJ
 *.iml
 .idea/
