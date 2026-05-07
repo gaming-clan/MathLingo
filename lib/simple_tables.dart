@@ -105,124 +105,213 @@ class _OperationTablesScreenState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final selectedTable = ref.watch(tablesProvider).selectedTable;
+    final width = MediaQuery.sizeOf(context).width;
+    final isMasterDetail = width >= 840;
+
     return DefaultTabController(
       length: 4,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              AdaptiveLayout.pagePadding(context).left,
-              AdaptiveLayout.pagePadding(context).top,
-              AdaptiveLayout.pagePadding(context).right,
-              12,
-            ),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1120),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.tablesTitle,
-                        style: TextStyle(
-                          color: CosmicColors.primaryContainer,
-                          fontSize: 32,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        l10n.tablesSubtitle,
-                        style: TextStyle(
-                          color: CosmicColors.onSurfaceVariant,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+      child: isMasterDetail
+          ? _buildMasterDetailLayout(context, l10n, selectedTable)
+          : _buildMobileLayout(context, l10n, selectedTable),
+    );
+  }
+
+  /// Mobile layout: Column with header + TabBar + TabBarView.
+  Widget _buildMobileLayout(
+    BuildContext context,
+    AppLocalizations l10n,
+    int selectedTable,
+  ) {
+    return Column(
+      children: [
+        _buildHeader(context, l10n),
+        _buildTabBar(context, l10n),
+        const SizedBox(height: 12),
+        Expanded(
+          child: TabBarView(
+            children: _buildTabViews(l10n, selectedTable),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// ≥840px: Master (left 280px number selector) + Detail (right tab grid).
+  Widget _buildMasterDetailLayout(
+    BuildContext context,
+    AppLocalizations l10n,
+    int selectedTable,
+  ) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Master panel – listë numrash 1–12
+        SizedBox(
+          width: 280,
+          child: Column(
+            children: [
+              _buildHeader(context, l10n),
+              Expanded(
+                child: _NumberMasterPanel(
+                  selectedTable: selectedTable,
+                  onSelect: (n) =>
+                      ref.read(tablesProvider.notifier).selectTable(n),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const VerticalDivider(
+          width: 1,
+          thickness: 1,
+          color: Color(0x1FEEEBFF),
+        ),
+        // Detail panel – TabBar + grid
+        Expanded(
+          child: Column(
+            children: [
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _buildTabBar(context, l10n),
+              ),
+              const SizedBox(height: 12),
+              Expanded(
+                child: TabBarView(
+                  children: _buildTabViews(
+                    l10n,
+                    selectedTable,
+                    showNumberSelector: false,
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AdaptiveLayout.pagePadding(context).left,
-            ),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1120),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: CosmicColors.surfaceHighest,
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(
-                      color: CosmicColors.primaryContainer,
-                      width: 2,
-                    ),
-                  ),
-                  child: TabBar(
-                    dividerColor: Colors.transparent,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: const BoxDecoration(
-                      color: CosmicColors.primaryContainer,
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                    ),
-                    labelColor: Colors.white,
-                    labelStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                    ),
-                    unselectedLabelColor: Colors.white,
-                    tabs: _TableOperation.values.map((op) {
-                      final showText =
-                          MediaQuery.sizeOf(context).width >= 360;
-                      return Tab(
-                        icon: Icon(op.icon, size: 20),
-                        text: showText ? op.tabLabel(l10n) : null,
-                        iconMargin: const EdgeInsets.only(bottom: 2),
-                        height: showText ? 54 : 42,
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Expanded(
-            child: TabBarView(
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _buildTabViews(
+    AppLocalizations l10n,
+    int selectedTable, {
+    bool showNumberSelector = true,
+  }) {
+    return [
+      _buildOperationTable(
+        _TableOperation.addition,
+        (a, b) => a + b,
+        Colors.green,
+        selectedTable,
+        showNumberSelector: showNumberSelector,
+      ),
+      _buildOperationTable(
+        _TableOperation.subtraction,
+        (a, b) => a - b,
+        Colors.red,
+        selectedTable,
+        showNumberSelector: showNumberSelector,
+      ),
+      _buildOperationTable(
+        _TableOperation.multiplication,
+        (a, b) => a * b,
+        Colors.orange,
+        selectedTable,
+        showNumberSelector: showNumberSelector,
+      ),
+      _buildOperationTable(
+        _TableOperation.division,
+        (a, b) => a ~/ b,
+        Colors.blue,
+        selectedTable,
+        showNumberSelector: showNumberSelector,
+      ),
+    ];
+  }
+
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        AdaptiveLayout.pagePadding(context).left,
+        AdaptiveLayout.pagePadding(context).top,
+        AdaptiveLayout.pagePadding(context).right,
+        12,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1120),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildOperationTable(
-                  _TableOperation.addition,
-                  (a, b) => a + b,
-                  Colors.green,
-                  selectedTable,
+                Text(
+                  l10n.tablesTitle,
+                  style: TextStyle(
+                    color: CosmicColors.primaryContainer,
+                    fontSize: 32,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-                _buildOperationTable(
-                  _TableOperation.subtraction,
-                  (a, b) => a - b,
-                  Colors.red,
-                  selectedTable,
-                ),
-                _buildOperationTable(
-                  _TableOperation.multiplication,
-                  (a, b) => a * b,
-                  Colors.orange,
-                  selectedTable,
-                ),
-                _buildOperationTable(
-                  _TableOperation.division,
-                  (a, b) => a ~/ b,
-                  Colors.blue,
-                  selectedTable,
+                const SizedBox(height: 8),
+                Text(
+                  l10n.tablesSubtitle,
+                  style: TextStyle(
+                    color: CosmicColors.onSurfaceVariant,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabBar(BuildContext context, AppLocalizations l10n) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: AdaptiveLayout.pagePadding(context).left,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1120),
+          child: Container(
+            decoration: BoxDecoration(
+              color: CosmicColors.surfaceHighest,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: CosmicColors.primaryContainer,
+                width: 2,
+              ),
+            ),
+            child: TabBar(
+              dividerColor: Colors.transparent,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicator: const BoxDecoration(
+                color: CosmicColors.primaryContainer,
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+              labelColor: Colors.white,
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+              unselectedLabelColor: Colors.white,
+              tabs: _TableOperation.values.map((op) {
+                final showText = MediaQuery.sizeOf(context).width >= 360;
+                return Tab(
+                  icon: Icon(op.icon, size: 20),
+                  text: showText ? op.tabLabel(l10n) : null,
+                  iconMargin: const EdgeInsets.only(bottom: 2),
+                  height: showText ? 54 : 42,
+                );
+              }).toList(),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -231,8 +320,9 @@ class _OperationTablesScreenState
     _TableOperation operation,
     int Function(int, int) calculate,
     Color color,
-    int selectedTable,
-  ) {
+    int selectedTable, {
+    bool showNumberSelector = true,
+  }) {
     final l10n = AppLocalizations.of(context);
     final entries = _buildVisibleEntries(operation, calculate, selectedTable);
     final operationLabel = operation.label(l10n);
@@ -251,64 +341,65 @@ class _OperationTablesScreenState
                   color: CosmicColors.onSurface,
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                l10n.tablesChooseNumber,
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: CosmicColors.onSurfaceVariant,
-                  fontWeight: FontWeight.bold,
+              if (showNumberSelector) ...[
+                const SizedBox(height: 16),
+                Text(
+                  l10n.tablesChooseNumber,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: CosmicColors.onSurfaceVariant,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),
-        SizedBox(
-          height: 60,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: 12,
-            itemBuilder: (context, index) {
-              int num = index + 1;
-              final isSelected = selectedTable == num;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                child: ElevatedButton(
-                  onPressed: () =>
-                      ref.read(tablesProvider.notifier).selectTable(num),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isSelected
-                        ? color
-                        : CosmicColors.surfaceHighest,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 14,
+        if (showNumberSelector)
+          SizedBox(
+            height: 60,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: 12,
+              itemBuilder: (context, index) {
+                int num = index + 1;
+                final isSelected = selectedTable == num;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                  child: ElevatedButton(
+                    onPressed: () =>
+                        ref.read(tablesProvider.notifier).selectTable(num),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isSelected
+                          ? color
+                          : CosmicColors.surfaceHighest,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
+                      ),
+                      elevation: isSelected ? 12 : 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: BorderSide(
+                          color: isSelected ? Colors.white : color,
+                          width: 2,
+                        ),
+                      ),
                     ),
-                    elevation: isSelected ? 12 : 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(
-                        color: isSelected
-                            ? Colors.white
-                            : color,
-                        width: 2,
+                    child: Text(
+                      '$num',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
                   ),
-                  child: Text(
-                    '$num',
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
         const SizedBox(height: 24),
         Expanded(
           child: LayoutBuilder(
@@ -439,6 +530,111 @@ class _OperationTablesScreenState
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Panel i majtë (Master) për Master-Detail layout — listë numrash 1–12.
+class _NumberMasterPanel extends StatelessWidget {
+  const _NumberMasterPanel({
+    required this.selectedTable,
+    required this.onSelect,
+  });
+
+  final int selectedTable;
+  final ValueChanged<int> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          right: BorderSide(color: Color(0x1FEEEBFF)),
+        ),
+      ),
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        itemCount: 12,
+        itemBuilder: (context, index) {
+          final num = index + 1;
+          final isSelected = selectedTable == num;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: isSelected
+                    ? CosmicColors.primaryContainer.withValues(alpha: 0.2)
+                    : Colors.transparent,
+                border: Border.all(
+                  color: isSelected
+                      ? CosmicColors.primaryContainer
+                      : const Color(0x22EEEBFF),
+                  width: isSelected ? 2 : 1,
+                ),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(14),
+                onTap: () => onSelect(num),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 20,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isSelected
+                              ? CosmicColors.primaryContainer
+                              : CosmicColors.surfaceHighest,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '$num',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              color: isSelected
+                                  ? Colors.white
+                                  : CosmicColors.onSurface,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Text(
+                        'Tabela $num',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: isSelected
+                              ? FontWeight.w800
+                              : FontWeight.w500,
+                          color: isSelected
+                              ? CosmicColors.primaryContainer
+                              : CosmicColors.onSurfaceVariant,
+                        ),
+                      ),
+                      if (isSelected) ...[
+                        const Spacer(),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                          color: CosmicColors.primaryContainer,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

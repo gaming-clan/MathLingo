@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../colors.dart';
+import '../../../core/providers/progress_provider.dart';
 import '../../../gamify_exercise.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../models/user_progress.dart';
 import '../../../models/operation.dart';
 import '../../../responsive.dart';
-import '../../../shared/utils/user_progress_storage.dart';
 import '../../../shared/navigation/adaptive_scaffold.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_progress.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
 import '../../../shared/widgets/glass_panel.dart';
 import '../../../shared/widgets/mascot_frame.dart';
+import '../../../shared/widgets/skeleton_card.dart';
 import '../../../simple_tables.dart';
 import '../../challenges/presentation/challenge_screen.dart';
 import '../../geometry/presentation/geometry_challenge_screen.dart';
@@ -124,6 +125,13 @@ class _DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isMasterDetail = width >= 840;
+
+    if (isMasterDetail) {
+      return _buildMasterDetailLayout(context, l10n);
+    }
+
     return ResponsivePage(
       maxWidth: 1120,
       child: Column(
@@ -153,6 +161,74 @@ class _DashboardPage extends StatelessWidget {
           const _ProgressModuleCard(),
         ],
       ),
+    );
+  }
+
+  Widget _buildMasterDetailLayout(BuildContext context, AppLocalizations l10n) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Panel i majtë — Hero: Sfida e Ditës + GamifyCard
+        Expanded(
+          flex: 5,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(
+              AdaptiveLayout.pagePadding(context).left,
+              AdaptiveLayout.pagePadding(context).top,
+              16,
+              AdaptiveLayout.pagePadding(context).bottom,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.dashboardWelcomeTitle,
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    color: CosmicColors.primaryContainer,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.dashboardWelcomeSubtitle,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 24),
+                _DailyChallengeCard(onStart: onStartGeometryChallenge),
+                const SizedBox(height: 20),
+                _GamifyCard(onStart: onStartGamifyExercise),
+              ],
+            ),
+          ),
+        ),
+        const VerticalDivider(
+          width: 1,
+          thickness: 1,
+          color: Color(0x1FEEEBFF),
+        ),
+        // Panel i djathtë — Control Center: QuickActions + Progress
+        Expanded(
+          flex: 5,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(
+              16,
+              AdaptiveLayout.pagePadding(context).top,
+              AdaptiveLayout.pagePadding(context).right,
+              AdaptiveLayout.pagePadding(context).bottom,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _QuickActionsCard(
+                  onStartChallenge: onStartChallenge,
+                  onStartGamifyExercise: onStartGamifyExercise,
+                ),
+                const SizedBox(height: 24),
+                const _ProgressModuleCard(),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -240,12 +316,13 @@ class _GamifyCard extends StatelessWidget {
   }
 }
 
-class _ProgressModuleCard extends StatelessWidget {
+class _ProgressModuleCard extends ConsumerWidget {
   const _ProgressModuleCard();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final progressAsync = ref.watch(progressProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -254,33 +331,31 @@ class _ProgressModuleCard extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         const SizedBox(height: 16),
-        FutureBuilder<UserProgress>(
-          future: UserProgressStorage.load(),
-          builder: (context, snapshot) {
-            final progress = snapshot.data ?? const UserProgress.empty();
-            return GlassPanel(
-              padding: const EdgeInsets.all(18),
-              child: Column(
-                children: [
-                  CosmicProgress(
-                    label: l10n.dashboardProgressPointsLabel(
-                      progress.totalPoints,
-                    ),
-                    value: progress.totalPointsProgress(),
-                    color: CosmicColors.secondaryContainer,
+        progressAsync.when(
+          loading: () => const CosmicShimmer(height: 120, rows: 2),
+          error: (_, __) => const CosmicShimmer(height: 120, rows: 2),
+          data: (progress) => GlassPanel(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              children: [
+                CosmicProgress(
+                  label: l10n.dashboardProgressPointsLabel(
+                    progress.totalPoints,
                   ),
-                  const SizedBox(height: 18),
-                  CosmicProgress(
-                    label: l10n.dashboardProgressAccuracyLabel(
-                      progress.averageAccuracy.round(),
-                    ),
-                    value: progress.accuracyProgress(),
-                    color: CosmicColors.primaryContainer,
+                  value: progress.totalPointsProgress(),
+                  color: CosmicColors.secondaryContainer,
+                ),
+                const SizedBox(height: 18),
+                CosmicProgress(
+                  label: l10n.dashboardProgressAccuracyLabel(
+                    progress.averageAccuracy.round(),
                   ),
-                ],
-              ),
-            );
-          },
+                  value: progress.accuracyProgress(),
+                  color: CosmicColors.primaryContainer,
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );
