@@ -7,12 +7,15 @@
 - **Android Min SDK:** 26.
 - **Namespace:** `com.mathlingo.app`.
 
-## 2. Varësitë Kryesore (Authorized)
+## 2. Varësitë Kryesore (Installed)
 - `cupertino_icons: ^1.0.8`
 - `image_picker: ^1.0.0`
-- `flutter_localizations` (Planned Sprint 3)
-- `riverpod` (Planned Sprint 2/3)
-- `hive` (Planned Sprint 3)
+- `image: ^4.2.0` — preprocesim OCR (grayscale, crop, threshold)
+- `google_mlkit_text_recognition: ^0.15.1` — OCR real (printed text; handwriting kufizim i njohur)
+- `flutter_localizations` (SDK) + `intl: any` — lokalizim shqip (ARB files)
+- `flutter_riverpod: ^2.6.1` — State Management (Sprint 4+)
+- `hive: ^2.2.3` + `hive_flutter: ^1.1.0` — persistencë lokale (Sprint 3+)
+- `flutter_launcher_icons: ^0.13.1` (dev)
 
 ## 3. Platformat & Mbështetja
 - **Mobile:** Android & iOS (Fokus parësor).
