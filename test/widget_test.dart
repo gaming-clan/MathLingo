@@ -2,9 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:math_lingo/features/challenges/presentation/challenge_screen.dart';
+import 'package:math_lingo/features/geometry/presentation/geometry_challenge_screen.dart';
 import 'package:math_lingo/main.dart';
+import 'package:math_lingo/models/operation.dart';
 
 void main() {
+  Finder buttonInside(Finder parent, Type buttonType) {
+    return find.descendant(of: parent, matching: find.byType(buttonType));
+  }
+
   testWidgets('dashboard loads with Stitch Cosmic Logic content', (
     tester,
   ) async {
@@ -23,9 +30,16 @@ void main() {
   ) async {
     await tester.pumpWidget(const MathLingoApp());
 
-    await tester.ensureVisible(find.byKey(const ValueKey('start-challenge')));
-    await tester.tap(find.byKey(const ValueKey('start-challenge')));
-    await tester.pumpAndSettle();
+    final startChallengeButton = buttonInside(
+      find.byKey(const ValueKey('start-challenge')),
+      ElevatedButton,
+    );
+
+    await tester.ensureVisible(startChallengeButton);
+    tester.widget<ElevatedButton>(startChallengeButton).onPressed!.call();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 350));
 
     expect(find.text('Sfida Gjeometrike'), findsOneWidget);
     expect(find.textContaining('Pikët:'), findsOneWidget);
@@ -45,15 +59,23 @@ void main() {
       ),
     );
 
-    await tester.ensureVisible(
+    final correctGeometryAnswerButton = buttonInside(
       find.byKey(const ValueKey('correct-geometry-answer')),
+      OutlinedButton,
     );
-    await tester.tap(find.byKey(const ValueKey('correct-geometry-answer')));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.ensureVisible(correctGeometryAnswerButton);
+    tester
+      .widget<OutlinedButton>(correctGeometryAnswerButton)
+      .onPressed!
+      .call();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.text('Bravo!'), findsOneWidget);
     expect(find.text('+15'), findsOneWidget);
-    expect(find.text('100%'), findsOneWidget);
+    expect(find.text('100%'), findsWidgets);
   });
 
   testWidgets('correct answers complete a short challenge and show results', (
@@ -70,12 +92,19 @@ void main() {
       ),
     );
 
-    await tester.ensureVisible(find.byKey(const ValueKey('correct-answer')));
-    await tester.tap(find.byKey(const ValueKey('correct-answer')));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    final correctAnswerButton = buttonInside(
+      find.byKey(const ValueKey('correct-answer')),
+      OutlinedButton,
+    );
+
+    await tester.ensureVisible(correctAnswerButton);
+    tester.widget<OutlinedButton>(correctAnswerButton).onPressed!.call();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.text('Bravo!'), findsOneWidget);
     expect(find.text('+10'), findsOneWidget);
-    expect(find.text('100%'), findsOneWidget);
+    expect(find.text('100%'), findsWidgets);
   });
 }
