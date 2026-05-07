@@ -407,16 +407,14 @@ class _OperationTablesScreenState
               final columns = constraints.maxWidth >= 1000
                   ? 5
                   : (constraints.maxWidth >= 700 ? 4 : 3);
+              // Përdor padding bazuar mbi gjerësinë e disponueshme (jo screen-width)
+              // për të shmangur tejkalimin kur GridView është brenda detail pane.
+              final hPad = constraints.maxWidth >= 600 ? 24.0 : 16.0;
               return GridView.builder(
-                padding: EdgeInsets.fromLTRB(
-                  AdaptiveLayout.pagePadding(context).left,
-                  16,
-                  AdaptiveLayout.pagePadding(context).right,
-                  32,
-                ),
+                padding: EdgeInsets.fromLTRB(hPad, 16, hPad, 32),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: columns,
-                  childAspectRatio: constraints.maxWidth >= 700 ? 1.25 : 1,
+                  childAspectRatio: constraints.maxWidth >= 700 ? 1.25 : 0.82,
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
                 ),

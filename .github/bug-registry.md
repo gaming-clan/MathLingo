@@ -8,6 +8,7 @@
 | B002 | Tabelat e pjesëtimit përdornin `~/` (p.sh 12/5=2) | **Kritik** | Fixed | `simple_tables.dart` |
 | B003 | SnackBar mbivendoste BottomNavigationBar | **Mesatar** | Fixed | UI Global |
 | B004 | SDK Mismatch (Local 3.32 vs Project 3.41) | **Bllokues** | Fixed | Environment |
+| B005 | AAPT2 / toolchain mismatch në build release | **Bllokues** | Fixed | Build System |
 | B008 | Dashboard body nuk renderohej për shkak të sizing-ut të BottomNavigation | **Kritik** | Fixed | Dashboard UI |
 | B006 | Tekstet ishin hardcoded në ekranet finale të Sprint 3 | **Mesatar** | Fixed | Localization |
 | B007 | `_processImage()` ishte vetëm placeholder, pa OCR real | **Lartë** | Fixed | Gamify Feature |
@@ -16,7 +17,7 @@
 
 | ID | Përshkrimi | Severiteti | Statusi | Sektori |
 | :--- | :--- | :--- | :--- | :--- |
-| B005 | AAPT2 Binary Mismatch në ARM64 Linux | **Bllokues** | Monitor | Build System |
+| - | - | - | - | - |
 
 ---
 **Legjenda:**

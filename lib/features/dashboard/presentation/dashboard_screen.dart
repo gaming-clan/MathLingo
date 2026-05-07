@@ -492,6 +492,8 @@ class _ActionTile extends StatelessWidget {
             Text(
               label,
               textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: CosmicColors.onSurface,
                 fontWeight: FontWeight.w800,
