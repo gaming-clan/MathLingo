@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/app_routes.dart';
 import 'colors.dart';
@@ -10,7 +11,7 @@ import 'shared/utils/user_progress_storage.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserProgressStorage.initialize();
-  runApp(const MathLingoApp());
+  runApp(const ProviderScope(child: MathLingoApp()));
 }
 
 class MathLingoApp extends StatelessWidget {
