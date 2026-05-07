@@ -83,21 +83,19 @@ class ResponsivePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewportWidth = MediaQuery.sizeOf(context).width;
+    final width = math.min(viewportWidth, maxWidth);
+
     return SafeArea(
       top: topSafeArea,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final width = math.min(constraints.maxWidth, maxWidth);
-          return SingleChildScrollView(
-            padding: padding ?? AdaptiveLayout.pagePadding(context),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: width),
-                child: child,
-              ),
-            ),
-          );
-        },
+      child: SingleChildScrollView(
+        padding: padding ?? AdaptiveLayout.pagePadding(context),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: width),
+            child: child,
+          ),
+        ),
       ),
     );
   }

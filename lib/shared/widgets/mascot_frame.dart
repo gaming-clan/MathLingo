@@ -66,6 +66,16 @@ class _MascotFrameState extends State<MascotFrame>
 
   @override
   Widget build(BuildContext context) {
+    final mascotImage = Image.asset(
+      'assets/icons/stich_icon.png',
+      fit: BoxFit.contain,
+      errorBuilder: (_, __, ___) => Icon(
+        Icons.smart_toy,
+        color: CosmicColors.secondaryContainer,
+        size: widget.size * 0.6,
+      ),
+    );
+
     return SizedBox(
       width: widget.size,
       height: widget.size,
@@ -87,27 +97,19 @@ class _MascotFrameState extends State<MascotFrame>
               ? _celebrationAnimation.value * 0.1
               : 0.0;
 
-          return Center(
-            child: Transform.translate(
-              offset: Offset(swayOffset, -bounceOffset),
-              child: Transform.rotate(
-                angle: rotation,
-                child: Transform.scale(
-                  scale: scale,
-                  child: Image.asset(
-                    'assets/icons/stich_icon.png',
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) => Icon(
-                      Icons.smart_toy,
-                      color: CosmicColors.secondaryContainer,
-                      size: widget.size * 0.6,
-                    ),
-                  ),
+          return RepaintBoundary(
+            child: Center(
+              child: Transform.translate(
+                offset: Offset(swayOffset, -bounceOffset),
+                child: Transform.rotate(
+                  angle: rotation,
+                  child: Transform.scale(scale: scale, child: child),
                 ),
               ),
             ),
           );
         },
+        child: mascotImage,
       ),
     );
   }

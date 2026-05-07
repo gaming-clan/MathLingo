@@ -8,6 +8,7 @@
 | B002 | Tabelat e pjesëtimit përdornin `~/` (p.sh 12/5=2) | **Kritik** | Fixed | `simple_tables.dart` |
 | B003 | SnackBar mbivendoste BottomNavigationBar | **Mesatar** | Fixed | UI Global |
 | B004 | SDK Mismatch (Local 3.32 vs Project 3.41) | **Bllokues** | Fixed | Environment |
+| B008 | Dashboard body nuk renderohej për shkak të sizing-ut të BottomNavigation | **Kritik** | Fixed | Dashboard UI |
 
 ## Open / Monitor
 

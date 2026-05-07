@@ -41,21 +41,19 @@ class CosmicBottomNav extends StatelessWidget {
             ),
           ],
         ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 820),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                for (var i = 0; i < items.length; i++)
-                  _BottomNavItem(
-                    icon: items[i].$1,
-                    label: items[i].$2,
-                    selected: i == selectedIndex,
-                    onTap: () => onSelected(i),
-                  ),
-              ],
-            ),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 820),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              for (var i = 0; i < items.length; i++)
+                _BottomNavItem(
+                  icon: items[i].$1,
+                  label: items[i].$2,
+                  selected: i == selectedIndex,
+                  onTap: () => onSelected(i),
+                ),
+            ],
           ),
         ),
       ),

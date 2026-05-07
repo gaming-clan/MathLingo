@@ -27,6 +27,28 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
+  void _onProfilePressed() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Profili do të shtohet së shpejti.'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _onNotificationsPressed() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Njoftimet do të shtohen së shpejti.'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _onTabSelected(int index) {
+    setState(() => _selectedIndex = index);
+  }
+
   Widget _buildCurrentPage() {
     switch (_selectedIndex) {
       case 0:
@@ -74,17 +96,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CosmicColors.background,
-      appBar: const CosmicTopBar(),
-      body: SafeArea(
-        top: false,
-        child: KeyedSubtree(
-          key: ValueKey(_selectedIndex),
-          child: _buildCurrentPage(),
-        ),
+      appBar: CosmicTopBar(
+        onProfilePressed: _onProfilePressed,
+        onNotificationsPressed: _onNotificationsPressed,
       ),
+      body: _buildCurrentPage(),
       bottomNavigationBar: CosmicBottomNav(
         selectedIndex: _selectedIndex,
-        onSelected: (index) => setState(() => _selectedIndex = index),
+        onSelected: _onTabSelected,
       ),
     );
   }
@@ -106,71 +125,32 @@ class _DashboardPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return ResponsivePage(
       maxWidth: 1120,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isWide = constraints.maxWidth >= 900;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.dashboardWelcomeTitle,
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  color: CosmicColors.primaryContainer,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.dashboardWelcomeSubtitle,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 28),
-              if (isWide) ...[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: _GamifyCard(onStart: onStartGamifyExercise),
-                    ),
-                    const SizedBox(width: 24),
-                    const Expanded(flex: 4, child: _ProgressModuleCard()),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: _QuickActionsCard(
-                        onStartChallenge: onStartChallenge,
-                        onStartGamifyExercise: onStartGamifyExercise,
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    Expanded(
-                      flex: 4,
-                      child: _DailyChallengeCard(
-                        onStart: onStartGeometryChallenge,
-                      ),
-                    ),
-                  ],
-                ),
-              ] else ...[
-                _GamifyCard(onStart: onStartGamifyExercise),
-                const SizedBox(height: 24),
-                _QuickActionsCard(
-                  onStartChallenge: onStartChallenge,
-                  onStartGamifyExercise: onStartGamifyExercise,
-                ),
-                const SizedBox(height: 24),
-                const _ProgressModuleCard(),
-                const SizedBox(height: 24),
-                _DailyChallengeCard(onStart: onStartGeometryChallenge),
-              ],
-            ],
-          );
-        },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.dashboardWelcomeTitle,
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+              color: CosmicColors.primaryContainer,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.dashboardWelcomeSubtitle,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 28),
+          _GamifyCard(onStart: onStartGamifyExercise),
+          const SizedBox(height: 24),
+          _QuickActionsCard(
+            onStartChallenge: onStartChallenge,
+            onStartGamifyExercise: onStartGamifyExercise,
+          ),
+          const SizedBox(height: 24),
+          const _ProgressModuleCard(),
+          const SizedBox(height: 24),
+          _DailyChallengeCard(onStart: onStartGeometryChallenge),
+        ],
       ),
     );
   }
@@ -186,57 +166,34 @@ class _DailyChallengeCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return GlassPanel(
       padding: const EdgeInsets.all(18),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isWide = constraints.maxWidth >= 620;
-          final mascot = const MascotFrame(size: 220);
-          final content = Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _NeonChip(
-                icon: Icons.local_fire_department,
-                label: l10n.tabDailyChallenge,
-                color: CosmicColors.secondaryContainer,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                l10n.dashboardDailyChallengeTitle,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                l10n.dashboardDailyChallengeDescription,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 22),
-              CosmicButton(
-                key: const ValueKey('start-challenge'),
-                label: l10n.dashboardStartChallenge,
-                icon: Icons.arrow_forward,
-                onPressed: onStart,
-              ),
-            ],
-          );
-
-          if (!isWide) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(child: mascot),
-                const SizedBox(height: 18),
-                content,
-              ],
-            );
-          }
-
-          return Row(
-            children: [
-              Expanded(child: Center(child: mascot)),
-              const SizedBox(width: 24),
-              Expanded(child: content),
-            ],
-          );
-        },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Center(child: RepaintBoundary(child: MascotFrame(size: 220))),
+          const SizedBox(height: 18),
+          _NeonChip(
+            icon: Icons.local_fire_department,
+            label: l10n.tabDailyChallenge,
+            color: CosmicColors.secondaryContainer,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            l10n.dashboardDailyChallengeTitle,
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            l10n.dashboardDailyChallengeDescription,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 22),
+          CosmicButton(
+            key: const ValueKey('start-challenge'),
+            label: l10n.dashboardStartChallenge,
+            icon: Icons.arrow_forward,
+            onPressed: onStart,
+          ),
+        ],
       ),
     );
   }
