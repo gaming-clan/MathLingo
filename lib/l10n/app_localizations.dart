@@ -100,6 +100,24 @@ abstract class AppLocalizations {
   /// **'MathLingo - Aventura e Matematikës'**
   String get appTitle;
 
+  /// No description provided for @commonPointsLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pikët'**
+  String get commonPointsLabel;
+
+  /// No description provided for @commonAccuracyLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Saktësia'**
+  String get commonAccuracyLabel;
+
+  /// No description provided for @commonContinue.
+  ///
+  /// In sq, this message translates to:
+  /// **'Vazhdo'**
+  String get commonContinue;
+
   /// No description provided for @tabDailyChallenge.
   ///
   /// In sq, this message translates to:
@@ -225,6 +243,311 @@ abstract class AppLocalizations {
   /// In sq, this message translates to:
   /// **'Pjesëtim'**
   String get dashboardOperationDivision;
+
+  /// No description provided for @challengeKicker.
+  ///
+  /// In sq, this message translates to:
+  /// **'ALGJEBRA BAZË'**
+  String get challengeKicker;
+
+  /// No description provided for @challengeTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Zgjidh ekuacionin'**
+  String get challengeTitle;
+
+  /// No description provided for @challengeScoreLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pikët: {score}'**
+  String challengeScoreLabel(int score);
+
+  /// No description provided for @challengeCorrectFeedback.
+  ///
+  /// In sq, this message translates to:
+  /// **'Saktë! Vazhdon fluturimi.'**
+  String get challengeCorrectFeedback;
+
+  /// No description provided for @challengeIncorrectFeedback.
+  ///
+  /// In sq, this message translates to:
+  /// **'Provo përsëri. Je shumë afër.'**
+  String get challengeIncorrectFeedback;
+
+  /// No description provided for @resultsTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Bravo!'**
+  String get resultsTitle;
+
+  /// No description provided for @resultsSubtitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Përfundove me sukses sfidën.'**
+  String get resultsSubtitle;
+
+  /// No description provided for @geometryKicker.
+  ///
+  /// In sq, this message translates to:
+  /// **'GJEOMETRIA BAZË'**
+  String get geometryKicker;
+
+  /// No description provided for @geometryTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Sfida Gjeometrike'**
+  String get geometryTitle;
+
+  /// No description provided for @geometryScoreLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pikët: {score}'**
+  String geometryScoreLabel(int score);
+
+  /// No description provided for @geometryCorrectFeedback.
+  ///
+  /// In sq, this message translates to:
+  /// **'Saktë! Forma u analizua.'**
+  String get geometryCorrectFeedback;
+
+  /// No description provided for @geometryIncorrectFeedback.
+  ///
+  /// In sq, this message translates to:
+  /// **'Jo ende. Shiko matjet dhe provo përsëri.'**
+  String get geometryIncorrectFeedback;
+
+  /// No description provided for @geometryRectanglePrompt.
+  ///
+  /// In sq, this message translates to:
+  /// **'Sa është sipërfaqja e drejtkëndëshit?'**
+  String get geometryRectanglePrompt;
+
+  /// No description provided for @geometryTrianglePrompt.
+  ///
+  /// In sq, this message translates to:
+  /// **'Sa është sipërfaqja e trekëndëshit?'**
+  String get geometryTrianglePrompt;
+
+  /// No description provided for @geometrySquarePrompt.
+  ///
+  /// In sq, this message translates to:
+  /// **'Sa është perimetri i katrorit?'**
+  String get geometrySquarePrompt;
+
+  /// No description provided for @geometryRectangleMeasurement.
+  ///
+  /// In sq, this message translates to:
+  /// **'gjerësi {width}, lartësi {height}'**
+  String geometryRectangleMeasurement(int width, int height);
+
+  /// No description provided for @geometryTriangleMeasurement.
+  ///
+  /// In sq, this message translates to:
+  /// **'bazë {width}, lartësi {height}'**
+  String geometryTriangleMeasurement(int width, int height);
+
+  /// No description provided for @geometrySquareMeasurement.
+  ///
+  /// In sq, this message translates to:
+  /// **'brinja {width}'**
+  String geometrySquareMeasurement(int width);
+
+  /// No description provided for @lessonsToolsTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Mjetet e Llogaritjes'**
+  String get lessonsToolsTitle;
+
+  /// No description provided for @progressPageTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Bravo!'**
+  String get progressPageTitle;
+
+  /// No description provided for @progressPageSubtitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Progresi yt po rritet çdo ditë.'**
+  String get progressPageSubtitle;
+
+  /// No description provided for @tablesTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Tabelat Matematikore'**
+  String get tablesTitle;
+
+  /// No description provided for @tablesSubtitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Praktiko dhe zotëro të gjitha operacionet'**
+  String get tablesSubtitle;
+
+  /// No description provided for @tablesTabAddition.
+  ///
+  /// In sq, this message translates to:
+  /// **'Mbledhje +'**
+  String get tablesTabAddition;
+
+  /// No description provided for @tablesTabSubtraction.
+  ///
+  /// In sq, this message translates to:
+  /// **'Zbritje -'**
+  String get tablesTabSubtraction;
+
+  /// No description provided for @tablesTabMultiplication.
+  ///
+  /// In sq, this message translates to:
+  /// **'Shumëzim ×'**
+  String get tablesTabMultiplication;
+
+  /// No description provided for @tablesTabDivision.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pjesëtim ÷'**
+  String get tablesTabDivision;
+
+  /// No description provided for @tablesHeader.
+  ///
+  /// In sq, this message translates to:
+  /// **'{operation} - Tabela e {table}'**
+  String tablesHeader(Object operation, int table);
+
+  /// No description provided for @tablesChooseNumber.
+  ///
+  /// In sq, this message translates to:
+  /// **'Zgjidh numrin'**
+  String get tablesChooseNumber;
+
+  /// No description provided for @tablesEquationSnackBar.
+  ///
+  /// In sq, this message translates to:
+  /// **'{selectedTable} {symbol} {operand} = {result}'**
+  String tablesEquationSnackBar(
+    int selectedTable,
+    Object symbol,
+    int operand,
+    int result,
+  );
+
+  /// No description provided for @gamifyScreenTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Argëto Ushtrimet'**
+  String get gamifyScreenTitle;
+
+  /// No description provided for @gamifyInputTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fotografo ose Shkruaj Ushtrimin'**
+  String get gamifyInputTitle;
+
+  /// No description provided for @gamifyInputSubtitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Zgjedh çfarëdo mënyre që të preferosh për të futur ushtrimin matematikor.'**
+  String get gamifyInputSubtitle;
+
+  /// No description provided for @gamifyClear.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fshij'**
+  String get gamifyClear;
+
+  /// No description provided for @gamifySolve.
+  ///
+  /// In sq, this message translates to:
+  /// **'Zgjidh'**
+  String get gamifySolve;
+
+  /// No description provided for @gamifySolutionTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'✨ Zgjidhja Argëtuese ✨'**
+  String get gamifySolutionTitle;
+
+  /// No description provided for @gamifyRecognizedTextLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Teksti i Njohur:'**
+  String get gamifyRecognizedTextLabel;
+
+  /// No description provided for @gamifyCameraButton.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fotografo'**
+  String get gamifyCameraButton;
+
+  /// No description provided for @gamifyGalleryButton.
+  ///
+  /// In sq, this message translates to:
+  /// **'Galeria'**
+  String get gamifyGalleryButton;
+
+  /// No description provided for @gamifyWriteExerciseLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Shkruaj Ushtrimin'**
+  String get gamifyWriteExerciseLabel;
+
+  /// No description provided for @gamifyExerciseHint.
+  ///
+  /// In sq, this message translates to:
+  /// **'Shembull: 15 + 7'**
+  String get gamifyExerciseHint;
+
+  /// No description provided for @gamifyRecognizedPlaceholder.
+  ///
+  /// In sq, this message translates to:
+  /// **'Ekuacioni u identifikua nga imazhi...'**
+  String get gamifyRecognizedPlaceholder;
+
+  /// No description provided for @gamifyEmptyEquationError.
+  ///
+  /// In sq, this message translates to:
+  /// **'Ju lutemi shkruani ose fotografoni një ekuacion.'**
+  String get gamifyEmptyEquationError;
+
+  /// No description provided for @gamifyImagePickError.
+  ///
+  /// In sq, this message translates to:
+  /// **'Gabim në zgjedhjen e imazhit: {error}'**
+  String gamifyImagePickError(Object error);
+
+  /// No description provided for @gamifyAdditionSolution.
+  ///
+  /// In sq, this message translates to:
+  /// **'🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} + {num2} = ?\n\n📚 HAPI I PARË: Imagjinoni {num1} ballona që ngrihen në qiell!\n🎈 HAPI I DYTË: Shtojmë edhe {num2} ballona - tani kemi {answer} në total!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Çdo shifër në {answer} përfaqëson një yll në qiellin e natës! 🌟'**
+  String gamifyAdditionSolution(int num1, int num2, int answer);
+
+  /// No description provided for @gamifySubtractionSolution.
+  ///
+  /// In sq, this message translates to:
+  /// **'🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} - {num2} = ?\n\n🍎 HAPI I PARË: Kemi {num1} mollë të shijshme në një kosh!\n😋 HAPI I DYTË: Hamë {num2} mollë - mbeten {answer} mollë të shijshme!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: {answer} janë mollët që mbeten për piknikun tënd! 🍎'**
+  String gamifySubtractionSolution(int num1, int num2, int answer);
+
+  /// No description provided for @gamifyMultiplicationSolution.
+  ///
+  /// In sq, this message translates to:
+  /// **'🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} × {num2} = ?\n\n🏗️ HAPI I PARË: Ndërtojmë një fort me {num1} kube në çdo rresht!\n🏰 HAPI I DYTË: Forti ka {num2} rreshta - në total {answer} kube!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Shumëzimi është si të ndërtosh me blloqe - sa më shumë rreshta, aq më i madh forti! 📦'**
+  String gamifyMultiplicationSolution(int num1, int num2, int answer);
+
+  /// No description provided for @gamifyDivisionSolution.
+  ///
+  /// In sq, this message translates to:
+  /// **'🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} ÷ {num2} = ?\n\n🍕 HAPI I PARË: Kemi {num1} pjesë pice për t’i ndarë!\n👨‍👩‍👧‍👦 HAPI I DYTË: I ndajmë mes {num2} shokëve - secili merr {answer} pjesë!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Pjesëtimi është si të ndash një surprizë - çdo mik merr pjesën e vet! 🎉'**
+  String gamifyDivisionSolution(int num1, int num2, int answer);
+
+  /// No description provided for @gamifyGenericSolution.
+  ///
+  /// In sq, this message translates to:
+  /// **'🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni juaj: \"{exercise}\"\n\n📚 Duket si një sfidë interesante!\n🧮 Këtu janë disa këshilla për ta zgjidhur:\n\n1. 🔍 Shikoni me kujdes numrat në ekuacion\n2. 🧠 Mendoni se çfarë operacioni të përdorni (+, -, ×, ÷)\n3. ✍️ Shkruani hap pas hapi\n4. ✅ Kontrolloni përgjigjen tuaj\n\n💡 Kujtohuni: Matematika është një lojë argëtuese! 🎮\n\nPër shembull:\n- 5 + 3 = 8 (Mbledhje)\n- 10 - 4 = 6 (Zbritje)\n- 7 × 2 = 14 (Shumëzim)\n- 12 ÷ 3 = 4 (Pjesëtim)'**
+  String gamifyGenericSolution(Object exercise);
+
+  /// No description provided for @gamifyInvalidSolution.
+  ///
+  /// In sq, this message translates to:
+  /// **'🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni: \"{exercise}\"\n\nHmm, duhet të jetë më i qartë! 🤔\n📝 Përpiquni ta rishkruani ekuacionin me numra dhe operacione të qarta.\n\nShembuj të mirë:\n✅ \"5 + 3\"\n✅ \"10 - 7\"\n✅ \"6 * 4\"\n✅ \"20 / 5\"\n\nPërpiquni përsëri! 💪'**
+  String gamifyInvalidSolution(Object exercise);
 }
 
 class _AppLocalizationsDelegate

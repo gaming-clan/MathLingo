@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../app/app_routes.dart';
 import '../../../colors.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
@@ -20,6 +21,7 @@ class ResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: CosmicColors.background,
       appBar: const CosmicTopBar(),
@@ -28,7 +30,7 @@ class ResultsScreen extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Bravo!',
+              l10n.resultsTitle,
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 color: CosmicColors.primary,
                 fontSize: 46,
@@ -36,7 +38,7 @@ class ResultsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Përfundove me sukses sfidën.',
+              l10n.resultsSubtitle,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 30),
@@ -47,7 +49,7 @@ class ResultsScreen extends StatelessWidget {
                 Expanded(
                   child: ScoreCard(
                     value: '+$points',
-                    label: 'Pikët',
+                    label: l10n.commonPointsLabel,
                     icon: Icons.workspace_premium,
                     color: CosmicColors.tertiary,
                   ),
@@ -56,7 +58,7 @@ class ResultsScreen extends StatelessWidget {
                 Expanded(
                   child: ScoreCard(
                     value: '$accuracy%',
-                    label: 'Saktësia',
+                    label: l10n.commonAccuracyLabel,
                     icon: Icons.my_location,
                     color: CosmicColors.secondary,
                   ),
@@ -65,7 +67,7 @@ class ResultsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             CosmicButton(
-              label: 'Vazhdo',
+              label: l10n.commonContinue,
               icon: Icons.arrow_forward,
               onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
                 AppRoutes.dashboard,

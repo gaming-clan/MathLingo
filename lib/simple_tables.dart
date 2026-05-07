@@ -1,9 +1,53 @@
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
+import 'l10n/app_localizations.dart';
 import 'responsive.dart';
 
 const _tableSnackBarMargin = EdgeInsets.fromLTRB(16, 8, 16, 96);
+
+enum _TableOperation { addition, subtraction, multiplication, division }
+
+extension _TableOperationX on _TableOperation {
+  String label(AppLocalizations l10n) {
+    switch (this) {
+      case _TableOperation.addition:
+        return l10n.dashboardOperationAddition;
+      case _TableOperation.subtraction:
+        return l10n.dashboardOperationSubtraction;
+      case _TableOperation.multiplication:
+        return l10n.dashboardOperationMultiplication;
+      case _TableOperation.division:
+        return l10n.dashboardOperationDivision;
+    }
+  }
+
+  String tabLabel(AppLocalizations l10n) {
+    switch (this) {
+      case _TableOperation.addition:
+        return l10n.tablesTabAddition;
+      case _TableOperation.subtraction:
+        return l10n.tablesTabSubtraction;
+      case _TableOperation.multiplication:
+        return l10n.tablesTabMultiplication;
+      case _TableOperation.division:
+        return l10n.tablesTabDivision;
+    }
+  }
+
+  String get symbol {
+    switch (this) {
+      case _TableOperation.addition:
+        return '+';
+      case _TableOperation.subtraction:
+        return '−';
+      case _TableOperation.multiplication:
+        return '×';
+      case _TableOperation.division:
+        return '÷';
+    }
+  }
+}
 
 // Simple Operation Tables Screen
 class OperationTablesScreen extends StatefulWidget {
@@ -15,19 +59,18 @@ class OperationTablesScreen extends StatefulWidget {
 
 class _OperationTablesScreenState extends State<OperationTablesScreen> {
   int selectedTable = 1;
-  String selectedOperation = 'Shumëzim';
 
   List<({int operand, int result})> _buildVisibleEntries(
-    String title,
+    _TableOperation operation,
     int Function(int, int) calculate,
   ) {
     final entries = <({int operand, int result})>[];
 
     for (var operand = 1; operand <= 10; operand++) {
-      if (title == 'Zbritje' && selectedTable < operand) {
+      if (operation == _TableOperation.subtraction && selectedTable < operand) {
         continue;
       }
-      if (title == 'Pjesëtim' && selectedTable % operand != 0) {
+      if (operation == _TableOperation.division && selectedTable % operand != 0) {
         continue;
       }
 
@@ -39,6 +82,7 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return DefaultTabController(
       length: 4,
       child: Column(
@@ -53,13 +97,13 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1120),
-                child: const Align(
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Tabelat Matematikore',
+                        l10n.tablesTitle,
                         style: TextStyle(
                           color: CosmicColors.primaryContainer,
                           fontSize: 32,
@@ -68,7 +112,7 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        'Praktiko dhe zotëro të gjitha operacionet',
+                        l10n.tablesSubtitle,
                         style: TextStyle(
                           color: CosmicColors.onSurfaceVariant,
                           fontSize: 14,
@@ -97,21 +141,24 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                       width: 2,
                     ),
                   ),
-                  child: const TabBar(
+                  child: TabBar(
                     dividerColor: Colors.transparent,
                     indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: BoxDecoration(
+                    indicator: const BoxDecoration(
                       color: CosmicColors.primaryContainer,
                       borderRadius: BorderRadius.all(Radius.circular(16)),
                     ),
                     labelColor: Colors.white,
-                    labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    labelStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                     unselectedLabelColor: Colors.white,
                     tabs: [
-                      Tab(text: 'Mbledhje +'),
-                      Tab(text: 'Zbritje -'),
-                      Tab(text: 'Shumëzim ×'),
-                      Tab(text: 'Pjesëtim ÷'),
+                      Tab(text: _TableOperation.addition.tabLabel(l10n)),
+                      Tab(text: _TableOperation.subtraction.tabLabel(l10n)),
+                      Tab(text: _TableOperation.multiplication.tabLabel(l10n)),
+                      Tab(text: _TableOperation.division.tabLabel(l10n)),
                     ],
                   ),
                 ),
@@ -122,14 +169,26 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
           Expanded(
             child: TabBarView(
               children: [
-                _buildOperationTable('Mbledhje', (a, b) => a + b, Colors.green),
-                _buildOperationTable('Zbritje', (a, b) => a - b, Colors.red),
                 _buildOperationTable(
-                  'Shumëzim',
+                  _TableOperation.addition,
+                  (a, b) => a + b,
+                  Colors.green,
+                ),
+                _buildOperationTable(
+                  _TableOperation.subtraction,
+                  (a, b) => a - b,
+                  Colors.red,
+                ),
+                _buildOperationTable(
+                  _TableOperation.multiplication,
                   (a, b) => a * b,
                   Colors.orange,
                 ),
-                _buildOperationTable('Pjesëtim', (a, b) => a ~/ b, Colors.blue),
+                _buildOperationTable(
+                  _TableOperation.division,
+                  (a, b) => a ~/ b,
+                  Colors.blue,
+                ),
               ],
             ),
           ),
@@ -139,11 +198,13 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
   }
 
   Widget _buildOperationTable(
-    String title,
+    _TableOperation operation,
     int Function(int, int) calculate,
     Color color,
   ) {
-    final entries = _buildVisibleEntries(title, calculate);
+    final l10n = AppLocalizations.of(context);
+    final entries = _buildVisibleEntries(operation, calculate);
+    final operationLabel = operation.label(l10n);
 
     return Column(
       children: [
@@ -152,7 +213,7 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
           child: Column(
             children: [
               Text(
-                '$title - Tabela e ${selectedTable.toString()}',
+                l10n.tablesHeader(operationLabel, selectedTable),
                 style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w900,
@@ -160,9 +221,13 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Zgjidh numrin',
-                style: TextStyle(fontSize: 18, color: CosmicColors.onSurfaceVariant, fontWeight: FontWeight.bold),
+              Text(
+                l10n.tablesChooseNumber,
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: CosmicColors.onSurfaceVariant,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -237,13 +302,7 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                   final entry = entries[index];
                   final num = entry.operand;
                   final result = entry.result;
-                  String op = title == 'Mbledhje'
-                      ? '+'
-                      : title == 'Zbritje'
-                      ? '−'
-                      : title == 'Shumëzim'
-                      ? '×'
-                      : '÷';
+                  final op = operation.symbol;
                   return Card(
                     color: color.withValues(alpha: 0.2),
                     elevation: 10,
@@ -259,7 +318,14 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('$selectedTable $op $num = $result'),
+                            content: Text(
+                              l10n.tablesEquationSnackBar(
+                                selectedTable,
+                                op,
+                                num,
+                                result,
+                              ),
+                            ),
                             duration: const Duration(seconds: 1),
                             backgroundColor: color,
                             behavior: SnackBarBehavior.floating,

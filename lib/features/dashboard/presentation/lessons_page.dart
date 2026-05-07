@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../colors.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/glass_panel.dart';
@@ -17,14 +18,15 @@ class LessonsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ResponsivePage(
       maxWidth: 960,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionHeader(
-            kicker: 'ALGJEBRA BAZË',
-            title: 'Zgjidh ekuacionin',
+          SectionHeader(
+            kicker: l10n.challengeKicker,
+            title: l10n.challengeTitle,
           ),
           const SizedBox(height: 24),
           const GlassPanel(
@@ -54,7 +56,7 @@ class LessonsPage extends StatelessWidget {
           ),
           const SizedBox(height: 28),
           Text(
-            'Mjetet e Llogaritjes',
+            l10n.lessonsToolsTitle,
             style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: 16),
@@ -69,7 +71,7 @@ class LessonsPage extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           CosmicButton(
-            label: 'Vazhdo',
+            label: l10n.commonContinue,
             icon: Icons.arrow_forward,
             onPressed: onStartGeometryChallenge,
           ),

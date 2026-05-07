@@ -1,13 +1,30 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:math_lingo/l10n/app_localizations.dart';
 import 'package:math_lingo/features/challenges/presentation/challenge_screen.dart';
 import 'package:math_lingo/features/geometry/presentation/geometry_challenge_screen.dart';
 import 'package:math_lingo/main.dart';
 import 'package:math_lingo/models/operation.dart';
 
 void main() {
+  Widget buildLocalizedTestApp(Widget home, {ThemeData? theme}) {
+    return MaterialApp(
+      locale: const Locale('sq'),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      theme: theme ?? ThemeData(useMaterial3: true),
+      home: home,
+    );
+  }
+
   Finder buttonInside(Finder parent, Type buttonType) {
     return find.descendant(of: parent, matching: find.byType(buttonType));
   }
@@ -53,9 +70,8 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: ThemeData(useMaterial3: true),
-        home: GeometryChallengeScreen(sessionLength: 1, random: Random(3)),
+      buildLocalizedTestApp(
+        GeometryChallengeScreen(sessionLength: 1, random: Random(3)),
       ),
     );
 
@@ -82,9 +98,8 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: ThemeData(useMaterial3: true),
-        home: ChallengeScreen(
+      buildLocalizedTestApp(
+        ChallengeScreen(
           operation: Operation.addition,
           sessionLength: 1,
           random: Random(7),

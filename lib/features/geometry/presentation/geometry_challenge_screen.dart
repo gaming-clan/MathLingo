@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../colors.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../models/geometry_question.dart';
 import '../../../models/geometry_shape.dart';
 import '../../../responsive.dart';
@@ -60,20 +61,20 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
         width = random.nextInt(7) + 3;
         height = random.nextInt(6) + 2;
         answer = width * height;
-        prompt = 'Sa është sipërfaqja e drejtkëndëshit?';
-        measurement = 'gjerësi $width, lartësi $height';
+        prompt = '';
+        measurement = '';
       case GeometryShape.triangle:
         width = (random.nextInt(5) + 3) * 2;
         height = random.nextInt(6) + 2;
         answer = (width * height) ~/ 2;
-        prompt = 'Sa është sipërfaqja e trekëndëshit?';
-        measurement = 'bazë $width, lartësi $height';
+        prompt = '';
+        measurement = '';
       case GeometryShape.square:
         width = random.nextInt(8) + 3;
         height = width;
         answer = width * 4;
-        prompt = 'Sa është perimetri i katrorit?';
-        measurement = 'brinja $width';
+        prompt = '';
+        measurement = '';
     }
 
     return GeometryQuestion(
@@ -109,11 +110,12 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
     }
 
     final isCorrect = answer == _question.answer;
+    final l10n = AppLocalizations.of(context);
     setState(() {
       _selectedAnswer = answer;
       _feedback = isCorrect
-          ? 'Saktë! Forma u analizua.'
-          : 'Jo ende. Shiko matjet dhe provo përsëri.';
+          ? l10n.geometryCorrectFeedback
+          : l10n.geometryIncorrectFeedback;
       if (isCorrect) {
         _score += 15;
         _correct += 1;
@@ -148,9 +150,38 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
     });
   }
 
+  String _promptForQuestion(AppLocalizations l10n) {
+    switch (_question.shape) {
+      case GeometryShape.rectangle:
+        return l10n.geometryRectanglePrompt;
+      case GeometryShape.triangle:
+        return l10n.geometryTrianglePrompt;
+      case GeometryShape.square:
+        return l10n.geometrySquarePrompt;
+    }
+  }
+
+  String _measurementForQuestion(AppLocalizations l10n) {
+    switch (_question.shape) {
+      case GeometryShape.rectangle:
+        return l10n.geometryRectangleMeasurement(
+          _question.width,
+          _question.height,
+        );
+      case GeometryShape.triangle:
+        return l10n.geometryTriangleMeasurement(
+          _question.width,
+          _question.height,
+        );
+      case GeometryShape.square:
+        return l10n.geometrySquareMeasurement(_question.width);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final progress = _answered / widget.sessionLength;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: CosmicColors.background,
@@ -160,13 +191,13 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionHeader(
-              kicker: 'GJEOMETRIA BAZË',
-              title: 'Sfida Gjeometrike',
+            SectionHeader(
+              kicker: l10n.geometryKicker,
+              title: l10n.geometryTitle,
             ),
             const SizedBox(height: 18),
             CosmicProgress(
-              label: 'Pikët: $_score',
+              label: l10n.geometryScoreLabel(_score),
               value: progress,
               color: CosmicColors.secondaryContainer,
             ),
@@ -198,13 +229,13 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
                   ),
                   const SizedBox(height: 18),
                   Text(
-                    _question.prompt,
+                    _promptForQuestion(l10n),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    _question.measurement,
+                    _measurementForQuestion(l10n),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),

@@ -12,6 +12,15 @@ class AppLocalizationsSq extends AppLocalizations {
   String get appTitle => 'MathLingo - Aventura e Matematikës';
 
   @override
+  String get commonPointsLabel => 'Pikët';
+
+  @override
+  String get commonAccuracyLabel => 'Saktësia';
+
+  @override
+  String get commonContinue => 'Vazhdo';
+
+  @override
   String get tabDailyChallenge => 'Sfida e Ditës';
 
   @override
@@ -76,4 +85,191 @@ class AppLocalizationsSq extends AppLocalizations {
 
   @override
   String get dashboardOperationDivision => 'Pjesëtim';
+
+  @override
+  String get challengeKicker => 'ALGJEBRA BAZË';
+
+  @override
+  String get challengeTitle => 'Zgjidh ekuacionin';
+
+  @override
+  String challengeScoreLabel(int score) {
+    return 'Pikët: $score';
+  }
+
+  @override
+  String get challengeCorrectFeedback => 'Saktë! Vazhdon fluturimi.';
+
+  @override
+  String get challengeIncorrectFeedback => 'Provo përsëri. Je shumë afër.';
+
+  @override
+  String get resultsTitle => 'Bravo!';
+
+  @override
+  String get resultsSubtitle => 'Përfundove me sukses sfidën.';
+
+  @override
+  String get geometryKicker => 'GJEOMETRIA BAZË';
+
+  @override
+  String get geometryTitle => 'Sfida Gjeometrike';
+
+  @override
+  String geometryScoreLabel(int score) {
+    return 'Pikët: $score';
+  }
+
+  @override
+  String get geometryCorrectFeedback => 'Saktë! Forma u analizua.';
+
+  @override
+  String get geometryIncorrectFeedback =>
+      'Jo ende. Shiko matjet dhe provo përsëri.';
+
+  @override
+  String get geometryRectanglePrompt => 'Sa është sipërfaqja e drejtkëndëshit?';
+
+  @override
+  String get geometryTrianglePrompt => 'Sa është sipërfaqja e trekëndëshit?';
+
+  @override
+  String get geometrySquarePrompt => 'Sa është perimetri i katrorit?';
+
+  @override
+  String geometryRectangleMeasurement(int width, int height) {
+    return 'gjerësi $width, lartësi $height';
+  }
+
+  @override
+  String geometryTriangleMeasurement(int width, int height) {
+    return 'bazë $width, lartësi $height';
+  }
+
+  @override
+  String geometrySquareMeasurement(int width) {
+    return 'brinja $width';
+  }
+
+  @override
+  String get lessonsToolsTitle => 'Mjetet e Llogaritjes';
+
+  @override
+  String get progressPageTitle => 'Bravo!';
+
+  @override
+  String get progressPageSubtitle => 'Progresi yt po rritet çdo ditë.';
+
+  @override
+  String get tablesTitle => 'Tabelat Matematikore';
+
+  @override
+  String get tablesSubtitle => 'Praktiko dhe zotëro të gjitha operacionet';
+
+  @override
+  String get tablesTabAddition => 'Mbledhje +';
+
+  @override
+  String get tablesTabSubtraction => 'Zbritje -';
+
+  @override
+  String get tablesTabMultiplication => 'Shumëzim ×';
+
+  @override
+  String get tablesTabDivision => 'Pjesëtim ÷';
+
+  @override
+  String tablesHeader(Object operation, int table) {
+    return '$operation - Tabela e $table';
+  }
+
+  @override
+  String get tablesChooseNumber => 'Zgjidh numrin';
+
+  @override
+  String tablesEquationSnackBar(
+    int selectedTable,
+    Object symbol,
+    int operand,
+    int result,
+  ) {
+    return '$selectedTable $symbol $operand = $result';
+  }
+
+  @override
+  String get gamifyScreenTitle => 'Argëto Ushtrimet';
+
+  @override
+  String get gamifyInputTitle => 'Fotografo ose Shkruaj Ushtrimin';
+
+  @override
+  String get gamifyInputSubtitle =>
+      'Zgjedh çfarëdo mënyre që të preferosh për të futur ushtrimin matematikor.';
+
+  @override
+  String get gamifyClear => 'Fshij';
+
+  @override
+  String get gamifySolve => 'Zgjidh';
+
+  @override
+  String get gamifySolutionTitle => '✨ Zgjidhja Argëtuese ✨';
+
+  @override
+  String get gamifyRecognizedTextLabel => 'Teksti i Njohur:';
+
+  @override
+  String get gamifyCameraButton => 'Fotografo';
+
+  @override
+  String get gamifyGalleryButton => 'Galeria';
+
+  @override
+  String get gamifyWriteExerciseLabel => 'Shkruaj Ushtrimin';
+
+  @override
+  String get gamifyExerciseHint => 'Shembull: 15 + 7';
+
+  @override
+  String get gamifyRecognizedPlaceholder =>
+      'Ekuacioni u identifikua nga imazhi...';
+
+  @override
+  String get gamifyEmptyEquationError =>
+      'Ju lutemi shkruani ose fotografoni një ekuacion.';
+
+  @override
+  String gamifyImagePickError(Object error) {
+    return 'Gabim në zgjedhjen e imazhit: $error';
+  }
+
+  @override
+  String gamifyAdditionSolution(int num1, int num2, int answer) {
+    return '🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: $num1 + $num2 = ?\n\n📚 HAPI I PARË: Imagjinoni $num1 ballona që ngrihen në qiell!\n🎈 HAPI I DYTË: Shtojmë edhe $num2 ballona - tani kemi $answer në total!\n✨ PËRGJIGJA FINALE: $answer\n\n💡 TRIKU ARGËTUES: Çdo shifër në $answer përfaqëson një yll në qiellin e natës! 🌟';
+  }
+
+  @override
+  String gamifySubtractionSolution(int num1, int num2, int answer) {
+    return '🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: $num1 - $num2 = ?\n\n🍎 HAPI I PARË: Kemi $num1 mollë të shijshme në një kosh!\n😋 HAPI I DYTË: Hamë $num2 mollë - mbeten $answer mollë të shijshme!\n✨ PËRGJIGJA FINALE: $answer\n\n💡 TRIKU ARGËTUES: $answer janë mollët që mbeten për piknikun tënd! 🍎';
+  }
+
+  @override
+  String gamifyMultiplicationSolution(int num1, int num2, int answer) {
+    return '🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: $num1 × $num2 = ?\n\n🏗️ HAPI I PARË: Ndërtojmë një fort me $num1 kube në çdo rresht!\n🏰 HAPI I DYTË: Forti ka $num2 rreshta - në total $answer kube!\n✨ PËRGJIGJA FINALE: $answer\n\n💡 TRIKU ARGËTUES: Shumëzimi është si të ndërtosh me blloqe - sa më shumë rreshta, aq më i madh forti! 📦';
+  }
+
+  @override
+  String gamifyDivisionSolution(int num1, int num2, int answer) {
+    return '🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: $num1 ÷ $num2 = ?\n\n🍕 HAPI I PARË: Kemi $num1 pjesë pice për t’i ndarë!\n👨‍👩‍👧‍👦 HAPI I DYTË: I ndajmë mes $num2 shokëve - secili merr $answer pjesë!\n✨ PËRGJIGJA FINALE: $answer\n\n💡 TRIKU ARGËTUES: Pjesëtimi është si të ndash një surprizë - çdo mik merr pjesën e vet! 🎉';
+  }
+
+  @override
+  String gamifyGenericSolution(Object exercise) {
+    return '🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni juaj: \"$exercise\"\n\n📚 Duket si një sfidë interesante!\n🧮 Këtu janë disa këshilla për ta zgjidhur:\n\n1. 🔍 Shikoni me kujdes numrat në ekuacion\n2. 🧠 Mendoni se çfarë operacioni të përdorni (+, -, ×, ÷)\n3. ✍️ Shkruani hap pas hapi\n4. ✅ Kontrolloni përgjigjen tuaj\n\n💡 Kujtohuni: Matematika është një lojë argëtuese! 🎮\n\nPër shembull:\n- 5 + 3 = 8 (Mbledhje)\n- 10 - 4 = 6 (Zbritje)\n- 7 × 2 = 14 (Shumëzim)\n- 12 ÷ 3 = 4 (Pjesëtim)';
+  }
+
+  @override
+  String gamifyInvalidSolution(Object exercise) {
+    return '🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni: \"$exercise\"\n\nHmm, duhet të jetë më i qartë! 🤔\n📝 Përpiquni ta rishkruani ekuacionin me numra dhe operacione të qarta.\n\nShembuj të mirë:\n✅ \"5 + 3\"\n✅ \"10 - 7\"\n✅ \"6 * 4\"\n✅ \"20 / 5\"\n\nPërpiquni përsëri! 💪';
+  }
 }

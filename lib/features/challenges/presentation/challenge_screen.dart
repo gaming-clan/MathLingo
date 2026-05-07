@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../colors.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../models/math_question.dart';
 import '../../../models/operation.dart';
 import '../../../responsive.dart';
@@ -104,11 +105,12 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     }
 
     final isCorrect = answer == _question.answer;
+    final l10n = AppLocalizations.of(context);
     setState(() {
       _selectedAnswer = answer;
       _feedback = isCorrect
-          ? 'Saktë! Vazhdon fluturimi.'
-          : 'Provo përsëri. Je shumë afër.';
+          ? l10n.challengeCorrectFeedback
+          : l10n.challengeIncorrectFeedback;
       if (isCorrect) {
         _score += 10;
         _correct += 1;
@@ -146,6 +148,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   @override
   Widget build(BuildContext context) {
     final progress = _answered / widget.sessionLength;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: CosmicColors.background,
@@ -155,13 +158,13 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionHeader(
-              kicker: 'ALGJEBRA BAZË',
-              title: 'Zgjidh ekuacionin',
+            SectionHeader(
+              kicker: l10n.challengeKicker,
+              title: l10n.challengeTitle,
             ),
             const SizedBox(height: 18),
             CosmicProgress(
-              label: 'Pikët: $_score',
+              label: l10n.challengeScoreLabel(_score),
               value: progress,
               color: CosmicColors.secondaryContainer,
             ),

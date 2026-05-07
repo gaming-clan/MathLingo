@@ -1,6 +1,9 @@
 {
   "@@locale": "sq",
   "appTitle": "MathLingo - Aventura e Matematikës",
+  "commonPointsLabel": "Pikët",
+  "commonAccuracyLabel": "Saktësia",
+  "commonContinue": "Vazhdo",
   "tabDailyChallenge": "Sfida e Ditës",
   "tabLessons": "Mësime",
   "tabTables": "Tabelat",
@@ -21,5 +24,185 @@
   "dashboardOperationAddition": "Mbledhje",
   "dashboardOperationSubtraction": "Zbritje",
   "dashboardOperationMultiplication": "Shumëzim",
-  "dashboardOperationDivision": "Pjesëtim"
+  "dashboardOperationDivision": "Pjesëtim",
+  "challengeKicker": "ALGJEBRA BAZË",
+  "challengeTitle": "Zgjidh ekuacionin",
+  "challengeScoreLabel": "Pikët: {score}",
+  "@challengeScoreLabel": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeCorrectFeedback": "Saktë! Vazhdon fluturimi.",
+  "challengeIncorrectFeedback": "Provo përsëri. Je shumë afër.",
+  "resultsTitle": "Bravo!",
+  "resultsSubtitle": "Përfundove me sukses sfidën.",
+  "geometryKicker": "GJEOMETRIA BAZË",
+  "geometryTitle": "Sfida Gjeometrike",
+  "geometryScoreLabel": "Pikët: {score}",
+  "@geometryScoreLabel": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "geometryCorrectFeedback": "Saktë! Forma u analizua.",
+  "geometryIncorrectFeedback": "Jo ende. Shiko matjet dhe provo përsëri.",
+  "geometryRectanglePrompt": "Sa është sipërfaqja e drejtkëndëshit?",
+  "geometryTrianglePrompt": "Sa është sipërfaqja e trekëndëshit?",
+  "geometrySquarePrompt": "Sa është perimetri i katrorit?",
+  "geometryRectangleMeasurement": "gjerësi {width}, lartësi {height}",
+  "@geometryRectangleMeasurement": {
+    "placeholders": {
+      "width": {
+        "type": "int"
+      },
+      "height": {
+        "type": "int"
+      }
+    }
+  },
+  "geometryTriangleMeasurement": "bazë {width}, lartësi {height}",
+  "@geometryTriangleMeasurement": {
+    "placeholders": {
+      "width": {
+        "type": "int"
+      },
+      "height": {
+        "type": "int"
+      }
+    }
+  },
+  "geometrySquareMeasurement": "brinja {width}",
+  "@geometrySquareMeasurement": {
+    "placeholders": {
+      "width": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsToolsTitle": "Mjetet e Llogaritjes",
+  "progressPageTitle": "Bravo!",
+  "progressPageSubtitle": "Progresi yt po rritet çdo ditë.",
+  "tablesTitle": "Tabelat Matematikore",
+  "tablesSubtitle": "Praktiko dhe zotëro të gjitha operacionet",
+  "tablesTabAddition": "Mbledhje +",
+  "tablesTabSubtraction": "Zbritje -",
+  "tablesTabMultiplication": "Shumëzim ×",
+  "tablesTabDivision": "Pjesëtim ÷",
+  "tablesHeader": "{operation} - Tabela e {table}",
+  "@tablesHeader": {
+    "placeholders": {
+      "operation": {},
+      "table": {
+        "type": "int"
+      }
+    }
+  },
+  "tablesChooseNumber": "Zgjidh numrin",
+  "tablesEquationSnackBar": "{selectedTable} {symbol} {operand} = {result}",
+  "@tablesEquationSnackBar": {
+    "placeholders": {
+      "selectedTable": {
+        "type": "int"
+      },
+      "symbol": {},
+      "operand": {
+        "type": "int"
+      },
+      "result": {
+        "type": "int"
+      }
+    }
+  },
+  "gamifyScreenTitle": "Argëto Ushtrimet",
+  "gamifyInputTitle": "Fotografo ose Shkruaj Ushtrimin",
+  "gamifyInputSubtitle": "Zgjedh çfarëdo mënyre që të preferosh për të futur ushtrimin matematikor.",
+  "gamifyClear": "Fshij",
+  "gamifySolve": "Zgjidh",
+  "gamifySolutionTitle": "✨ Zgjidhja Argëtuese ✨",
+  "gamifyRecognizedTextLabel": "Teksti i Njohur:",
+  "gamifyCameraButton": "Fotografo",
+  "gamifyGalleryButton": "Galeria",
+  "gamifyWriteExerciseLabel": "Shkruaj Ushtrimin",
+  "gamifyExerciseHint": "Shembull: 15 + 7",
+  "gamifyRecognizedPlaceholder": "Ekuacioni u identifikua nga imazhi...",
+  "gamifyEmptyEquationError": "Ju lutemi shkruani ose fotografoni një ekuacion.",
+  "gamifyImagePickError": "Gabim në zgjedhjen e imazhit: {error}",
+  "@gamifyImagePickError": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "gamifyAdditionSolution": "🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} + {num2} = ?\n\n📚 HAPI I PARË: Imagjinoni {num1} ballona që ngrihen në qiell!\n🎈 HAPI I DYTË: Shtojmë edhe {num2} ballona - tani kemi {answer} në total!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Çdo shifër në {answer} përfaqëson një yll në qiellin e natës! 🌟",
+  "@gamifyAdditionSolution": {
+    "placeholders": {
+      "num1": {
+        "type": "int"
+      },
+      "num2": {
+        "type": "int"
+      },
+      "answer": {
+        "type": "int"
+      }
+    }
+  },
+  "gamifySubtractionSolution": "🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} - {num2} = ?\n\n🍎 HAPI I PARË: Kemi {num1} mollë të shijshme në një kosh!\n😋 HAPI I DYTË: Hamë {num2} mollë - mbeten {answer} mollë të shijshme!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: {answer} janë mollët që mbeten për piknikun tënd! 🍎",
+  "@gamifySubtractionSolution": {
+    "placeholders": {
+      "num1": {
+        "type": "int"
+      },
+      "num2": {
+        "type": "int"
+      },
+      "answer": {
+        "type": "int"
+      }
+    }
+  },
+  "gamifyMultiplicationSolution": "🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} × {num2} = ?\n\n🏗️ HAPI I PARË: Ndërtojmë një fort me {num1} kube në çdo rresht!\n🏰 HAPI I DYTË: Forti ka {num2} rreshta - në total {answer} kube!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Shumëzimi është si të ndërtosh me blloqe - sa më shumë rreshta, aq më i madh forti! 📦",
+  "@gamifyMultiplicationSolution": {
+    "placeholders": {
+      "num1": {
+        "type": "int"
+      },
+      "num2": {
+        "type": "int"
+      },
+      "answer": {
+        "type": "int"
+      }
+    }
+  },
+  "gamifyDivisionSolution": "🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} ÷ {num2} = ?\n\n🍕 HAPI I PARË: Kemi {num1} pjesë pice për t’i ndarë!\n👨‍👩‍👧‍👦 HAPI I DYTË: I ndajmë mes {num2} shokëve - secili merr {answer} pjesë!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Pjesëtimi është si të ndash një surprizë - çdo mik merr pjesën e vet! 🎉",
+  "@gamifyDivisionSolution": {
+    "placeholders": {
+      "num1": {
+        "type": "int"
+      },
+      "num2": {
+        "type": "int"
+      },
+      "answer": {
+        "type": "int"
+      }
+    }
+  },
+  "gamifyGenericSolution": "🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni juaj: \"{exercise}\"\n\n📚 Duket si një sfidë interesante!\n🧮 Këtu janë disa këshilla për ta zgjidhur:\n\n1. 🔍 Shikoni me kujdes numrat në ekuacion\n2. 🧠 Mendoni se çfarë operacioni të përdorni (+, -, ×, ÷)\n3. ✍️ Shkruani hap pas hapi\n4. ✅ Kontrolloni përgjigjen tuaj\n\n💡 Kujtohuni: Matematika është një lojë argëtuese! 🎮\n\nPër shembull:\n- 5 + 3 = 8 (Mbledhje)\n- 10 - 4 = 6 (Zbritje)\n- 7 × 2 = 14 (Shumëzim)\n- 12 ÷ 3 = 4 (Pjesëtim)",
+  "@gamifyGenericSolution": {
+    "placeholders": {
+      "exercise": {}
+    }
+  },
+  "gamifyInvalidSolution": "🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni: \"{exercise}\"\n\nHmm, duhet të jetë më i qartë! 🤔\n📝 Përpiquni ta rishkruani ekuacionin me numra dhe operacione të qarta.\n\nShembuj të mirë:\n✅ \"5 + 3\"\n✅ \"10 - 7\"\n✅ \"6 * 4\"\n✅ \"20 / 5\"\n\nPërpiquni përsëri! 💪",
+  "@gamifyInvalidSolution": {
+    "placeholders": {
+      "exercise": {}
+    }
+  }
 }
