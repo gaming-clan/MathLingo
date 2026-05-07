@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 import 'responsive.dart';
 
+const _tableSnackBarMargin = EdgeInsets.fromLTRB(16, 8, 16, 96);
+
 // Simple Operation Tables Screen
 class OperationTablesScreen extends StatefulWidget {
   const OperationTablesScreen({super.key});
@@ -14,6 +16,26 @@ class OperationTablesScreen extends StatefulWidget {
 class _OperationTablesScreenState extends State<OperationTablesScreen> {
   int selectedTable = 1;
   String selectedOperation = 'Shumëzim';
+
+  List<({int operand, int result})> _buildVisibleEntries(
+    String title,
+    int Function(int, int) calculate,
+  ) {
+    final entries = <({int operand, int result})>[];
+
+    for (var operand = 1; operand <= 10; operand++) {
+      if (title == 'Zbritje' && selectedTable < operand) {
+        continue;
+      }
+      if (title == 'Pjesëtim' && selectedTable % operand != 0) {
+        continue;
+      }
+
+      entries.add((operand: operand, result: calculate(selectedTable, operand)));
+    }
+
+    return entries;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +143,8 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
     int Function(int, int) calculate,
     Color color,
   ) {
+    final entries = _buildVisibleEntries(title, calculate);
+
     return Column(
       children: [
         Padding(
@@ -208,10 +232,11 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
                 ),
-                itemCount: 10,
+                itemCount: entries.length,
                 itemBuilder: (context, index) {
-                  int num = index + 1;
-                  int result = calculate(selectedTable, num);
+                  final entry = entries[index];
+                  final num = entry.operand;
+                  final result = entry.result;
                   String op = title == 'Mbledhje'
                       ? '+'
                       : title == 'Zbritje'
@@ -237,6 +262,8 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                             content: Text('$selectedTable $op $num = $result'),
                             duration: const Duration(seconds: 1),
                             backgroundColor: color,
+                            behavior: SnackBarBehavior.floating,
+                            margin: _tableSnackBarMargin,
                           ),
                         );
                       },
@@ -366,7 +393,13 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
     } else {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('E gabuar, provo përsëri!')));
+      ).showSnackBar(
+        const SnackBar(
+          content: Text('E gabuar, provo përsëri!'),
+          behavior: SnackBarBehavior.floating,
+          margin: _tableSnackBarMargin,
+        ),
+      );
     }
   }
 

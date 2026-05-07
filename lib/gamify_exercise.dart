@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'colors.dart';
 import 'responsive.dart';
 
+const _floatingSnackBarMargin = EdgeInsets.fromLTRB(16, 8, 16, 24);
+
 class GamifyExerciseScreen extends StatefulWidget {
   const GamifyExerciseScreen({super.key});
 
@@ -237,7 +239,12 @@ Përpiquni përsëri! 💪
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: CosmicColors.error),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: CosmicColors.error,
+        behavior: SnackBarBehavior.floating,
+        margin: _floatingSnackBarMargin,
+      ),
     );
   }
 
