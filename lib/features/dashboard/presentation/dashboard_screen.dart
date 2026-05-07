@@ -473,34 +473,51 @@ class _ActionTile extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: onTap,
-      child: GlassPanel(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 54,
-              height: 54,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: color.withValues(alpha: 0.12),
-                border: Border.all(color: color.withValues(alpha: 0.35)),
-              ),
-              child: Icon(icon, color: color),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isCompact =
+              constraints.maxHeight < 96 || constraints.maxWidth < 116;
+          final iconBoxSize = isCompact ? 40.0 : 54.0;
+          final iconSize = isCompact ? 20.0 : 24.0;
+          final verticalGap = isCompact ? 8.0 : 12.0;
+          final tilePadding = isCompact ? 8.0 : 12.0;
+          final fontSize = isCompact ? 11.0 : 14.0;
+
+          return GlassPanel(
+            padding: EdgeInsets.all(tilePadding),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: iconBoxSize,
+                  height: iconBoxSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: color.withValues(alpha: 0.12),
+                    border: Border.all(color: color.withValues(alpha: 0.35)),
+                  ),
+                  child: Icon(icon, color: color, size: iconSize),
+                ),
+                SizedBox(height: verticalGap),
+                Flexible(
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    maxLines: isCompact ? 2 : 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: CosmicColors.onSurface,
+                      fontWeight: FontWeight.w800,
+                      fontSize: fontSize,
+                      height: 1.05,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: CosmicColors.onSurface,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

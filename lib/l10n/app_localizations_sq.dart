@@ -292,7 +292,7 @@ class AppLocalizationsSq extends AppLocalizations {
 
   @override
   String get gamifyInputSubtitle =>
-      'Zgjedh çfarëdo mënyre që të preferosh për të futur ushtrimin matematikor.';
+      'Mund ta fotografosh ose ta shkruash ushtrimin. OCR funksionon më mirë me tekst të shtypur dhe imazhe të qarta.';
 
   @override
   String get gamifyClear => 'Fshij';
@@ -326,7 +326,8 @@ class AppLocalizationsSq extends AppLocalizations {
   String get gamifyOcrProcessing => 'Po lexoj tekstin nga imazhi...';
 
   @override
-  String get gamifyOcrNoTextDetected => 'Nuk u gjet tekst në imazh.';
+  String get gamifyOcrNoTextDetected =>
+      'Nuk u gjet tekst në imazh. Provo një foto më të qartë ose shkruaje ushtrimin manualisht.';
 
   @override
   String get gamifyOcrNoEquationFound =>
@@ -387,5 +388,32 @@ class AppLocalizationsSq extends AppLocalizations {
   @override
   String gamifyInvalidSolution(Object exercise) {
     return '🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni: \"$exercise\"\n\nHmm, duhet të jetë më i qartë! 🤔\n📝 Përpiquni ta rishkruani ekuacionin me numra dhe operacione të qarta.\n\nShembuj të mirë:\n✅ \"5 + 3\"\n✅ \"10 - 7\"\n✅ \"6 * 4\"\n✅ \"20 / 5\"\n\nPërpiquni përsëri! 💪';
+  }
+
+  @override
+  String gamifySymbolicSolution(
+    Object exercise,
+    Object leftOperand,
+    Object rightOperand,
+  ) {
+    return '✨ SHPREHJE ALGJEBRIKE ✨\n\nShprehja: $exercise\n\n🔤 Kjo është një shprehje me ndryshore, jo një llogaritje me numra të gatshëm.\n🧩 Termat $leftOperand dhe $rightOperand duhen zëvendësuar me vlera për të gjetur përgjigjen.\n\n📘 Shembull:\nNëse a = 3 dhe b = 4, atëherë a^2 + b^2 = 3^2 + 4^2 = 9 + 16 = 25.\n\n💡 Pa vlerat e ndryshoreve, shprehja nuk ka një përgjigje numerike të vetme.';
+  }
+
+  @override
+  String gamifyDifferenceOfSquaresSolution(
+    Object exercise,
+    Object leftOperand,
+    Object rightOperand,
+  ) {
+    return '✨ DIFERENCA E KATRORËVE ✨\n\nShprehja: $exercise\n\n🧠 Kjo është një formulë e njohur: a^2 - b^2 = (a - b)(a + b).\n🧩 Për termat $leftOperand dhe $rightOperand, forma e faktorizuar bëhet:\n($leftOperand - $rightOperand)($leftOperand + $rightOperand)\n\n💡 Ky truk të ndihmon të kalosh nga katrorët te prodhimi i dy kllapave.';
+  }
+
+  @override
+  String gamifyQuadraticSolution(
+    Object exercise,
+    Object variable,
+    Object factorization,
+  ) {
+    return '✨ SHPREHJE KUADRATIKE ✨\n\nShprehja: $exercise\n\n📘 Kjo është një ekuacion kuadratik me ndryshoren $variable.\n🧩 Një mënyrë e zakonshme zgjidhjeje është faktorizimi:\n$factorization\n\n💡 Pasi faktorizon, vendos secilën kllapë baraz me zero për të gjetur zgjidhjet.';
   }
 }

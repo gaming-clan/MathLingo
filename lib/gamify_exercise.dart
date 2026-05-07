@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 
 import 'colors.dart';
@@ -79,16 +80,44 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
     });
 
     try {
-      final inputImage = InputImage.fromFile(image);
-      final recognizedText = await _textRecognizer.processImage(inputImage);
+      debugPrint('[OCR] Starting processImage for path: ${image.path}');
+      var recognizedText = await _runOcrAttempt(
+        label: 'fromFilePath',
+        inputImage: InputImage.fromFilePath(image.path),
+      );
+
+      // Fallback: disa pajisje/metadata japin rezultat më të mirë me fromFile.
+      if (_isOcrEmpty(recognizedText)) {
+        debugPrint('[OCR] Empty result from fromFilePath, retrying with fromFile');
+        recognizedText = await _runOcrAttempt(
+          label: 'fromFile',
+          inputImage: InputImage.fromFile(image),
+        );
+      }
+
+      // Fallback i tretë: preprocesim i figurës për raste me shkrim dore/kontrast të ulët.
+      if (_isOcrEmpty(recognizedText)) {
+        debugPrint('[OCR] Empty result after direct attempts, trying preprocessed variants');
+        final preprocessedResult = await _runPreprocessedOcr(image);
+        if (preprocessedResult != null) {
+          recognizedText = preprocessedResult;
+        }
+      }
+
+      final rawText = recognizedText.text;
+      debugPrint('[OCR] blocks=${recognizedText.blocks.length}');
+      debugPrint('[OCR] rawText="${rawText.replaceAll('\n', ' ')}"');
       final equation = _extractEquation(recognizedText.text);
+      debugPrint('[OCR] extractedEquation=$equation');
 
       if (!mounted) {
+        debugPrint('[OCR] Widget not mounted after OCR, aborting state update');
         return;
       }
 
       if (equation == null) {
         final visibleText = recognizedText.text.trim();
+        debugPrint('[OCR] No equation detected. visibleTextLength=${visibleText.length}');
         setState(() {
           _recognizedText = visibleText.isEmpty
               ? l10n.gamifyOcrNoTextDetected
@@ -105,7 +134,9 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
         _isProcessing = false;
       });
       _generateSolution(prefilledExercise: equation);
-    } catch (e) {
+    } catch (e, stack) {
+      debugPrint('[OCR] Exception while processing image: $e');
+      debugPrint('[OCR] Stack: $stack');
       if (!mounted) {
         return;
       }
@@ -118,10 +149,93 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
     }
   }
 
+  bool _isOcrEmpty(RecognizedText recognizedText) {
+    return recognizedText.blocks.isEmpty && recognizedText.text.trim().isEmpty;
+  }
+
+  Future<RecognizedText> _runOcrAttempt({
+    required String label,
+    required InputImage inputImage,
+  }) async {
+    final result = await _textRecognizer.processImage(inputImage);
+    debugPrint(
+      '[OCR] Attempt($label): blocks=${result.blocks.length}, textLength=${result.text.trim().length}',
+    );
+    return result;
+  }
+
+  Future<RecognizedText?> _runPreprocessedOcr(File imageFile) async {
+    final originalBytes = await imageFile.readAsBytes();
+    final original = img.decodeImage(originalBytes);
+    if (original == null) {
+      debugPrint('[OCR] Preprocess: decodeImage failed');
+      return null;
+    }
+
+    final variants = <(String, img.Image)>[];
+
+    // Variant 1: grayscale + contrast boost.
+    final v1 = img.grayscale(original.clone());
+    variants.add(('gray', img.adjustColor(v1, contrast: 1.6, brightness: 0.05)));
+
+    // Variant 2: crop zonën qendrore sipër ku zakonisht është ekuacioni në foto.
+    final cropW = (original.width * 0.9).round();
+    final cropH = (original.height * 0.45).round();
+    final cropX = ((original.width - cropW) / 2).round();
+    final cropY = (original.height * 0.15).round();
+    final v2 = img.copyCrop(
+      original,
+      x: cropX.clamp(0, original.width - 1),
+      y: cropY.clamp(0, original.height - 1),
+      width: cropW.clamp(1, original.width - cropX),
+      height: cropH.clamp(1, original.height - cropY),
+    );
+    variants.add(('crop', img.adjustColor(img.grayscale(v2), contrast: 1.8)));
+
+    // Variant 3: threshold agresiv për penë mbi letër.
+    final v3 = img.grayscale(original.clone());
+    variants.add(('threshold', img.luminanceThreshold(v3, threshold: 0.62)));
+
+    for (final (label, variant) in variants) {
+      File? tempFile;
+      try {
+        final bytes = img.encodeJpg(variant, quality: 100);
+        tempFile = File(
+          '${Directory.systemTemp.path}${Platform.pathSeparator}mathlingo_ocr_${DateTime.now().microsecondsSinceEpoch}_$label.jpg',
+        );
+        await tempFile.writeAsBytes(bytes, flush: true);
+
+        final result = await _runOcrAttempt(
+          label: 'preprocessed-$label',
+          inputImage: InputImage.fromFilePath(tempFile.path),
+        );
+
+        if (!_isOcrEmpty(result)) {
+          debugPrint('[OCR] Preprocess success with variant=$label');
+          return result;
+        }
+      } catch (e) {
+        debugPrint('[OCR] Preprocess variant failed ($label): $e');
+      } finally {
+        if (tempFile != null && await tempFile.exists()) {
+          try {
+            await tempFile.delete();
+          } catch (_) {
+            // Best effort cleanup.
+          }
+        }
+      }
+    }
+
+    debugPrint('[OCR] Preprocess attempts ended with empty result');
+    return null;
+  }
+
   void _generateSolution({String? prefilledExercise}) {
     final l10n = AppLocalizations.of(context);
     final rawInput = prefilledExercise ?? _exerciseController.text;
-    final exerciseText = _extractEquation(rawInput) ?? rawInput.trim();
+    final exerciseText =
+        _extractEquation(rawInput) ?? _normalizeEquationText(rawInput);
 
     if (exerciseText.isEmpty) {
       _showErrorSnackBar(l10n.gamifyEmptyEquationError);
@@ -142,33 +256,116 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
   }
 
   String? _extractEquation(String text) {
+    final normalized = _normalizeEquationText(text);
+
+    final numericMatch = RegExp(
+      r'^(\d+)\s*([+\-×÷])\s*(\d+)\s*=?.*$',
+    ).firstMatch(normalized);
+    if (numericMatch != null) {
+      final leftOperand = numericMatch.group(1)!;
+      final operator = numericMatch.group(2)!;
+      final rightOperand = numericMatch.group(3)!;
+      return '$leftOperand $operator $rightOperand';
+    }
+
+    final quadraticMatch = RegExp(
+      r'^([A-Za-z])\^2\s*([+\-])\s*(\d+)([A-Za-z])\s*([+\-])\s*(\d+)\s*=\s*0$',
+    ).firstMatch(normalized);
+    if (quadraticMatch != null && quadraticMatch.group(1) == quadraticMatch.group(4)) {
+      final variable = quadraticMatch.group(1)!;
+      final middleSign = quadraticMatch.group(2)!;
+      final middleCoeff = quadraticMatch.group(3)!;
+      final constantSign = quadraticMatch.group(5)!;
+      final constantValue = quadraticMatch.group(6)!;
+      return '$variable^2 $middleSign $middleCoeff$variable $constantSign $constantValue = 0';
+    }
+
+    final symbolicMatch = RegExp(
+      r'^([A-Za-z](?:\^\d+)?)\s*([+\-×÷])\s*([A-Za-z](?:\^\d+)?)\s*=?.*$',
+    ).firstMatch(normalized);
+    if (symbolicMatch != null) {
+      final leftOperand = symbolicMatch.group(1)!;
+      final operator = symbolicMatch.group(2)!;
+      final rightOperand = symbolicMatch.group(3)!;
+      return '$leftOperand $operator $rightOperand';
+    }
+
+    return null;
+  }
+
+  String _normalizeEquationText(String text) {
     final normalized = text
         .replaceAll(RegExp(r'[\r\n]+'), ' ')
+        .replaceAll('²', '^2')
+        .replaceAll('³', '^3')
+        .replaceAll('⁴', '^4')
         .replaceAll('*', '×')
         .replaceAll('/', '÷')
         .replaceAll(RegExp(r'(?<=\d)\s*[xX]\s*(?=\d)'), ' × ')
+        .replaceAll(RegExp(r'\s*\^\s*'), '^')
         .replaceAll(RegExp(r'\s+'), ' ')
         .trim();
 
-    final match = RegExp(r'(\d+)\s*([+\-×÷])\s*(\d+)').firstMatch(normalized);
-    if (match == null) {
-      return null;
-    }
-
-    final leftOperand = match.group(1)!;
-    final operator = match.group(2)!;
-    final rightOperand = match.group(3)!;
-    return '$leftOperand $operator $rightOperand';
+    return normalized.replaceAllMapped(
+      RegExp(r'([A-Za-z])\s*([0-9]+)(?=\s*(?:[+\-=×÷)]|$))'),
+      (match) => '${match.group(1)}^${match.group(2)}',
+    );
   }
 
   String _generateFunSolution(String exercise) {
     final l10n = AppLocalizations.of(context);
-    final normalizedExercise = _extractEquation(exercise) ?? exercise.trim();
+    final normalizedExercise =
+        _extractEquation(exercise) ?? _normalizeEquationText(exercise);
     final match = RegExp(r'^(\d+)\s*([+\-×÷])\s*(\d+)$').firstMatch(
       normalizedExercise,
     );
 
     if (match == null) {
+      final quadraticMatch = RegExp(
+        r'^([A-Za-z])\^2\s*([+\-])\s*(\d+)([A-Za-z])\s*([+\-])\s*(\d+)\s*=\s*0$',
+      ).firstMatch(normalizedExercise);
+      if (quadraticMatch != null && quadraticMatch.group(1) == quadraticMatch.group(4)) {
+        final variable = quadraticMatch.group(1)!;
+        final middleSign = quadraticMatch.group(2)!;
+        final middleCoeff = int.parse(quadraticMatch.group(3)!);
+        final constantSign = quadraticMatch.group(5)!;
+        final constantValue = int.parse(quadraticMatch.group(6)!);
+        final signedMiddleCoeff = middleSign == '-' ? -middleCoeff : middleCoeff;
+        final signedConstant = constantSign == '-' ? -constantValue : constantValue;
+        final factorization = _factorQuadratic(variable, signedMiddleCoeff, signedConstant);
+        return l10n.gamifyQuadraticSolution(
+          normalizedExercise,
+          variable,
+          factorization ?? 'Nuk u gjet një faktorizim i thjeshtë me numra të plotë.',
+        );
+      }
+
+      final differenceMatch = RegExp(
+        r'^([A-Za-z])\^2\s*-\s*([A-Za-z])\^2$',
+      ).firstMatch(normalizedExercise);
+      if (differenceMatch != null) {
+        final leftOperand = differenceMatch.group(1)!;
+        final rightOperand = differenceMatch.group(2)!;
+        return l10n.gamifyDifferenceOfSquaresSolution(
+          normalizedExercise,
+          leftOperand,
+          rightOperand,
+        );
+      }
+
+      final symbolicMatch = RegExp(
+        r'^([A-Za-z](?:\^\d+)?)\s*([+\-×÷])\s*([A-Za-z](?:\^\d+)?)$',
+      ).firstMatch(normalizedExercise);
+      if (symbolicMatch != null) {
+        final leftOperand = symbolicMatch.group(1)!;
+        final rightOperand = symbolicMatch.group(3)!;
+        return l10n.gamifySymbolicSolution(
+          normalizedExercise,
+          leftOperand,
+          rightOperand,
+        );
+      }
+
       return normalizedExercise.isEmpty
           ? l10n.gamifyInvalidSolution(exercise)
           : l10n.gamifyGenericSolution(normalizedExercise);
@@ -199,6 +396,26 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
     }
 
     return l10n.gamifyGenericSolution(normalizedExercise);
+  }
+
+  String? _factorQuadratic(String variable, int middleCoeff, int constant) {
+    for (var left = -20; left <= 20; left++) {
+      for (var right = -20; right <= 20; right++) {
+        if (left + right == middleCoeff && left * right == constant) {
+          return '( $variable ${_signedNumber(left)} )( $variable ${_signedNumber(right)} ) = 0';
+        }
+      }
+    }
+
+    return null;
+  }
+
+  String _signedNumber(int value) {
+    if (value >= 0) {
+      return '+ $value';
+    }
+
+    return '- ${value.abs()}';
   }
 
   void _showErrorSnackBar(String message) {

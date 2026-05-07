@@ -220,7 +220,7 @@
   },
   "gamifyScreenTitle": "Argëto Ushtrimet",
   "gamifyInputTitle": "Fotografo ose Shkruaj Ushtrimin",
-  "gamifyInputSubtitle": "Zgjedh çfarëdo mënyre që të preferosh për të futur ushtrimin matematikor.",
+  "gamifyInputSubtitle": "Mund ta fotografosh ose ta shkruash ushtrimin. OCR funksionon më mirë me tekst të shtypur dhe imazhe të qarta.",
   "gamifyClear": "Fshij",
   "gamifySolve": "Zgjidh",
   "gamifySolutionTitle": "✨ Zgjidhja Argëtuese ✨",
@@ -231,7 +231,7 @@
   "gamifyExerciseHint": "Shembull: 15 + 7",
   "gamifyRecognizedPlaceholder": "Ekuacioni u identifikua nga imazhi...",
   "gamifyOcrProcessing": "Po lexoj tekstin nga imazhi...",
-  "gamifyOcrNoTextDetected": "Nuk u gjet tekst në imazh.",
+  "gamifyOcrNoTextDetected": "Nuk u gjet tekst në imazh. Provo një foto më të qartë ose shkruaje ushtrimin manualisht.",
   "gamifyOcrNoEquationFound": "Nuk u gjet asnjë ekuacion matematikor në imazh.",
   "gamifyOcrProcessingError": "Gabim gjatë leximit të tekstit: {error}",
   "@gamifyOcrProcessingError": {
@@ -335,6 +335,30 @@
   "@gamifyInvalidSolution": {
     "placeholders": {
       "exercise": {}
+    }
+  },
+  "gamifySymbolicSolution": "✨ SHPREHJE ALGJEBRIKE ✨\n\nShprehja: {exercise}\n\n🔤 Kjo është një shprehje me ndryshore, jo një llogaritje me numra të gatshëm.\n🧩 Termat {leftOperand} dhe {rightOperand} duhen zëvendësuar me vlera për të gjetur përgjigjen.\n\n📘 Shembull:\nNëse a = 3 dhe b = 4, atëherë a^2 + b^2 = 3^2 + 4^2 = 9 + 16 = 25.\n\n💡 Pa vlerat e ndryshoreve, shprehja nuk ka një përgjigje numerike të vetme.",
+  "@gamifySymbolicSolution": {
+    "placeholders": {
+      "exercise": {},
+      "leftOperand": {},
+      "rightOperand": {}
+    }
+  },
+  "gamifyDifferenceOfSquaresSolution": "✨ DIFERENCA E KATRORËVE ✨\n\nShprehja: {exercise}\n\n🧠 Kjo është një formulë e njohur: a^2 - b^2 = (a - b)(a + b).\n🧩 Për termat {leftOperand} dhe {rightOperand}, forma e faktorizuar bëhet:\n({leftOperand} - {rightOperand})({leftOperand} + {rightOperand})\n\n💡 Ky truk të ndihmon të kalosh nga katrorët te prodhimi i dy kllapave.",
+  "@gamifyDifferenceOfSquaresSolution": {
+    "placeholders": {
+      "exercise": {},
+      "leftOperand": {},
+      "rightOperand": {}
+    }
+  },
+  "gamifyQuadraticSolution": "✨ SHPREHJE KUADRATIKE ✨\n\nShprehja: {exercise}\n\n📘 Kjo është një ekuacion kuadratik me ndryshoren {variable}.\n🧩 Një mënyrë e zakonshme zgjidhjeje është faktorizimi:\n{factorization}\n\n💡 Pasi faktorizon, vendos secilën kllapë baraz me zero për të gjetur zgjidhjet.",
+  "@gamifyQuadraticSolution": {
+    "placeholders": {
+      "exercise": {},
+      "variable": {},
+      "factorization": {}
     }
   }
 }

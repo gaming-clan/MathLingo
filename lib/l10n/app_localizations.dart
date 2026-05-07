@@ -582,7 +582,7 @@ abstract class AppLocalizations {
   /// No description provided for @gamifyInputSubtitle.
   ///
   /// In sq, this message translates to:
-  /// **'Zgjedh çfarëdo mënyre që të preferosh për të futur ushtrimin matematikor.'**
+  /// **'Mund ta fotografosh ose ta shkruash ushtrimin. OCR funksionon më mirë me tekst të shtypur dhe imazhe të qarta.'**
   String get gamifyInputSubtitle;
 
   /// No description provided for @gamifyClear.
@@ -648,7 +648,7 @@ abstract class AppLocalizations {
   /// No description provided for @gamifyOcrNoTextDetected.
   ///
   /// In sq, this message translates to:
-  /// **'Nuk u gjet tekst në imazh.'**
+  /// **'Nuk u gjet tekst në imazh. Provo një foto më të qartë ose shkruaje ushtrimin manualisht.'**
   String get gamifyOcrNoTextDetected;
 
   /// No description provided for @gamifyOcrNoEquationFound.
@@ -728,6 +728,36 @@ abstract class AppLocalizations {
   /// In sq, this message translates to:
   /// **'🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni: \"{exercise}\"\n\nHmm, duhet të jetë më i qartë! 🤔\n📝 Përpiquni ta rishkruani ekuacionin me numra dhe operacione të qarta.\n\nShembuj të mirë:\n✅ \"5 + 3\"\n✅ \"10 - 7\"\n✅ \"6 * 4\"\n✅ \"20 / 5\"\n\nPërpiquni përsëri! 💪'**
   String gamifyInvalidSolution(Object exercise);
+
+  /// No description provided for @gamifySymbolicSolution.
+  ///
+  /// In sq, this message translates to:
+  /// **'✨ SHPREHJE ALGJEBRIKE ✨\n\nShprehja: {exercise}\n\n🔤 Kjo është një shprehje me ndryshore, jo një llogaritje me numra të gatshëm.\n🧩 Termat {leftOperand} dhe {rightOperand} duhen zëvendësuar me vlera për të gjetur përgjigjen.\n\n📘 Shembull:\nNëse a = 3 dhe b = 4, atëherë a^2 + b^2 = 3^2 + 4^2 = 9 + 16 = 25.\n\n💡 Pa vlerat e ndryshoreve, shprehja nuk ka një përgjigje numerike të vetme.'**
+  String gamifySymbolicSolution(
+    Object exercise,
+    Object leftOperand,
+    Object rightOperand,
+  );
+
+  /// No description provided for @gamifyDifferenceOfSquaresSolution.
+  ///
+  /// In sq, this message translates to:
+  /// **'✨ DIFERENCA E KATRORËVE ✨\n\nShprehja: {exercise}\n\n🧠 Kjo është një formulë e njohur: a^2 - b^2 = (a - b)(a + b).\n🧩 Për termat {leftOperand} dhe {rightOperand}, forma e faktorizuar bëhet:\n({leftOperand} - {rightOperand})({leftOperand} + {rightOperand})\n\n💡 Ky truk të ndihmon të kalosh nga katrorët te prodhimi i dy kllapave.'**
+  String gamifyDifferenceOfSquaresSolution(
+    Object exercise,
+    Object leftOperand,
+    Object rightOperand,
+  );
+
+  /// No description provided for @gamifyQuadraticSolution.
+  ///
+  /// In sq, this message translates to:
+  /// **'✨ SHPREHJE KUADRATIKE ✨\n\nShprehja: {exercise}\n\n📘 Kjo është një ekuacion kuadratik me ndryshoren {variable}.\n🧩 Një mënyrë e zakonshme zgjidhjeje është faktorizimi:\n{factorization}\n\n💡 Pasi faktorizon, vendos secilën kllapë baraz me zero për të gjetur zgjidhjet.'**
+  String gamifyQuadraticSolution(
+    Object exercise,
+    Object variable,
+    Object factorization,
+  );
 }
 
 class _AppLocalizationsDelegate
