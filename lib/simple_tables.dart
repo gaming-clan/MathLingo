@@ -8,6 +8,10 @@ const _tableSnackBarMargin = EdgeInsets.fromLTRB(16, 8, 16, 96);
 
 enum _TableOperation { addition, subtraction, multiplication, division }
 
+enum _LegacyGeometryShape { rectangle, square, triangle }
+
+enum _LegacyGeometryQuestion { perimeter, area }
+
 extension _TableOperationX on _TableOperation {
   String label(AppLocalizations l10n) {
     switch (this) {
@@ -399,7 +403,7 @@ class SimpleGeometryChallenge extends StatefulWidget {
 class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
   int score = 0;
   int question = 0;
-  late List<GeometryProblem> problems;
+  late List<_GeometryProblem> problems;
 
   @override
   void initState() {
@@ -409,43 +413,43 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
 
   void _generateProblems() {
     problems = [
-      GeometryProblem(
-        shape: 'Drejtkëndësh',
+      _GeometryProblem(
+        shape: _LegacyGeometryShape.rectangle,
         width: 5,
         height: 3,
-        question: 'Sa është perimetri?',
+        questionType: _LegacyGeometryQuestion.perimeter,
         answer: 16,
         options: [14, 16, 18, 20],
       ),
-      GeometryProblem(
-        shape: 'Katror',
+      _GeometryProblem(
+        shape: _LegacyGeometryShape.square,
         width: 4,
         height: 4,
-        question: 'Sa është sipërfaqja?',
+        questionType: _LegacyGeometryQuestion.area,
         answer: 16,
         options: [12, 14, 16, 18],
       ),
-      GeometryProblem(
-        shape: 'Trekëndësh',
+      _GeometryProblem(
+        shape: _LegacyGeometryShape.triangle,
         width: 6,
         height: 4,
-        question: 'Sa është sipërfaqja?',
+        questionType: _LegacyGeometryQuestion.area,
         answer: 12,
         options: [10, 12, 14, 16],
       ),
-      GeometryProblem(
-        shape: 'Drejtkëndësh',
+      _GeometryProblem(
+        shape: _LegacyGeometryShape.rectangle,
         width: 8,
         height: 2,
-        question: 'Sa është perimetri?',
+        questionType: _LegacyGeometryQuestion.perimeter,
         answer: 20,
         options: [16, 18, 20, 22],
       ),
-      GeometryProblem(
-        shape: 'Katror',
+      _GeometryProblem(
+        shape: _LegacyGeometryShape.square,
         width: 5,
         height: 5,
-        question: 'Sa është perimetri?',
+        questionType: _LegacyGeometryQuestion.perimeter,
         answer: 20,
         options: [18, 20, 22, 24],
       ),
@@ -453,6 +457,7 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
   }
 
   void _checkAnswer(int selected) {
+    final l10n = AppLocalizations.of(context);
     if (selected == problems[question].answer) {
       setState(() => score++);
       _nextQuestion();
@@ -460,8 +465,8 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-        const SnackBar(
-          content: Text('E gabuar, provo përsëri!'),
+        SnackBar(
+          content: Text(l10n.legacyGeometryWrongAnswer),
           behavior: SnackBarBehavior.floating,
           margin: _tableSnackBarMargin,
         ),
@@ -478,20 +483,23 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
   }
 
   void _showResults() {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Përfundim!'),
+        title: Text(l10n.legacyGeometryResultTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Pikët: $score/${problems.length}',
+              l10n.legacyGeometryScoreSummary(score, problems.length),
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Text(
-              score >= 3 ? '👏 Bravo!' : 'Përpiqu përsëri!',
+              score >= 3
+                  ? l10n.legacyGeometrySuccessMessage
+                  : l10n.legacyGeometryRetryMessage,
               style: const TextStyle(fontSize: 20),
             ),
           ],
@@ -502,7 +510,7 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            child: const Text('Mbaroj'),
+            child: Text(l10n.legacyGeometryFinish),
           ),
         ],
       ),
@@ -511,10 +519,11 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final problem = problems[question];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pyetja ${question + 1}/${problems.length}'),
+        title: Text(l10n.legacyGeometryQuestionTitle(question + 1, problems.length)),
         backgroundColor: Colors.deepPurple,
       ),
       body: Padding(
@@ -523,7 +532,7 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Pikët: $score',
+              l10n.legacyGeometryCurrentScore(score),
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -532,7 +541,7 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
             ),
             const SizedBox(height: 30),
             Text(
-              problem.question,
+              _questionLabel(l10n, problem.questionType),
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
@@ -540,7 +549,11 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
             _buildShape(problem),
             const SizedBox(height: 40),
             Text(
-              '${problem.shape} (${problem.width} × ${problem.height})',
+              l10n.legacyGeometryShapeDimensions(
+                _shapeLabel(l10n, problem.shape),
+                problem.width,
+                problem.height,
+              ),
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const SizedBox(height: 40),
@@ -574,34 +587,58 @@ class _SimpleGeometryChallengeState extends State<SimpleGeometryChallenge> {
     );
   }
 
-  Widget _buildShape(GeometryProblem problem) {
+  String _shapeLabel(AppLocalizations l10n, _LegacyGeometryShape shape) {
+    switch (shape) {
+      case _LegacyGeometryShape.rectangle:
+        return l10n.legacyGeometryRectangleLabel;
+      case _LegacyGeometryShape.square:
+        return l10n.legacyGeometrySquareLabel;
+      case _LegacyGeometryShape.triangle:
+        return l10n.legacyGeometryTriangleLabel;
+    }
+  }
+
+  String _questionLabel(
+    AppLocalizations l10n,
+    _LegacyGeometryQuestion questionType,
+  ) {
+    switch (questionType) {
+      case _LegacyGeometryQuestion.perimeter:
+        return l10n.legacyGeometryPerimeterQuestion;
+      case _LegacyGeometryQuestion.area:
+        return l10n.legacyGeometryAreaQuestion;
+    }
+  }
+
+  Widget _buildShape(_GeometryProblem problem) {
     final width = problem.width.toDouble();
     final height = problem.height.toDouble();
     final scale = 40.0 / (width > height ? width : height);
 
-    if (problem.shape == 'Drejtkëndësh') {
-      return Container(
-        width: width * scale,
-        height: height * scale,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.purple, width: 3),
-          color: Colors.purple[50],
-        ),
-      );
-    } else if (problem.shape == 'Katror') {
-      return Container(
-        width: width * scale,
-        height: height * scale,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.orange, width: 3),
-          color: Colors.orange[50],
-        ),
-      );
-    } else {
-      return CustomPaint(
-        size: Size(width * scale, height * scale),
-        painter: TrianglePainter(),
-      );
+    switch (problem.shape) {
+      case _LegacyGeometryShape.rectangle:
+        return Container(
+          width: width * scale,
+          height: height * scale,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.purple, width: 3),
+            color: Colors.purple[50],
+          ),
+        );
+      case _LegacyGeometryShape.square:
+        return Container(
+          width: width * scale,
+          height: height * scale,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.orange, width: 3),
+            color: Colors.orange[50],
+          ),
+        );
+      case _LegacyGeometryShape.triangle:
+        return CustomPaint(
+          size: Size(width * scale, height * scale),
+          painter: TrianglePainter(),
+        );
     }
   }
 }
@@ -625,19 +662,19 @@ class TrianglePainter extends CustomPainter {
   bool shouldRepaint(TrianglePainter oldDelegate) => false;
 }
 
-class GeometryProblem {
-  final String shape;
+class _GeometryProblem {
+  final _LegacyGeometryShape shape;
   final int width;
   final int height;
-  final String question;
+  final _LegacyGeometryQuestion questionType;
   final int answer;
   final List<int> options;
 
-  GeometryProblem({
+  _GeometryProblem({
     required this.shape,
     required this.width,
     required this.height,
-    required this.question,
+    required this.questionType,
     required this.answer,
     required this.options,
   });

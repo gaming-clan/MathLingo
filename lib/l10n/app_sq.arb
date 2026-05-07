@@ -21,6 +21,8 @@
   "dashboardProgressAbstractAlgebra": "Algjebra Abstrakte",
   "dashboardProgressMathematicalAnalysis": "Analiza Matematike",
   "dashboardQuickActionsTitle": "Veprime të Shpejta",
+  "dashboardProfileComingSoon": "Profili do të shtohet së shpejti.",
+  "dashboardNotificationsComingSoon": "Njoftimet do të shtohen së shpejti.",
   "dashboardOperationAddition": "Mbledhje",
   "dashboardOperationSubtraction": "Zbritje",
   "dashboardOperationMultiplication": "Shumëzim",
@@ -80,6 +82,58 @@
   "@geometrySquareMeasurement": {
     "placeholders": {
       "width": {
+        "type": "int"
+      }
+    }
+  },
+  "legacyGeometryRectangleLabel": "Drejtkëndësh",
+  "legacyGeometrySquareLabel": "Katror",
+  "legacyGeometryTriangleLabel": "Trekëndësh",
+  "legacyGeometryPerimeterQuestion": "Sa është perimetri?",
+  "legacyGeometryAreaQuestion": "Sa është sipërfaqja?",
+  "legacyGeometryWrongAnswer": "E gabuar, provo përsëri!",
+  "legacyGeometryResultTitle": "Përfundim!",
+  "legacyGeometryScoreSummary": "Pikët: {score}/{total}",
+  "@legacyGeometryScoreSummary": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "legacyGeometrySuccessMessage": "👏 Bravo!",
+  "legacyGeometryRetryMessage": "Përpiqu përsëri!",
+  "legacyGeometryFinish": "Mbaroj",
+  "legacyGeometryQuestionTitle": "Pyetja {current}/{total}",
+  "@legacyGeometryQuestionTitle": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "legacyGeometryCurrentScore": "Pikët: {score}",
+  "@legacyGeometryCurrentScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "legacyGeometryShapeDimensions": "{shape} ({width} × {height})",
+  "@legacyGeometryShapeDimensions": {
+    "placeholders": {
+      "shape": {},
+      "width": {
+        "type": "int"
+      },
+      "height": {
         "type": "int"
       }
     }

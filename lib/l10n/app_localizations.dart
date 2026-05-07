@@ -220,6 +220,18 @@ abstract class AppLocalizations {
   /// **'Veprime të Shpejta'**
   String get dashboardQuickActionsTitle;
 
+  /// No description provided for @dashboardProfileComingSoon.
+  ///
+  /// In sq, this message translates to:
+  /// **'Profili do të shtohet së shpejti.'**
+  String get dashboardProfileComingSoon;
+
+  /// No description provided for @dashboardNotificationsComingSoon.
+  ///
+  /// In sq, this message translates to:
+  /// **'Njoftimet do të shtohen së shpejti.'**
+  String get dashboardNotificationsComingSoon;
+
   /// No description provided for @dashboardOperationAddition.
   ///
   /// In sq, this message translates to:
@@ -351,6 +363,90 @@ abstract class AppLocalizations {
   /// In sq, this message translates to:
   /// **'brinja {width}'**
   String geometrySquareMeasurement(int width);
+
+  /// No description provided for @legacyGeometryRectangleLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Drejtkëndësh'**
+  String get legacyGeometryRectangleLabel;
+
+  /// No description provided for @legacyGeometrySquareLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Katror'**
+  String get legacyGeometrySquareLabel;
+
+  /// No description provided for @legacyGeometryTriangleLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Trekëndësh'**
+  String get legacyGeometryTriangleLabel;
+
+  /// No description provided for @legacyGeometryPerimeterQuestion.
+  ///
+  /// In sq, this message translates to:
+  /// **'Sa është perimetri?'**
+  String get legacyGeometryPerimeterQuestion;
+
+  /// No description provided for @legacyGeometryAreaQuestion.
+  ///
+  /// In sq, this message translates to:
+  /// **'Sa është sipërfaqja?'**
+  String get legacyGeometryAreaQuestion;
+
+  /// No description provided for @legacyGeometryWrongAnswer.
+  ///
+  /// In sq, this message translates to:
+  /// **'E gabuar, provo përsëri!'**
+  String get legacyGeometryWrongAnswer;
+
+  /// No description provided for @legacyGeometryResultTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Përfundim!'**
+  String get legacyGeometryResultTitle;
+
+  /// No description provided for @legacyGeometryScoreSummary.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pikët: {score}/{total}'**
+  String legacyGeometryScoreSummary(int score, int total);
+
+  /// No description provided for @legacyGeometrySuccessMessage.
+  ///
+  /// In sq, this message translates to:
+  /// **'👏 Bravo!'**
+  String get legacyGeometrySuccessMessage;
+
+  /// No description provided for @legacyGeometryRetryMessage.
+  ///
+  /// In sq, this message translates to:
+  /// **'Përpiqu përsëri!'**
+  String get legacyGeometryRetryMessage;
+
+  /// No description provided for @legacyGeometryFinish.
+  ///
+  /// In sq, this message translates to:
+  /// **'Mbaroj'**
+  String get legacyGeometryFinish;
+
+  /// No description provided for @legacyGeometryQuestionTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pyetja {current}/{total}'**
+  String legacyGeometryQuestionTitle(int current, int total);
+
+  /// No description provided for @legacyGeometryCurrentScore.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pikët: {score}'**
+  String legacyGeometryCurrentScore(int score);
+
+  /// No description provided for @legacyGeometryShapeDimensions.
+  ///
+  /// In sq, this message translates to:
+  /// **'{shape} ({width} × {height})'**
+  String legacyGeometryShapeDimensions(Object shape, int width, int height);
 
   /// No description provided for @lessonsToolsTitle.
   ///

@@ -28,18 +28,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
   void _onProfilePressed() {
+    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Profili do të shtohet së shpejti.'),
+      SnackBar(
+        content: Text(l10n.dashboardProfileComingSoon),
         behavior: SnackBarBehavior.floating,
       ),
     );
   }
 
   void _onNotificationsPressed() {
+    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Njoftimet do të shtohen së shpejti.'),
+      SnackBar(
+        content: Text(l10n.dashboardNotificationsComingSoon),
         behavior: SnackBarBehavior.floating,
       ),
     );

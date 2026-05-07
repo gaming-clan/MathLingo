@@ -75,6 +75,13 @@ class AppLocalizationsSq extends AppLocalizations {
   String get dashboardQuickActionsTitle => 'Veprime të Shpejta';
 
   @override
+  String get dashboardProfileComingSoon => 'Profili do të shtohet së shpejti.';
+
+  @override
+  String get dashboardNotificationsComingSoon =>
+      'Njoftimet do të shtohen së shpejti.';
+
+  @override
   String get dashboardOperationAddition => 'Mbledhje';
 
   @override
@@ -149,6 +156,56 @@ class AppLocalizationsSq extends AppLocalizations {
   @override
   String geometrySquareMeasurement(int width) {
     return 'brinja $width';
+  }
+
+  @override
+  String get legacyGeometryRectangleLabel => 'Drejtkëndësh';
+
+  @override
+  String get legacyGeometrySquareLabel => 'Katror';
+
+  @override
+  String get legacyGeometryTriangleLabel => 'Trekëndësh';
+
+  @override
+  String get legacyGeometryPerimeterQuestion => 'Sa është perimetri?';
+
+  @override
+  String get legacyGeometryAreaQuestion => 'Sa është sipërfaqja?';
+
+  @override
+  String get legacyGeometryWrongAnswer => 'E gabuar, provo përsëri!';
+
+  @override
+  String get legacyGeometryResultTitle => 'Përfundim!';
+
+  @override
+  String legacyGeometryScoreSummary(int score, int total) {
+    return 'Pikët: $score/$total';
+  }
+
+  @override
+  String get legacyGeometrySuccessMessage => '👏 Bravo!';
+
+  @override
+  String get legacyGeometryRetryMessage => 'Përpiqu përsëri!';
+
+  @override
+  String get legacyGeometryFinish => 'Mbaroj';
+
+  @override
+  String legacyGeometryQuestionTitle(int current, int total) {
+    return 'Pyetja $current/$total';
+  }
+
+  @override
+  String legacyGeometryCurrentScore(int score) {
+    return 'Pikët: $score';
+  }
+
+  @override
+  String legacyGeometryShapeDimensions(Object shape, int width, int height) {
+    return '$shape ($width × $height)';
   }
 
   @override
