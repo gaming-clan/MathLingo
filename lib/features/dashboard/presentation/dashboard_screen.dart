@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../colors.dart';
 import '../../../gamify_exercise.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../models/operation.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/cosmic_bottom_nav.dart';
@@ -87,6 +88,7 @@ class _DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ResponsivePage(
       maxWidth: 1120,
       child: LayoutBuilder(
@@ -96,14 +98,14 @@ class _DashboardPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Mirësevini!',
+                l10n.dashboardWelcomeTitle,
                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                   color: CosmicColors.primaryContainer,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Zgjedh një mënyrë për të mësuar matematikën - më lehtë ose më sfiduese.',
+                l10n.dashboardWelcomeSubtitle,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 28),
@@ -166,6 +168,7 @@ class _DailyChallengeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return GlassPanel(
       padding: const EdgeInsets.all(18),
       child: LayoutBuilder(
@@ -175,25 +178,25 @@ class _DailyChallengeCard extends StatelessWidget {
           final content = Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _NeonChip(
+              _NeonChip(
                 icon: Icons.local_fire_department,
-                label: 'Sfida e Ditës',
+                label: l10n.tabDailyChallenge,
                 color: CosmicColors.secondaryContainer,
               ),
               const SizedBox(height: 16),
               Text(
-                'Gjeometria Bazë',
+                l10n.dashboardDailyChallengeTitle,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 12),
               Text(
-                'Mësoni format dhe llogaritni sipërfaqe të thjeshta me ndihmën e mikut tuaj AI.',
+                l10n.dashboardDailyChallengeDescription,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 22),
               CosmicButton(
                 key: const ValueKey('start-challenge'),
-                label: 'Fillo Sfidën',
+                label: l10n.dashboardStartChallenge,
                 icon: Icons.arrow_forward,
                 onPressed: onStart,
               ),
@@ -231,29 +234,30 @@ class _GamifyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return GlassPanel(
       padding: const EdgeInsets.all(18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _NeonChip(
+          _NeonChip(
             icon: Icons.camera_alt,
-            label: 'Argëto Ushtrimet',
+            label: l10n.dashboardGamifyChip,
             color: CosmicColors.primaryContainer,
           ),
           const SizedBox(height: 16),
           Text(
-            'Fotografo ose Shkruaj Ushtrimin',
+            l10n.dashboardGamifyTitle,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 12),
           Text(
-            'Fotografo ekuacionin që nuk e kupton, shkruaje direkt, dhe merrni zgjidhje argëtuese që të bëjnë matematikën më të lehtë për të kuptuar!',
+            l10n.dashboardGamifyDescription,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 22),
           CosmicButton(
-            label: 'Filloi Aventurën',
+            label: l10n.dashboardStartAdventure,
             icon: Icons.camera_alt,
             onPressed: onStart,
           ),
@@ -268,26 +272,27 @@ class _ProgressModuleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Progresi i Modulit',
+          l10n.dashboardProgressModuleTitle,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         const SizedBox(height: 16),
-        const GlassPanel(
-          padding: EdgeInsets.all(18),
+        GlassPanel(
+          padding: const EdgeInsets.all(18),
           child: Column(
             children: [
               CosmicProgress(
-                label: 'Algjebra Abstrakte',
+                label: l10n.dashboardProgressAbstractAlgebra,
                 value: 0.85,
                 color: CosmicColors.secondaryContainer,
               ),
-              SizedBox(height: 18),
+              const SizedBox(height: 18),
               CosmicProgress(
-                label: 'Analiza Matematike',
+                label: l10n.dashboardProgressMathematicalAnalysis,
                 value: 0.42,
                 color: CosmicColors.primaryContainer,
               ),
@@ -310,11 +315,12 @@ class _QuickActionsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Veprime të Shpejta',
+          l10n.dashboardQuickActionsTitle,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         const SizedBox(height: 16),
@@ -336,21 +342,25 @@ class _QuickActionsCard extends StatelessWidget {
               children: [
                 _OperationTile(
                   operation: Operation.addition,
+                  label: l10n.dashboardOperationAddition,
                   color: CosmicColors.primaryContainer,
                   onTap: () => onStartChallenge(Operation.addition),
                 ),
                 _OperationTile(
                   operation: Operation.subtraction,
+                  label: l10n.dashboardOperationSubtraction,
                   color: CosmicColors.primaryContainer,
                   onTap: () => onStartChallenge(Operation.subtraction),
                 ),
                 _OperationTile(
                   operation: Operation.multiplication,
+                  label: l10n.dashboardOperationMultiplication,
                   color: CosmicColors.secondaryContainer,
                   onTap: () => onStartChallenge(Operation.multiplication),
                 ),
                 _OperationTile(
                   operation: Operation.division,
+                  label: l10n.dashboardOperationDivision,
                   color: CosmicColors.secondaryContainer,
                   onTap: () => onStartChallenge(Operation.division),
                 ),
@@ -366,11 +376,13 @@ class _QuickActionsCard extends StatelessWidget {
 class _OperationTile extends StatelessWidget {
   const _OperationTile({
     required this.operation,
+    required this.label,
     required this.color,
     required this.onTap,
   });
 
   final Operation operation;
+  final String label;
   final Color color;
   final VoidCallback onTap;
 
@@ -378,7 +390,7 @@ class _OperationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return _ActionTile(
       icon: operation.icon,
-      label: operation.label,
+      label: label,
       color: color,
       onTap: onTap,
     );

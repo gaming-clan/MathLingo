@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../colors.dart';
+import '../../l10n/app_localizations.dart';
 
 class CosmicBottomNav extends StatelessWidget {
   const CosmicBottomNav({
@@ -14,11 +15,12 @@ class CosmicBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const items = [
-      (Icons.dashboard, 'Sfida e Ditës'),
-      (Icons.school, 'Mësime'),
-      (Icons.grid_3x3, 'Tabelat'),
-      (Icons.trending_up, 'Progresi'),
+    final l10n = AppLocalizations.of(context);
+    final items = [
+      (Icons.dashboard, l10n.tabDailyChallenge),
+      (Icons.school, l10n.tabLessons),
+      (Icons.grid_3x3, l10n.tabTables),
+      (Icons.trending_up, l10n.tabProgress),
     ];
 
     return SafeArea(

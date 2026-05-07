@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app/app_routes.dart';
 import 'colors.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
+import 'l10n/app_localizations.dart';
 
 void main() {
   runApp(const MathLingoApp());
@@ -14,9 +16,17 @@ class MathLingoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MathLingo - Math Learning Adventure',
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.dashboard,
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+      locale: const Locale('sq'),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: CosmicColors.background,
