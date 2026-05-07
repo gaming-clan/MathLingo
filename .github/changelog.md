@@ -7,6 +7,7 @@
 - Routing bazë i aplikacionit përmes `AppRoutes` dhe `main.dart` minimal.
 
 ### Changed
+- Package name updated from `com.example.mathlingo` to `com.mathlingo.app` (Android & iOS).
 - `main.dart` tani përmban vetëm bootstrap-in e aplikacionit, temën dhe konfigurimin bazë të route-ve.
 - Testet e widget-eve u përditësuan sipas strukturës së re modulare.
 

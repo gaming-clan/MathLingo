@@ -5,7 +5,7 @@
 - **Dart SDK:** `^3.9.2`.
 - **Android Target SDK:** 35.
 - **Android Min SDK:** 26.
-- **Namespace:** `com.example.mathlingo`.
+- **Namespace:** `com.mathlingo.app`.
 
 ## 2. Varësitë Kryesore (Authorized)
 - `cupertino_icons: ^1.0.8`
