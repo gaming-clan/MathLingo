@@ -1,0 +1,26 @@
+# 🐞 Regjistri i Bug-eve
+
+## Fixed
+
+| ID | Përshkrimi | Severiteti | Statusi | Sektori |
+| :--- | :--- | :--- | :--- | :--- |
+| B001 | Tabelat e zbritjes shfaqnin rezultate negative (p.sh 2-9=-7) | **Kritik** | Fixed | `simple_tables.dart` |
+| B002 | Tabelat e pjesëtimit përdornin `~/` (p.sh 12/5=2) | **Kritik** | Fixed | `simple_tables.dart` |
+| B003 | SnackBar mbivendoste BottomNavigationBar | **Mesatar** | Fixed | UI Global |
+| B004 | SDK Mismatch (Local 3.32 vs Project 3.41) | **Bllokues** | Fixed | Environment |
+
+## Open / Monitor
+
+| ID | Përshkrimi | Severiteti | Statusi | Sektori |
+| :--- | :--- | :--- | :--- | :--- |
+| B005 | AAPT2 Binary Mismatch në ARM64 Linux | **Bllokues** | Monitor | Build System |
+| B006 | Tekstet janë hardcoded (pamundëson testet automatike) | **Mesatar** | Open | Localization |
+| B007 | _processImage() është vetëm një placeholder (pa OCR real) | **Lartë** | Open | Gamify Feature |
+
+---
+**Legjenda:**
+- **Fixed:** E adresuar dhe e verifikuar në degën aktuale të zhvillimit.
+- **Monitor:** Kërkon verifikim në mjedise ose platforma specifike.
+- **Bllokues:** Build dështon plotësisht.
+- **Kritik:** Logjika matematikore/pedagogjike është e gabuar.
+- **Mesatar:** Probleme vizuale ose borxh teknik.
