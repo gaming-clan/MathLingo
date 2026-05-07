@@ -25,11 +25,13 @@ class ProgressNotifier extends StateNotifier<AsyncValue<UserProgress>> {
   Future<void> addSession({
     required int points,
     required int accuracy,
+    String? moduleKey,
   }) async {
     try {
       final updated = await UserProgressStorage.addSession(
         points: points,
         accuracy: accuracy,
+        moduleKey: moduleKey,
       );
       if (mounted) state = AsyncValue.data(updated);
     } on Exception catch (e, st) {

@@ -64,6 +64,7 @@ class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
                 builder: (_) => ResultsScreen(
                   points: next.score,
                   accuracy: next.accuracy,
+                  moduleKey: widget.operation.label,
                 ),
               ),
             );

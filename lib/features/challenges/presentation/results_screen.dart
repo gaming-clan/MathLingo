@@ -16,10 +16,14 @@ class ResultsScreen extends ConsumerStatefulWidget {
     super.key,
     required this.points,
     required this.accuracy,
+    this.moduleKey,
   });
 
   final int points;
   final int accuracy;
+
+  /// Çelësi i modulit për statistikat per-modul (p.sh. 'Mbledhje', 'Gjeometri').
+  final String? moduleKey;
 
   @override
   ConsumerState<ResultsScreen> createState() => _ResultsScreenState();
@@ -81,6 +85,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
               await ref.read(progressProvider.notifier).addSession(
                 points: widget.points,
                 accuracy: widget.accuracy,
+                moduleKey: widget.moduleKey,
               );
               if (!mounted) {
                 return;

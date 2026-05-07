@@ -64,6 +64,11 @@ void main() {
   testWidgets('dashboard tabs render body content and respond to taps', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(480 * 2, 960 * 2);
+    tester.view.devicePixelRatio = 2.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(const ProviderScope(child: MathLingoApp()));
 
     expect(find.byType(DashboardScreen), findsOneWidget);
