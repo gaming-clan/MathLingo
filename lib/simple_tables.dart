@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'colors.dart';
+import 'core/providers/tables_provider.dart';
 import 'l10n/app_localizations.dart';
 import 'responsive.dart';
 
@@ -51,22 +53,37 @@ extension _TableOperationX on _TableOperation {
         return '÷';
     }
   }
+
+  IconData get icon {
+    switch (this) {
+      case _TableOperation.addition:
+        return Icons.add;
+      case _TableOperation.subtraction:
+        return Icons.remove;
+      case _TableOperation.multiplication:
+        return Icons.close;
+      case _TableOperation.division:
+        return Icons.more_horiz;
+    }
+  }
 }
 
 // Simple Operation Tables Screen
-class OperationTablesScreen extends StatefulWidget {
+class OperationTablesScreen extends ConsumerStatefulWidget {
   const OperationTablesScreen({super.key});
 
   @override
-  State<OperationTablesScreen> createState() => _OperationTablesScreenState();
+  ConsumerState<OperationTablesScreen> createState() =>
+      _OperationTablesScreenState();
 }
 
-class _OperationTablesScreenState extends State<OperationTablesScreen> {
-  int selectedTable = 1;
+class _OperationTablesScreenState
+    extends ConsumerState<OperationTablesScreen> {
 
   List<({int operand, int result})> _buildVisibleEntries(
     _TableOperation operation,
     int Function(int, int) calculate,
+    int selectedTable,
   ) {
     final entries = <({int operand, int result})>[];
 
@@ -87,6 +104,7 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final selectedTable = ref.watch(tablesProvider).selectedTable;
     return DefaultTabController(
       length: 4,
       child: Column(
@@ -155,15 +173,19 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                     labelColor: Colors.white,
                     labelStyle: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 13,
                     ),
                     unselectedLabelColor: Colors.white,
-                    tabs: [
-                      Tab(text: _TableOperation.addition.tabLabel(l10n)),
-                      Tab(text: _TableOperation.subtraction.tabLabel(l10n)),
-                      Tab(text: _TableOperation.multiplication.tabLabel(l10n)),
-                      Tab(text: _TableOperation.division.tabLabel(l10n)),
-                    ],
+                    tabs: _TableOperation.values.map((op) {
+                      final showText =
+                          MediaQuery.sizeOf(context).width >= 360;
+                      return Tab(
+                        icon: Icon(op.icon, size: 20),
+                        text: showText ? op.tabLabel(l10n) : null,
+                        iconMargin: const EdgeInsets.only(bottom: 2),
+                        height: showText ? 54 : 42,
+                      );
+                    }).toList(),
                   ),
                 ),
               ),
@@ -177,21 +199,25 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                   _TableOperation.addition,
                   (a, b) => a + b,
                   Colors.green,
+                  selectedTable,
                 ),
                 _buildOperationTable(
                   _TableOperation.subtraction,
                   (a, b) => a - b,
                   Colors.red,
+                  selectedTable,
                 ),
                 _buildOperationTable(
                   _TableOperation.multiplication,
                   (a, b) => a * b,
                   Colors.orange,
+                  selectedTable,
                 ),
                 _buildOperationTable(
                   _TableOperation.division,
                   (a, b) => a ~/ b,
                   Colors.blue,
+                  selectedTable,
                 ),
               ],
             ),
@@ -205,9 +231,10 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
     _TableOperation operation,
     int Function(int, int) calculate,
     Color color,
+    int selectedTable,
   ) {
     final l10n = AppLocalizations.of(context);
-    final entries = _buildVisibleEntries(operation, calculate);
+    final entries = _buildVisibleEntries(operation, calculate, selectedTable);
     final operationLabel = operation.label(l10n);
 
     return Column(
@@ -248,7 +275,8 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6.0),
                 child: ElevatedButton(
-                  onPressed: () => setState(() => selectedTable = num),
+                  onPressed: () =>
+                      ref.read(tablesProvider.notifier).selectTable(num),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isSelected
                         ? color
@@ -312,10 +340,7 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                     elevation: 10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(
-                        color: color,
-                        width: 3,
-                      ),
+                      side: BorderSide(color: color, width: 3),
                     ),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(16),
@@ -337,47 +362,74 @@ class _OperationTablesScreenState extends State<OperationTablesScreen> {
                           ),
                         );
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              color.withValues(alpha: 0.15),
-                              color.withValues(alpha: 0.05),
-                            ],
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '$selectedTable $op $num',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900,
-                                color: CosmicColors.onSurface,
+                      child: Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  color.withValues(alpha: 0.15),
+                                  color.withValues(alpha: 0.05),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 12),
-                            Container(
-                              padding: const EdgeInsets.all(12),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '$selectedTable $op $num',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900,
+                                    color: CosmicColors.onSurface,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: color,
+                                  ),
+                                  child: Text(
+                                    '$result',
+                                    style: const TextStyle(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // C2: badge simboli operacionit (WCAG non-color encoding)
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
                                 color: color,
+                                borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                '$result',
+                                op,
                                 style: const TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.w900,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
                                   color: Colors.white,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   );

@@ -30,28 +30,20 @@ class LessonsPage extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           const GlassPanel(
-            padding: EdgeInsets.all(22),
-            child: SizedBox(
-              height: 260,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Text(
-                      '5 + 3 = 8',
-                      style: TextStyle(
-                        color: CosmicColors.secondaryContainer,
-                        fontSize: 46,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
+            padding: EdgeInsets.symmetric(vertical: 24, horizontal: 22),
+            child: Column(
+              children: [
+                Text(
+                  '5 + 3 = 8',
+                  style: TextStyle(
+                    color: CosmicColors.secondaryContainer,
+                    fontSize: 46,
+                    fontWeight: FontWeight.w900,
                   ),
-                  Positioned(
-                    right: -18,
-                    bottom: -24,
-                    child: MascotFrame(size: 170),
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(height: 20),
+                MascotFrame(size: 160),
+              ],
             ),
           ),
           const SizedBox(height: 28),

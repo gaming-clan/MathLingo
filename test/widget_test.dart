@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:math_lingo/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:math_lingo/l10n/app_localizations.dart';
@@ -27,17 +28,19 @@ void main() {
   });
 
   Widget buildLocalizedTestApp(Widget home, {ThemeData? theme}) {
-    return MaterialApp(
-      locale: const Locale('sq'),
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales,
-      theme: theme ?? ThemeData(useMaterial3: true),
-      home: home,
+    return ProviderScope(
+      child: MaterialApp(
+        locale: const Locale('sq'),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: theme ?? ThemeData(useMaterial3: true),
+        home: home,
+      ),
     );
   }
 
@@ -48,7 +51,7 @@ void main() {
   testWidgets('dashboard loads with Stitch Cosmic Logic content', (
     tester,
   ) async {
-    await tester.pumpWidget(const MathLingoApp());
+    await tester.pumpWidget(const ProviderScope(child: MathLingoApp()));
 
     expect(find.text('MathLingo'), findsOneWidget);
     expect(find.text('Sfida e Ditës'), findsWidgets);
@@ -61,7 +64,7 @@ void main() {
   testWidgets('dashboard tabs render body content and respond to taps', (
     tester,
   ) async {
-    await tester.pumpWidget(const MathLingoApp());
+    await tester.pumpWidget(const ProviderScope(child: MathLingoApp()));
 
     expect(find.byType(DashboardScreen), findsOneWidget);
     expect(find.text('Veprime të Shpejta'), findsOneWidget);
@@ -76,6 +79,7 @@ void main() {
 
     await tester.tap(find.text('Progresi'));
     await tester.pump();
+    await tester.runAsync(() async {}); // allow progressProvider Future to complete
     await tester.pump();
     expect(find.text('Progresi yt po rritet çdo ditë.'), findsOneWidget);
   });
@@ -83,7 +87,7 @@ void main() {
   testWidgets('start challenge opens the geometry challenge flow', (
     tester,
   ) async {
-    await tester.pumpWidget(const MathLingoApp());
+    await tester.pumpWidget(const ProviderScope(child: MathLingoApp()));
 
     final startChallengeButton = buttonInside(
       find.byKey(const ValueKey('start-challenge')),

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/app_routes.dart';
 import '../../../colors.dart';
+import '../../../core/providers/progress_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../responsive.dart';
-import '../../../shared/utils/user_progress_storage.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
 import '../../../shared/widgets/mascot_frame.dart';
 import '../../../shared/widgets/score_card.dart';
 
-class ResultsScreen extends StatefulWidget {
+class ResultsScreen extends ConsumerStatefulWidget {
   const ResultsScreen({
     super.key,
     required this.points,
@@ -21,10 +22,10 @@ class ResultsScreen extends StatefulWidget {
   final int accuracy;
 
   @override
-  State<ResultsScreen> createState() => _ResultsScreenState();
+  ConsumerState<ResultsScreen> createState() => _ResultsScreenState();
 }
 
-class _ResultsScreenState extends State<ResultsScreen> {
+class _ResultsScreenState extends ConsumerState<ResultsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -77,7 +78,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
               icon: Icons.arrow_forward,
               onPressed: () async {
               final navigator = Navigator.of(context);
-              await UserProgressStorage.addSession(
+              await ref.read(progressProvider.notifier).addSession(
                 points: widget.points,
                 accuracy: widget.accuracy,
               );

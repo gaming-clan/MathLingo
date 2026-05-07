@@ -7,7 +7,7 @@ import '../../../models/user_progress.dart';
 import '../../../models/operation.dart';
 import '../../../responsive.dart';
 import '../../../shared/utils/user_progress_storage.dart';
-import '../../../shared/widgets/cosmic_bottom_nav.dart';
+import '../../../shared/navigation/adaptive_scaffold.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_progress.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
@@ -98,17 +98,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: CosmicColors.background,
+    return AdaptiveScaffold(
+      selectedIndex: _selectedIndex,
+      onSelected: _onTabSelected,
       appBar: CosmicTopBar(
         onProfilePressed: _onProfilePressed,
         onNotificationsPressed: _onNotificationsPressed,
       ),
       body: _buildCurrentPage(),
-      bottomNavigationBar: CosmicBottomNav(
-        selectedIndex: _selectedIndex,
-        onSelected: _onTabSelected,
-      ),
     );
   }
 }
@@ -144,6 +141,8 @@ class _DashboardPage extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 28),
+          _DailyChallengeCard(onStart: onStartGeometryChallenge),
+          const SizedBox(height: 24),
           _GamifyCard(onStart: onStartGamifyExercise),
           const SizedBox(height: 24),
           _QuickActionsCard(
@@ -152,8 +151,6 @@ class _DashboardPage extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           const _ProgressModuleCard(),
-          const SizedBox(height: 24),
-          _DailyChallengeCard(onStart: onStartGeometryChallenge),
         ],
       ),
     );

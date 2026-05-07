@@ -1,10 +1,11 @@
-import 'dart:math';
+﻿import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../colors.dart';
+import '../../../core/providers/geometry_provider.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../models/geometry_question.dart';
 import '../../../models/geometry_shape.dart';
 import '../../../responsive.dart';
 import '../../../shared/painting/geometry_shape_painter.dart';
@@ -16,7 +17,7 @@ import '../../../shared/widgets/section_header.dart';
 import '../../challenges/presentation/results_screen.dart';
 import '../../challenges/presentation/widgets/answer_button.dart';
 
-class GeometryChallengeScreen extends StatefulWidget {
+class GeometryChallengeScreen extends ConsumerStatefulWidget {
   const GeometryChallengeScreen({
     super.key,
     this.sessionLength = 4,
@@ -27,131 +28,25 @@ class GeometryChallengeScreen extends StatefulWidget {
   final Random random;
 
   @override
-  State<GeometryChallengeScreen> createState() =>
+  ConsumerState<GeometryChallengeScreen> createState() =>
       _GeometryChallengeScreenState();
 }
 
-class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
-  late GeometryQuestion _question;
-  int _score = 0;
-  int _answered = 0;
-  int _correct = 0;
-  int? _selectedAnswer;
-  String _feedback = '';
-  bool _isAdvancing = false;
+class _GeometryChallengeScreenState
+    extends ConsumerState<GeometryChallengeScreen> {
+  late final GeometryConfig _config;
 
   @override
   void initState() {
     super.initState();
-    _question = _generateQuestion();
-  }
-
-  GeometryQuestion _generateQuestion() {
-    final random = widget.random;
-    final shape =
-        GeometryShape.values[random.nextInt(GeometryShape.values.length)];
-    late int width;
-    late int height;
-    late int answer;
-    late String prompt;
-    late String measurement;
-
-    switch (shape) {
-      case GeometryShape.rectangle:
-        width = random.nextInt(7) + 3;
-        height = random.nextInt(6) + 2;
-        answer = width * height;
-        prompt = '';
-        measurement = '';
-      case GeometryShape.triangle:
-        width = (random.nextInt(5) + 3) * 2;
-        height = random.nextInt(6) + 2;
-        answer = (width * height) ~/ 2;
-        prompt = '';
-        measurement = '';
-      case GeometryShape.square:
-        width = random.nextInt(8) + 3;
-        height = width;
-        answer = width * 4;
-        prompt = '';
-        measurement = '';
-    }
-
-    return GeometryQuestion(
-      shape: shape,
-      prompt: prompt,
-      measurement: measurement,
-      answer: answer,
-      options: _generateOptions(answer),
-      width: width,
-      height: height,
+    _config = GeometryConfig(
+      sessionLength: widget.sessionLength,
+      random: widget.random,
     );
   }
 
-  List<int> _generateOptions(int correctAnswer) {
-    final random = widget.random;
-    final options = <int>{correctAnswer};
-    while (options.length < 4) {
-      var offset = random.nextInt(14) - 7;
-      if (offset == 0) {
-        offset = 2;
-      }
-      final wrongAnswer = correctAnswer + offset;
-      if (wrongAnswer > 0) {
-        options.add(wrongAnswer);
-      }
-    }
-    return options.toList()..shuffle(random);
-  }
-
-  void _checkAnswer(int answer) {
-    if (_isAdvancing) {
-      return;
-    }
-
-    final isCorrect = answer == _question.answer;
-    final l10n = AppLocalizations.of(context);
-    setState(() {
-      _selectedAnswer = answer;
-      _feedback = isCorrect
-          ? l10n.geometryCorrectFeedback
-          : l10n.geometryIncorrectFeedback;
-      if (isCorrect) {
-        _score += 15;
-        _correct += 1;
-        _answered += 1;
-        _isAdvancing = true;
-      }
-    });
-
-    if (!isCorrect) {
-      return;
-    }
-
-    Future<void>.delayed(const Duration(milliseconds: 500), () {
-      if (!mounted) {
-        return;
-      }
-      if (_answered >= widget.sessionLength) {
-        final accuracy = ((_correct / widget.sessionLength) * 100).round();
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute<void>(
-            builder: (_) => ResultsScreen(points: _score, accuracy: accuracy),
-          ),
-        );
-        return;
-      }
-      setState(() {
-        _question = _generateQuestion();
-        _selectedAnswer = null;
-        _feedback = '';
-        _isAdvancing = false;
-      });
-    });
-  }
-
-  String _promptForQuestion(AppLocalizations l10n) {
-    switch (_question.shape) {
+  String _promptForShape(GeometryShape shape, AppLocalizations l10n) {
+    switch (shape) {
       case GeometryShape.rectangle:
         return l10n.geometryRectanglePrompt;
       case GeometryShape.triangle:
@@ -161,27 +56,49 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
     }
   }
 
-  String _measurementForQuestion(AppLocalizations l10n) {
-    switch (_question.shape) {
+  String _measurementForShape(GeometryState state, AppLocalizations l10n) {
+    final q = state.question;
+    switch (q.shape) {
       case GeometryShape.rectangle:
-        return l10n.geometryRectangleMeasurement(
-          _question.width,
-          _question.height,
-        );
+        return l10n.geometryRectangleMeasurement(q.width, q.height);
       case GeometryShape.triangle:
-        return l10n.geometryTriangleMeasurement(
-          _question.width,
-          _question.height,
-        );
+        return l10n.geometryTriangleMeasurement(q.width, q.height);
       case GeometryShape.square:
-        return l10n.geometrySquareMeasurement(_question.width);
+        return l10n.geometrySquareMeasurement(q.width);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final progress = _answered / widget.sessionLength;
+    final state = ref.watch(geometryProvider(_config));
     final l10n = AppLocalizations.of(context);
+
+    ref.listen(geometryProvider(_config), (prev, next) {
+      if (next.isAdvancing && !(prev?.isAdvancing ?? false)) {
+        final navigator = Navigator.of(context);
+        Future<void>.delayed(const Duration(milliseconds: 500), () {
+          if (!mounted) return;
+          if (next.isComplete) {
+            navigator.pushReplacement(
+              MaterialPageRoute<void>(
+                builder: (_) => ResultsScreen(
+                  points: next.score,
+                  accuracy: next.accuracy,
+                ),
+              ),
+            );
+          } else {
+            ref.read(geometryProvider(_config).notifier).advance();
+          }
+        });
+      }
+    });
+
+    final feedback = state.isAnswerCorrect == null
+        ? ''
+        : (state.isAnswerCorrect!
+            ? l10n.geometryCorrectFeedback
+            : l10n.geometryIncorrectFeedback);
 
     return Scaffold(
       backgroundColor: CosmicColors.background,
@@ -197,8 +114,8 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
             ),
             const SizedBox(height: 18),
             CosmicProgress(
-              label: l10n.geometryScoreLabel(_score),
-              value: progress,
+              label: l10n.geometryScoreLabel(state.score),
+              value: state.progress,
               color: CosmicColors.secondaryContainer,
             ),
             const SizedBox(height: 24),
@@ -213,10 +130,10 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
                       return SizedBox(
                         height: height,
                         child: CustomPaint(
-                          painter: GeometryShapePainter(_question),
+                          painter: GeometryShapePainter(state.question),
                           child: Center(
                             child: Icon(
-                              _question.shape.icon,
+                              state.question.shape.icon,
                               color: CosmicColors.secondaryContainer.withValues(
                                 alpha: 0.2,
                               ),
@@ -229,13 +146,13 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
                   ),
                   const SizedBox(height: 18),
                   Text(
-                    _promptForQuestion(l10n),
+                    _promptForShape(state.question.shape, l10n),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    _measurementForQuestion(l10n),
+                    _measurementForShape(state, l10n),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
@@ -270,9 +187,9 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
                   childAspectRatio: childAspectRatio,
                   mainAxisSpacing: 14,
                   crossAxisSpacing: 14,
-                  children: _question.options.map((option) {
-                    final isSelected = _selectedAnswer == option;
-                    final isCorrect = option == _question.answer;
+                  children: state.question.options.map((option) {
+                    final isSelected = state.selectedAnswer == option;
+                    final isCorrect = option == state.question.answer;
                     final color = isSelected && isCorrect
                         ? CosmicColors.secondaryContainer
                         : isSelected
@@ -284,7 +201,9 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
                           : ValueKey('geometry-answer-$option'),
                       value: option,
                       color: color,
-                      onPressed: () => _checkAnswer(option),
+                      onPressed: () => ref
+                          .read(geometryProvider(_config).notifier)
+                          .checkAnswer(option),
                     );
                   }).toList(),
                 );
@@ -293,13 +212,13 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
             const SizedBox(height: 18),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 180),
-              child: _feedback.isEmpty
+              child: feedback.isEmpty
                   ? const SizedBox(height: 28)
                   : Text(
-                      _feedback,
-                      key: ValueKey(_feedback),
+                      feedback,
+                      key: ValueKey(feedback),
                       style: TextStyle(
-                        color: _selectedAnswer == _question.answer
+                        color: state.isAnswerCorrect == true
                             ? CosmicColors.secondaryContainer
                             : CosmicColors.error,
                         fontSize: 18,
