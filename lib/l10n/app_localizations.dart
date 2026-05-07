@@ -274,6 +274,12 @@ abstract class AppLocalizations {
   /// **'Pikët: {score}'**
   String challengeScoreLabel(int score);
 
+  /// No description provided for @challengeEquationPrompt.
+  ///
+  /// In sq, this message translates to:
+  /// **'{num1} {symbol} {num2} = ?'**
+  String challengeEquationPrompt(int num1, Object symbol, int num2);
+
   /// No description provided for @challengeCorrectFeedback.
   ///
   /// In sq, this message translates to:
@@ -297,6 +303,18 @@ abstract class AppLocalizations {
   /// In sq, this message translates to:
   /// **'Përfundove me sukses sfidën.'**
   String get resultsSubtitle;
+
+  /// No description provided for @resultsPointsValue.
+  ///
+  /// In sq, this message translates to:
+  /// **'+{points}'**
+  String resultsPointsValue(int points);
+
+  /// No description provided for @resultsAccuracyValue.
+  ///
+  /// In sq, this message translates to:
+  /// **'{accuracy}%'**
+  String resultsAccuracyValue(int accuracy);
 
   /// No description provided for @geometryKicker.
   ///
@@ -597,6 +615,30 @@ abstract class AppLocalizations {
   /// **'Ekuacioni u identifikua nga imazhi...'**
   String get gamifyRecognizedPlaceholder;
 
+  /// No description provided for @gamifyOcrProcessing.
+  ///
+  /// In sq, this message translates to:
+  /// **'Po lexoj tekstin nga imazhi...'**
+  String get gamifyOcrProcessing;
+
+  /// No description provided for @gamifyOcrNoTextDetected.
+  ///
+  /// In sq, this message translates to:
+  /// **'Nuk u gjet tekst në imazh.'**
+  String get gamifyOcrNoTextDetected;
+
+  /// No description provided for @gamifyOcrNoEquationFound.
+  ///
+  /// In sq, this message translates to:
+  /// **'Nuk u gjet asnjë ekuacion matematikor në imazh.'**
+  String get gamifyOcrNoEquationFound;
+
+  /// No description provided for @gamifyOcrProcessingError.
+  ///
+  /// In sq, this message translates to:
+  /// **'Gabim gjatë leximit të tekstit: {error}'**
+  String gamifyOcrProcessingError(Object error);
+
   /// No description provided for @gamifyEmptyEquationError.
   ///
   /// In sq, this message translates to:
@@ -608,6 +650,24 @@ abstract class AppLocalizations {
   /// In sq, this message translates to:
   /// **'Gabim në zgjedhjen e imazhit: {error}'**
   String gamifyImagePickError(Object error);
+
+  /// No description provided for @gamifySubtractionNeedsPositiveResult.
+  ///
+  /// In sq, this message translates to:
+  /// **'Ky ushtrim krijon rezultat negativ ({num1} - {num2}). Përdor një zbritje ku numri i parë është më i madh.'**
+  String gamifySubtractionNeedsPositiveResult(int num1, int num2);
+
+  /// No description provided for @gamifyDivisionByZero.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pjesëtimi me zero nuk lejohet.'**
+  String get gamifyDivisionByZero;
+
+  /// No description provided for @gamifyDivisionNeedsWholeResult.
+  ///
+  /// In sq, this message translates to:
+  /// **'Ky pjesëtim nuk jep rezultat të plotë ({num1} ÷ {num2}). Zgjidh një ushtrim që ndahet pa mbetje.'**
+  String gamifyDivisionNeedsWholeResult(int num1, int num2);
 
   /// No description provided for @gamifyAdditionSolution.
   ///

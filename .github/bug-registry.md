@@ -9,14 +9,14 @@
 | B003 | SnackBar mbivendoste BottomNavigationBar | **Mesatar** | Fixed | UI Global |
 | B004 | SDK Mismatch (Local 3.32 vs Project 3.41) | **Bllokues** | Fixed | Environment |
 | B008 | Dashboard body nuk renderohej për shkak të sizing-ut të BottomNavigation | **Kritik** | Fixed | Dashboard UI |
+| B006 | Tekstet ishin hardcoded në ekranet finale të Sprint 3 | **Mesatar** | Fixed | Localization |
+| B007 | `_processImage()` ishte vetëm placeholder, pa OCR real | **Lartë** | Fixed | Gamify Feature |
 
 ## Open / Monitor
 
 | ID | Përshkrimi | Severiteti | Statusi | Sektori |
 | :--- | :--- | :--- | :--- | :--- |
 | B005 | AAPT2 Binary Mismatch në ARM64 Linux | **Bllokues** | Monitor | Build System |
-| B006 | Tekstet janë hardcoded (pamundëson testet automatike) | **Mesatar** | Open | Localization |
-| B007 | _processImage() është vetëm një placeholder (pa OCR real) | **Lartë** | Open | Gamify Feature |
 
 ---
 **Legjenda:**

@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'colors.dart';
 import 'l10n/app_localizations.dart';
@@ -19,6 +20,9 @@ class GamifyExerciseScreen extends StatefulWidget {
 class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
   final TextEditingController _exerciseController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
+  final TextRecognizer _textRecognizer = TextRecognizer(
+    script: TextRecognitionScript.latin,
+  );
   File? _selectedImage;
   String? _recognizedText;
   String? _solution;
@@ -32,12 +36,13 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
       );
 
       if (pickedFile != null) {
+        final image = File(pickedFile.path);
         setState(() {
-          _selectedImage = File(pickedFile.path);
+          _selectedImage = image;
           _recognizedText = null;
           _solution = null;
         });
-        _processImage();
+        await _processImage(image);
       }
     } catch (e) {
       _showErrorSnackBar(l10n.gamifyImagePickError('$e'));
@@ -52,27 +57,71 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
       );
 
       if (pickedFile != null) {
+        final image = File(pickedFile.path);
         setState(() {
-          _selectedImage = File(pickedFile.path);
+          _selectedImage = image;
           _recognizedText = null;
           _solution = null;
         });
-        _processImage();
+        await _processImage(image);
       }
     } catch (e) {
       _showErrorSnackBar(l10n.gamifyImagePickError('$e'));
     }
   }
 
-  Future<void> _processImage() async {
+  Future<void> _processImage(File image) async {
+    final l10n = AppLocalizations.of(context);
     setState(() {
-      _recognizedText = AppLocalizations.of(context).gamifyRecognizedPlaceholder;
+      _isProcessing = true;
+      _recognizedText = l10n.gamifyOcrProcessing;
+      _solution = null;
     });
+
+    try {
+      final inputImage = InputImage.fromFile(image);
+      final recognizedText = await _textRecognizer.processImage(inputImage);
+      final equation = _extractEquation(recognizedText.text);
+
+      if (!mounted) {
+        return;
+      }
+
+      if (equation == null) {
+        final visibleText = recognizedText.text.trim();
+        setState(() {
+          _recognizedText = visibleText.isEmpty
+              ? l10n.gamifyOcrNoTextDetected
+              : visibleText;
+          _isProcessing = false;
+        });
+        _showErrorSnackBar(l10n.gamifyOcrNoEquationFound);
+        return;
+      }
+
+      _exerciseController.text = equation;
+      setState(() {
+        _recognizedText = equation;
+        _isProcessing = false;
+      });
+      _generateSolution(prefilledExercise: equation);
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _isProcessing = false;
+        _recognizedText = null;
+      });
+      _showErrorSnackBar(l10n.gamifyOcrProcessingError('$e'));
+    }
   }
 
-  void _generateSolution() {
+  void _generateSolution({String? prefilledExercise}) {
     final l10n = AppLocalizations.of(context);
-    final exerciseText = _recognizedText ?? _exerciseController.text;
+    final rawInput = prefilledExercise ?? _exerciseController.text;
+    final exerciseText = _extractEquation(rawInput) ?? rawInput.trim();
 
     if (exerciseText.isEmpty) {
       _showErrorSnackBar(l10n.gamifyEmptyEquationError);
@@ -83,84 +132,73 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
       _isProcessing = true;
     });
 
-    // Simulate processing delay
-    Future<void>.delayed(const Duration(milliseconds: 800), () {
-      if (!mounted) return;
+    final solution = _generateFunSolution(exerciseText);
 
-      // Parse and generate fun solution
-      final solution = _generateFunSolution(exerciseText);
-
-      setState(() {
-        _solution = solution;
-        _isProcessing = false;
-      });
+    setState(() {
+      _recognizedText ??= prefilledExercise;
+      _solution = solution;
+      _isProcessing = false;
     });
+  }
+
+  String? _extractEquation(String text) {
+    final normalized = text
+        .replaceAll(RegExp(r'[\r\n]+'), ' ')
+        .replaceAll('*', '×')
+        .replaceAll('/', '÷')
+        .replaceAll(RegExp(r'(?<=\d)\s*[xX]\s*(?=\d)'), ' × ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+
+    final match = RegExp(r'(\d+)\s*([+\-×÷])\s*(\d+)').firstMatch(normalized);
+    if (match == null) {
+      return null;
+    }
+
+    final leftOperand = match.group(1)!;
+    final operator = match.group(2)!;
+    final rightOperand = match.group(3)!;
+    return '$leftOperand $operator $rightOperand';
   }
 
   String _generateFunSolution(String exercise) {
     final l10n = AppLocalizations.of(context);
-    exercise = exercise.toLowerCase().trim();
+    final normalizedExercise = _extractEquation(exercise) ?? exercise.trim();
+    final match = RegExp(r'^(\d+)\s*([+\-×÷])\s*(\d+)$').firstMatch(
+      normalizedExercise,
+    );
 
-    exercise = exercise
-        .replaceAll('zgjidh', '')
-        .replaceAll('llogarit', '')
-        .replaceAll('sa është', '')
-        .replaceAll('janë', '')
-        .trim();
-
-    try {
-      if (exercise.contains('+')) {
-        final parts = exercise.split('+');
-        if (parts.length == 2) {
-          final num1 = int.parse(parts[0].trim());
-          final num2 = int.parse(parts[1].trim());
-          final answer = num1 + num2;
-
-          return l10n.gamifyAdditionSolution(num1, num2, answer);
-        }
-      } else if (exercise.contains('-')) {
-        final parts = exercise.split('-');
-        if (parts.length == 2) {
-          final num1 = int.parse(parts[0].trim());
-          final num2 = int.parse(parts[1].trim());
-          final answer = num1 - num2;
-
-          return l10n.gamifySubtractionSolution(num1, num2, answer);
-        }
-      } else if (exercise.contains('*') ||
-          exercise.contains('×') ||
-          exercise.contains('x')) {
-        final delimiter = exercise.contains('*')
-            ? '*'
-            : exercise.contains('×')
-            ? '×'
-            : 'x';
-        final parts = exercise.split(delimiter);
-        if (parts.length == 2) {
-          final num1 = int.parse(parts[0].trim());
-          final num2 = int.parse(parts[1].trim());
-          final answer = num1 * num2;
-
-          return l10n.gamifyMultiplicationSolution(num1, num2, answer);
-        }
-      } else if (exercise.contains('/') || exercise.contains('÷')) {
-        final delimiter = exercise.contains('/') ? '/' : '÷';
-        final parts = exercise.split(delimiter);
-        if (parts.length == 2) {
-          final num1 = int.parse(parts[0].trim());
-          final num2 = int.parse(parts[1].trim());
-          if (num2 != 0) {
-            final answer = num1 ~/ num2;
-
-            return l10n.gamifyDivisionSolution(num1, num2, answer);
-          }
-        }
-      }
-
-      return l10n.gamifyGenericSolution(exercise);
-    } catch (e) {
-      return l10n.gamifyInvalidSolution(exercise);
+    if (match == null) {
+      return normalizedExercise.isEmpty
+          ? l10n.gamifyInvalidSolution(exercise)
+          : l10n.gamifyGenericSolution(normalizedExercise);
     }
+
+    final num1 = int.parse(match.group(1)!);
+    final operator = match.group(2)!;
+    final num2 = int.parse(match.group(3)!);
+
+    switch (operator) {
+      case '+':
+        return l10n.gamifyAdditionSolution(num1, num2, num1 + num2);
+      case '-':
+        if (num1 < num2) {
+          return l10n.gamifySubtractionNeedsPositiveResult(num1, num2);
+        }
+        return l10n.gamifySubtractionSolution(num1, num2, num1 - num2);
+      case '×':
+        return l10n.gamifyMultiplicationSolution(num1, num2, num1 * num2);
+      case '÷':
+        if (num2 == 0) {
+          return l10n.gamifyDivisionByZero;
+        }
+        if (num1 % num2 != 0) {
+          return l10n.gamifyDivisionNeedsWholeResult(num1, num2);
+        }
+        return l10n.gamifyDivisionSolution(num1, num2, num1 ~/ num2);
+    }
+
+    return l10n.gamifyGenericSolution(normalizedExercise);
   }
 
   void _showErrorSnackBar(String message) {
@@ -186,6 +224,7 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
   @override
   void dispose() {
     _exerciseController.dispose();
+    _textRecognizer.close();
     super.dispose();
   }
 

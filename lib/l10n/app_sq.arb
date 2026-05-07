@@ -37,10 +37,38 @@
       }
     }
   },
+  "challengeEquationPrompt": "{num1} {symbol} {num2} = ?",
+  "@challengeEquationPrompt": {
+    "placeholders": {
+      "num1": {
+        "type": "int"
+      },
+      "symbol": {},
+      "num2": {
+        "type": "int"
+      }
+    }
+  },
   "challengeCorrectFeedback": "Saktë! Vazhdon fluturimi.",
   "challengeIncorrectFeedback": "Provo përsëri. Je shumë afër.",
   "resultsTitle": "Bravo!",
   "resultsSubtitle": "Përfundove me sukses sfidën.",
+  "resultsPointsValue": "+{points}",
+  "@resultsPointsValue": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "resultsAccuracyValue": "{accuracy}%",
+  "@resultsAccuracyValue": {
+    "placeholders": {
+      "accuracy": {
+        "type": "int"
+      }
+    }
+  },
   "geometryKicker": "GJEOMETRIA BAZË",
   "geometryTitle": "Sfida Gjeometrike",
   "geometryScoreLabel": "Pikët: {score}",
@@ -184,11 +212,43 @@
   "gamifyWriteExerciseLabel": "Shkruaj Ushtrimin",
   "gamifyExerciseHint": "Shembull: 15 + 7",
   "gamifyRecognizedPlaceholder": "Ekuacioni u identifikua nga imazhi...",
+  "gamifyOcrProcessing": "Po lexoj tekstin nga imazhi...",
+  "gamifyOcrNoTextDetected": "Nuk u gjet tekst në imazh.",
+  "gamifyOcrNoEquationFound": "Nuk u gjet asnjë ekuacion matematikor në imazh.",
+  "gamifyOcrProcessingError": "Gabim gjatë leximit të tekstit: {error}",
+  "@gamifyOcrProcessingError": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "gamifyEmptyEquationError": "Ju lutemi shkruani ose fotografoni një ekuacion.",
   "gamifyImagePickError": "Gabim në zgjedhjen e imazhit: {error}",
   "@gamifyImagePickError": {
     "placeholders": {
       "error": {}
+    }
+  },
+  "gamifySubtractionNeedsPositiveResult": "Ky ushtrim krijon rezultat negativ ({num1} - {num2}). Përdor një zbritje ku numri i parë është më i madh.",
+  "@gamifySubtractionNeedsPositiveResult": {
+    "placeholders": {
+      "num1": {
+        "type": "int"
+      },
+      "num2": {
+        "type": "int"
+      }
+    }
+  },
+  "gamifyDivisionByZero": "Pjesëtimi me zero nuk lejohet.",
+  "gamifyDivisionNeedsWholeResult": "Ky pjesëtim nuk jep rezultat të plotë ({num1} ÷ {num2}). Zgjidh një ushtrim që ndahet pa mbetje.",
+  "@gamifyDivisionNeedsWholeResult": {
+    "placeholders": {
+      "num1": {
+        "type": "int"
+      },
+      "num2": {
+        "type": "int"
+      }
     }
   },
   "gamifyAdditionSolution": "🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} + {num2} = ?\n\n📚 HAPI I PARË: Imagjinoni {num1} ballona që ngrihen në qiell!\n🎈 HAPI I DYTË: Shtojmë edhe {num2} ballona - tani kemi {answer} në total!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Çdo shifër në {answer} përfaqëson një yll në qiellin e natës! 🌟",

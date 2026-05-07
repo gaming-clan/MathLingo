@@ -48,7 +48,7 @@ class ResultsScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: ScoreCard(
-                    value: '+$points',
+                    value: l10n.resultsPointsValue(points),
                     label: l10n.commonPointsLabel,
                     icon: Icons.workspace_premium,
                     color: CosmicColors.tertiary,
@@ -57,7 +57,7 @@ class ResultsScreen extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ScoreCard(
-                    value: '$accuracy%',
+                    value: l10n.resultsAccuracyValue(accuracy),
                     label: l10n.commonAccuracyLabel,
                     icon: Icons.my_location,
                     color: CosmicColors.secondary,

@@ -15,7 +15,7 @@
 
 ## Sprint 3: Shkallëzimi & Inteligjenca
 - [x] **Task 1:** Lokalizimi zyrtar (ARB files).
-- [ ] **Task 2:** Integrimi i ML Kit OCR (Real Image Recognition).
+- [x] **Task 2:** Integrimi i ML Kit OCR (Real Image Recognition).
 - [ ] **Task 3:** Implementimi i Riverpod për State Management.
 - [ ] **Task 4:** Persistenca lokale e progresit (Hive).
 

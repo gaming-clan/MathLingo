@@ -105,6 +105,11 @@ class AppLocalizationsSq extends AppLocalizations {
   }
 
   @override
+  String challengeEquationPrompt(int num1, Object symbol, int num2) {
+    return '$num1 $symbol $num2 = ?';
+  }
+
+  @override
   String get challengeCorrectFeedback => 'Saktë! Vazhdon fluturimi.';
 
   @override
@@ -115,6 +120,16 @@ class AppLocalizationsSq extends AppLocalizations {
 
   @override
   String get resultsSubtitle => 'Përfundove me sukses sfidën.';
+
+  @override
+  String resultsPointsValue(int points) {
+    return '+$points';
+  }
+
+  @override
+  String resultsAccuracyValue(int accuracy) {
+    return '$accuracy%';
+  }
 
   @override
   String get geometryKicker => 'GJEOMETRIA BAZË';
@@ -292,12 +307,40 @@ class AppLocalizationsSq extends AppLocalizations {
       'Ekuacioni u identifikua nga imazhi...';
 
   @override
+  String get gamifyOcrProcessing => 'Po lexoj tekstin nga imazhi...';
+
+  @override
+  String get gamifyOcrNoTextDetected => 'Nuk u gjet tekst në imazh.';
+
+  @override
+  String get gamifyOcrNoEquationFound =>
+      'Nuk u gjet asnjë ekuacion matematikor në imazh.';
+
+  @override
+  String gamifyOcrProcessingError(Object error) {
+    return 'Gabim gjatë leximit të tekstit: $error';
+  }
+
+  @override
   String get gamifyEmptyEquationError =>
       'Ju lutemi shkruani ose fotografoni një ekuacion.';
 
   @override
   String gamifyImagePickError(Object error) {
     return 'Gabim në zgjedhjen e imazhit: $error';
+  }
+
+  @override
+  String gamifySubtractionNeedsPositiveResult(int num1, int num2) {
+    return 'Ky ushtrim krijon rezultat negativ ($num1 - $num2). Përdor një zbritje ku numri i parë është më i madh.';
+  }
+
+  @override
+  String get gamifyDivisionByZero => 'Pjesëtimi me zero nuk lejohet.';
+
+  @override
+  String gamifyDivisionNeedsWholeResult(int num1, int num2) {
+    return 'Ky pjesëtim nuk jep rezultat të plotë ($num1 ÷ $num2). Zgjidh një ushtrim që ndahet pa mbetje.';
   }
 
   @override

@@ -182,7 +182,11 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                       children: [
                         Center(
                           child: Text(
-                            '${_question.num1} ${widget.operation.displaySymbol} ${_question.num2} = ?',
+                            l10n.challengeEquationPrompt(
+                              _question.num1,
+                              widget.operation.displaySymbol,
+                              _question.num2,
+                            ),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: CosmicColors.secondaryContainer,
