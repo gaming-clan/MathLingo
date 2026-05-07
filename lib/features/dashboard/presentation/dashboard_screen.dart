@@ -27,6 +27,29 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
+  Widget _buildCurrentPage() {
+    switch (_selectedIndex) {
+      case 0:
+        return _DashboardPage(
+          onStartChallenge: _startChallenge,
+          onStartGeometryChallenge: _startGeometryChallenge,
+          onStartGamifyExercise: _startGamifyExercise,
+        );
+      case 1:
+        return LessonsPage(onStartGeometryChallenge: _startGeometryChallenge);
+      case 2:
+        return const OperationTablesScreen();
+      case 3:
+        return const ProgressPage();
+      default:
+        return _DashboardPage(
+          onStartChallenge: _startChallenge,
+          onStartGeometryChallenge: _startGeometryChallenge,
+          onStartGamifyExercise: _startGamifyExercise,
+        );
+    }
+  }
+
   void _startChallenge([Operation operation = Operation.addition]) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -49,23 +72,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final pages = [
-      _DashboardPage(
-        onStartChallenge: _startChallenge,
-        onStartGeometryChallenge: _startGeometryChallenge,
-        onStartGamifyExercise: _startGamifyExercise,
-      ),
-      LessonsPage(onStartGeometryChallenge: _startGeometryChallenge),
-      const OperationTablesScreen(),
-      const ProgressPage(),
-    ];
-
     return Scaffold(
       backgroundColor: CosmicColors.background,
       appBar: const CosmicTopBar(),
       body: SafeArea(
         top: false,
-        child: IndexedStack(index: _selectedIndex, children: pages),
+        child: KeyedSubtree(
+          key: ValueKey(_selectedIndex),
+          child: _buildCurrentPage(),
+        ),
       ),
       bottomNavigationBar: CosmicBottomNav(
         selectedIndex: _selectedIndex,

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:math_lingo/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:math_lingo/l10n/app_localizations.dart';
 import 'package:math_lingo/features/challenges/presentation/challenge_screen.dart';
 import 'package:math_lingo/features/geometry/presentation/geometry_challenge_screen.dart';
@@ -40,6 +41,27 @@ void main() {
     expect(find.text('Progresi i Modulit'), findsOneWidget);
     expect(find.text('Veprime të Shpejta'), findsOneWidget);
     expect(find.text('Fillo Sfidën'), findsOneWidget);
+  });
+
+  testWidgets('dashboard tabs render body content and respond to taps', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const MathLingoApp());
+
+    expect(find.byType(DashboardScreen), findsOneWidget);
+    expect(find.text('Veprime të Shpejta'), findsOneWidget);
+
+    await tester.tap(find.text('Mësime'));
+    await tester.pump();
+    expect(find.text('Mjetet e Llogaritjes'), findsOneWidget);
+
+    await tester.tap(find.text('Tabelat'));
+    await tester.pump();
+    expect(find.text('Tabelat Matematikore'), findsOneWidget);
+
+    await tester.tap(find.text('Progresi'));
+    await tester.pump();
+    expect(find.text('Progresi yt po rritet çdo ditë.'), findsOneWidget);
   });
 
   testWidgets('start challenge opens the geometry challenge flow', (
