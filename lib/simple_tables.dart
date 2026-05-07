@@ -173,7 +173,12 @@ class _OperationTablesScreenState
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildTabBar(context, l10n),
+                child: _buildTabBar(
+                  context,
+                  l10n,
+                  horizontalPadding: 0,
+                  isNarrowPanel: true,
+                ),
               ),
               const SizedBox(height: 12),
               Expanded(
@@ -270,11 +275,18 @@ class _OperationTablesScreenState
     );
   }
 
-  Widget _buildTabBar(BuildContext context, AppLocalizations l10n) {
+  /// [horizontalPadding] lejon thirrësin të vendosë padding sipas kontekstit.
+  /// [isNarrowPanel] true → TabBar bëhet scrollable (detail pane i ngushtë).
+  Widget _buildTabBar(
+    BuildContext context,
+    AppLocalizations l10n, {
+    double? horizontalPadding,
+    bool isNarrowPanel = false,
+  }) {
+    final hPad =
+        horizontalPadding ?? AdaptiveLayout.pagePadding(context).left;
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: AdaptiveLayout.pagePadding(context).left,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: hPad),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1120),
@@ -288,6 +300,10 @@ class _OperationTablesScreenState
               ),
             ),
             child: TabBar(
+              isScrollable: isNarrowPanel,
+              tabAlignment: isNarrowPanel
+                  ? TabAlignment.start
+                  : TabAlignment.fill,
               dividerColor: Colors.transparent,
               indicatorSize: TabBarIndicatorSize.tab,
               indicator: const BoxDecoration(

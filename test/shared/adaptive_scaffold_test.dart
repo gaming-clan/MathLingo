@@ -88,7 +88,7 @@ void main() {
     });
   });
 
-  group('AdaptiveScaffold — 600–839px (tablet compact)', () {
+  group('AdaptiveScaffold — ≥600px (tablet me etiketa)', () {
     testWidgets('shfaq NavigationRail', (tester) async {
       tester.view.physicalSize = const Size(700 * 2, 800 * 2);
       tester.view.devicePixelRatio = 2.0;
@@ -117,7 +117,7 @@ void main() {
       expect(find.byType(CosmicBottomNav), findsNothing);
     });
 
-    testWidgets('NavigationRail nuk është extended (pa etiketa)', (tester) async {
+    testWidgets('NavigationRail është gjithmonë extended (etiketa të dukshme)', (tester) async {
       tester.view.physicalSize = const Size(700 * 2, 800 * 2);
       tester.view.devicePixelRatio = 2.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -129,7 +129,8 @@ void main() {
       await tester.pumpAndSettle();
 
       final rail = tester.widget<NavigationRail>(find.byType(NavigationRail));
-      expect(rail.extended, isFalse);
+      // Rail gjithmonë extended ≥600px — fëmijët kanë nevojë për etiketa.
+      expect(rail.extended, isTrue);
     });
   });
 

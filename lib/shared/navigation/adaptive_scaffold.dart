@@ -6,8 +6,8 @@ import '../widgets/cosmic_bottom_nav.dart';
 
 /// AdaptiveScaffold shfaq:
 ///   < 600px  → BottomNav (CosmicBottomNav)
-///   600–839px → NavigationRail kompakt (vetëm ikona)
-///   ≥ 840px  → NavigationRail extended (ikona + etiketa) + Master-Detail slot
+///   ≥ 600px  → NavigationRail extended (ikona + etiketa) — gjithmonë visible
+///   ≥ 840px  → NavigationRail extended + Master-Detail slot
 class AdaptiveScaffold extends StatelessWidget {
   const AdaptiveScaffold({
     super.key,
@@ -42,7 +42,8 @@ class AdaptiveScaffold extends StatelessWidget {
       );
     }
 
-    final extended = width >= 840;
+    // Gjithmonë extended kur ≥600px — fëmijët 6-10 vjeç kanë nevojë për etiketa.
+    const extended = true;
 
     return Scaffold(
       backgroundColor: CosmicColors.background,
