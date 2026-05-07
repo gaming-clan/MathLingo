@@ -5,8 +5,11 @@ import 'app/app_routes.dart';
 import 'colors.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'l10n/app_localizations.dart';
+import 'shared/utils/user_progress_storage.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await UserProgressStorage.initialize();
   runApp(const MathLingoApp());
 }
 

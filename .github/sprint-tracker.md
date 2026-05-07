@@ -13,11 +13,13 @@
 - [x] **Task 4:** Refaktorimi i `main.dart` (Ndarja e ekraneve).
 - [x] **Task 5:** Validimi me `fvm flutter analyze` dhe `fvm flutter test`.
 
-## Sprint 3: Shkallëzimi & Inteligjenca
+## Sprint 3: Shkallëzimi & Inteligjenca - DONE
 - [x] **Task 1:** Lokalizimi zyrtar (ARB files).
 - [x] **Task 2:** Integrimi i ML Kit OCR (Real Image Recognition).
-- [ ] **Task 3:** Implementimi i Riverpod për State Management.
-- [ ] **Task 4:** Persistenca lokale e progresit (Hive).
+- [x] **Task 3:** Persistenca lokale e progresit (Hive).
+
+## Sprint 4: State Management & Hardening
+- [ ] **Task 1:** Implementimi i Riverpod për State Management.
 
 ## Hardening & Release Ops
 - [ ] **Task 1:** Konfigurimi i Android Release Signing.

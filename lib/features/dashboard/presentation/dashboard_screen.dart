@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../colors.dart';
 import '../../../gamify_exercise.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../models/user_progress.dart';
 import '../../../models/operation.dart';
 import '../../../responsive.dart';
+import '../../../shared/utils/user_progress_storage.dart';
 import '../../../shared/widgets/cosmic_bottom_nav.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_progress.dart';
@@ -255,23 +257,33 @@ class _ProgressModuleCard extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         const SizedBox(height: 16),
-        GlassPanel(
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            children: [
-              CosmicProgress(
-                label: l10n.dashboardProgressAbstractAlgebra,
-                value: 0.85,
-                color: CosmicColors.secondaryContainer,
+        FutureBuilder<UserProgress>(
+          future: UserProgressStorage.load(),
+          builder: (context, snapshot) {
+            final progress = snapshot.data ?? const UserProgress.empty();
+            return GlassPanel(
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                children: [
+                  CosmicProgress(
+                    label: l10n.dashboardProgressPointsLabel(
+                      progress.totalPoints,
+                    ),
+                    value: progress.totalPointsProgress(),
+                    color: CosmicColors.secondaryContainer,
+                  ),
+                  const SizedBox(height: 18),
+                  CosmicProgress(
+                    label: l10n.dashboardProgressAccuracyLabel(
+                      progress.averageAccuracy.round(),
+                    ),
+                    value: progress.accuracyProgress(),
+                    color: CosmicColors.primaryContainer,
+                  ),
+                ],
               ),
-              const SizedBox(height: 18),
-              CosmicProgress(
-                label: l10n.dashboardProgressMathematicalAnalysis,
-                value: 0.42,
-                color: CosmicColors.primaryContainer,
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ],
     );

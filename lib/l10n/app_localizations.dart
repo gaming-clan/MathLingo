@@ -214,6 +214,18 @@ abstract class AppLocalizations {
   /// **'Analiza Matematike'**
   String get dashboardProgressMathematicalAnalysis;
 
+  /// No description provided for @dashboardProgressPointsLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pikë totale: {points}'**
+  String dashboardProgressPointsLabel(int points);
+
+  /// No description provided for @dashboardProgressAccuracyLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Saktësia mesatare: {accuracy}%'**
+  String dashboardProgressAccuracyLabel(int accuracy);
+
   /// No description provided for @dashboardQuickActionsTitle.
   ///
   /// In sq, this message translates to:
@@ -483,6 +495,18 @@ abstract class AppLocalizations {
   /// In sq, this message translates to:
   /// **'Progresi yt po rritet çdo ditë.'**
   String get progressPageSubtitle;
+
+  /// No description provided for @progressPageTotalPointsLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pikët totale'**
+  String get progressPageTotalPointsLabel;
+
+  /// No description provided for @progressPageAverageAccuracyLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Saktësia mesatare'**
+  String get progressPageAverageAccuracyLabel;
 
   /// No description provided for @tablesTitle.
   ///

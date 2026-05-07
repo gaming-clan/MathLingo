@@ -72,6 +72,16 @@ class AppLocalizationsSq extends AppLocalizations {
   String get dashboardProgressMathematicalAnalysis => 'Analiza Matematike';
 
   @override
+  String dashboardProgressPointsLabel(int points) {
+    return 'Pikë totale: $points';
+  }
+
+  @override
+  String dashboardProgressAccuracyLabel(int accuracy) {
+    return 'Saktësia mesatare: $accuracy%';
+  }
+
+  @override
   String get dashboardQuickActionsTitle => 'Veprime të Shpejta';
 
   @override
@@ -231,6 +241,12 @@ class AppLocalizationsSq extends AppLocalizations {
 
   @override
   String get progressPageSubtitle => 'Progresi yt po rritet çdo ditë.';
+
+  @override
+  String get progressPageTotalPointsLabel => 'Pikët totale';
+
+  @override
+  String get progressPageAverageAccuracyLabel => 'Saktësia mesatare';
 
   @override
   String get tablesTitle => 'Tabelat Matematikore';

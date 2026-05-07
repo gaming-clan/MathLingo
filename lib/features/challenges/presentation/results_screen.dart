@@ -4,12 +4,13 @@ import '../../../app/app_routes.dart';
 import '../../../colors.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../responsive.dart';
+import '../../../shared/utils/user_progress_storage.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
 import '../../../shared/widgets/mascot_frame.dart';
 import '../../../shared/widgets/score_card.dart';
 
-class ResultsScreen extends StatelessWidget {
+class ResultsScreen extends StatefulWidget {
   const ResultsScreen({
     super.key,
     required this.points,
@@ -19,6 +20,11 @@ class ResultsScreen extends StatelessWidget {
   final int points;
   final int accuracy;
 
+  @override
+  State<ResultsScreen> createState() => _ResultsScreenState();
+}
+
+class _ResultsScreenState extends State<ResultsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -48,7 +54,7 @@ class ResultsScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: ScoreCard(
-                    value: l10n.resultsPointsValue(points),
+                    value: l10n.resultsPointsValue(widget.points),
                     label: l10n.commonPointsLabel,
                     icon: Icons.workspace_premium,
                     color: CosmicColors.tertiary,
@@ -57,7 +63,7 @@ class ResultsScreen extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ScoreCard(
-                    value: l10n.resultsAccuracyValue(accuracy),
+                    value: l10n.resultsAccuracyValue(widget.accuracy),
                     label: l10n.commonAccuracyLabel,
                     icon: Icons.my_location,
                     color: CosmicColors.secondary,
@@ -69,10 +75,20 @@ class ResultsScreen extends StatelessWidget {
             CosmicButton(
               label: l10n.commonContinue,
               icon: Icons.arrow_forward,
-              onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+              onPressed: () async {
+              final navigator = Navigator.of(context);
+              await UserProgressStorage.addSession(
+                points: widget.points,
+                accuracy: widget.accuracy,
+              );
+              if (!mounted) {
+                return;
+              }
+              navigator.pushNamedAndRemoveUntil(
                 AppRoutes.dashboard,
                 (_) => false,
-              ),
+              );
+            },
             ),
           ],
         ),

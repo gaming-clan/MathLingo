@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -9,8 +10,22 @@ import 'package:math_lingo/features/challenges/presentation/challenge_screen.dar
 import 'package:math_lingo/features/geometry/presentation/geometry_challenge_screen.dart';
 import 'package:math_lingo/main.dart';
 import 'package:math_lingo/models/operation.dart';
+import 'package:math_lingo/shared/utils/user_progress_storage.dart';
 
 void main() {
+  late Directory hiveTestDirectory;
+
+  setUpAll(() async {
+    hiveTestDirectory = await Directory.systemTemp.createTemp(
+      'mathlingo_hive_test_',
+    );
+    await UserProgressStorage.resetForTests(testPath: hiveTestDirectory.path);
+  });
+
+  setUp(() async {
+    await UserProgressStorage.clearForTests();
+  });
+
   Widget buildLocalizedTestApp(Widget home, {ThemeData? theme}) {
     return MaterialApp(
       locale: const Locale('sq'),
@@ -60,6 +75,7 @@ void main() {
     expect(find.text('Tabelat Matematikore'), findsOneWidget);
 
     await tester.tap(find.text('Progresi'));
+    await tester.pump();
     await tester.pump();
     expect(find.text('Progresi yt po rritet çdo ditë.'), findsOneWidget);
   });

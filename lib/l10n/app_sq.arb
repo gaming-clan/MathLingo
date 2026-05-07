@@ -20,6 +20,22 @@
   "dashboardProgressModuleTitle": "Progresi i Modulit",
   "dashboardProgressAbstractAlgebra": "Algjebra Abstrakte",
   "dashboardProgressMathematicalAnalysis": "Analiza Matematike",
+  "dashboardProgressPointsLabel": "Pikë totale: {points}",
+  "@dashboardProgressPointsLabel": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardProgressAccuracyLabel": "Saktësia mesatare: {accuracy}%",
+  "@dashboardProgressAccuracyLabel": {
+    "placeholders": {
+      "accuracy": {
+        "type": "int"
+      }
+    }
+  },
   "dashboardQuickActionsTitle": "Veprime të Shpejta",
   "dashboardProfileComingSoon": "Profili do të shtohet së shpejti.",
   "dashboardNotificationsComingSoon": "Njoftimet do të shtohen së shpejti.",
@@ -169,6 +185,8 @@
   "lessonsToolsTitle": "Mjetet e Llogaritjes",
   "progressPageTitle": "Bravo!",
   "progressPageSubtitle": "Progresi yt po rritet çdo ditë.",
+  "progressPageTotalPointsLabel": "Pikët totale",
+  "progressPageAverageAccuracyLabel": "Saktësia mesatare",
   "tablesTitle": "Tabelat Matematikore",
   "tablesSubtitle": "Praktiko dhe zotëro të gjitha operacionet",
   "tablesTabAddition": "Mbledhje +",
