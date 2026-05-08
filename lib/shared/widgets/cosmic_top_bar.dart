@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 import '../../colors.dart';
 
 class CosmicTopBar extends StatelessWidget implements PreferredSizeWidget {
-  const CosmicTopBar({super.key, this.showBackButton = false});
+  const CosmicTopBar({
+    super.key,
+    this.showBackButton = false,
+    this.onProfilePressed,
+    this.onNotificationsPressed,
+  });
 
   final bool showBackButton;
+  final VoidCallback? onProfilePressed;
+  final VoidCallback? onNotificationsPressed;
 
   @override
   Size get preferredSize => const Size.fromHeight(76);
@@ -24,7 +31,7 @@ class CosmicTopBar extends StatelessWidget implements PreferredSizeWidget {
             icon: showBackButton ? Icons.arrow_back : Icons.person,
             onPressed: showBackButton
                 ? () => Navigator.maybePop(context)
-                : null,
+                : onProfilePressed,
           ),
           const Spacer(),
           const Text(
@@ -36,7 +43,10 @@ class CosmicTopBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           const Spacer(),
-          const _RoundIconButton(icon: Icons.notifications),
+          _RoundIconButton(
+            icon: Icons.notifications,
+            onPressed: onNotificationsPressed,
+          ),
         ],
       ),
     );

@@ -18,6 +18,11 @@ output-metadata.json
 
 # Flutter tools
 .dart_tool/
+.flutter-plugins-dependencies
+.dart_tool/extension_discovery/vs_code.json
+
+# Android signing credentials (never commit)
+android/key.properties
 
 # IntelliJ
 *.iml

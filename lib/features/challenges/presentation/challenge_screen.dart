@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../colors.dart';
-import '../../../models/math_question.dart';
+import '../../../core/providers/challenge_provider.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../models/operation.dart';
 import '../../../responsive.dart';
 import '../../../shared/utils/default_random.dart';
@@ -14,7 +16,7 @@ import '../../../shared/widgets/section_header.dart';
 import 'results_screen.dart';
 import 'widgets/answer_button.dart';
 
-class ChallengeScreen extends StatefulWidget {
+class ChallengeScreen extends ConsumerStatefulWidget {
   const ChallengeScreen({
     super.key,
     this.operation = Operation.addition,
@@ -29,123 +31,55 @@ class ChallengeScreen extends StatefulWidget {
   final Random random;
 
   @override
-  State<ChallengeScreen> createState() => _ChallengeScreenState();
+  ConsumerState<ChallengeScreen> createState() => _ChallengeScreenState();
 }
 
-class _ChallengeScreenState extends State<ChallengeScreen> {
-  late MathQuestion _question;
-  int _score = 0;
-  int _answered = 0;
-  int _correct = 0;
-  int? _selectedAnswer;
-  String _feedback = '';
-  bool _isAdvancing = false;
+class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
+  late final ChallengeConfig _config;
 
   @override
   void initState() {
     super.initState();
-    _question = _generateQuestion();
-  }
-
-  MathQuestion _generateQuestion() {
-    final random = widget.random;
-    final maxNumber = widget.level == 1 ? 10 : (widget.level == 2 ? 20 : 50);
-    late int num1;
-    late int num2;
-    late int answer;
-
-    switch (widget.operation) {
-      case Operation.addition:
-        num1 = random.nextInt(maxNumber) + 1;
-        num2 = random.nextInt(maxNumber) + 1;
-        answer = num1 + num2;
-      case Operation.subtraction:
-        num1 = random.nextInt(maxNumber) + 2;
-        num2 = random.nextInt(num1 - 1) + 1;
-        answer = num1 - num2;
-      case Operation.multiplication:
-        final multMax = widget.level == 1 ? 5 : (widget.level == 2 ? 10 : 12);
-        num1 = random.nextInt(multMax) + 1;
-        num2 = random.nextInt(multMax) + 1;
-        answer = num1 * num2;
-      case Operation.division:
-        final divMax = widget.level == 1 ? 5 : (widget.level == 2 ? 10 : 12);
-        answer = random.nextInt(divMax) + 1;
-        num2 = random.nextInt(divMax) + 1;
-        num1 = answer * num2;
-    }
-
-    return MathQuestion(
-      num1: num1,
-      num2: num2,
-      answer: answer,
-      options: _generateOptions(answer),
+    _config = ChallengeConfig(
+      operation: widget.operation,
+      level: widget.level,
+      sessionLength: widget.sessionLength,
+      random: widget.random,
     );
-  }
-
-  List<int> _generateOptions(int correctAnswer) {
-    final random = widget.random;
-    final options = <int>{correctAnswer};
-    while (options.length < 4) {
-      var offset = random.nextInt(12) - 6;
-      if (offset == 0) offset = 1;
-      final wrongAnswer = correctAnswer + offset;
-      if (wrongAnswer >= 0) {
-        options.add(wrongAnswer);
-      }
-    }
-    final shuffled = options.toList()..shuffle(random);
-    return shuffled;
-  }
-
-  void _checkAnswer(int answer) {
-    if (_isAdvancing) {
-      return;
-    }
-
-    final isCorrect = answer == _question.answer;
-    setState(() {
-      _selectedAnswer = answer;
-      _feedback = isCorrect
-          ? 'Saktë! Vazhdon fluturimi.'
-          : 'Provo përsëri. Je shumë afër.';
-      if (isCorrect) {
-        _score += 10;
-        _correct += 1;
-        _answered += 1;
-        _isAdvancing = true;
-      }
-    });
-
-    if (!isCorrect) {
-      return;
-    }
-
-    Future<void>.delayed(const Duration(milliseconds: 450), () {
-      if (!mounted) {
-        return;
-      }
-      if (_answered >= widget.sessionLength) {
-        final accuracy = ((_correct / widget.sessionLength) * 100).round();
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute<void>(
-            builder: (_) => ResultsScreen(points: _score, accuracy: accuracy),
-          ),
-        );
-        return;
-      }
-      setState(() {
-        _question = _generateQuestion();
-        _selectedAnswer = null;
-        _feedback = '';
-        _isAdvancing = false;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final progress = _answered / widget.sessionLength;
+    final state = ref.watch(challengeProvider(_config));
+    final l10n = AppLocalizations.of(context);
+
+    ref.listen(challengeProvider(_config), (prev, next) {
+      if (next.isAdvancing && !(prev?.isAdvancing ?? false)) {
+        final navigator = Navigator.of(context);
+        Future<void>.delayed(const Duration(milliseconds: 450), () {
+          if (!mounted) return;
+          if (next.isComplete) {
+            navigator.pushReplacement(
+              MaterialPageRoute<void>(
+                builder: (_) => ResultsScreen(
+                  points: next.score,
+                  accuracy: next.accuracy,
+                  moduleKey: widget.operation.label,
+                ),
+              ),
+            );
+          } else {
+            ref.read(challengeProvider(_config).notifier).advance();
+          }
+        });
+      }
+    });
+
+    final feedback = state.isAnswerCorrect == null
+        ? ''
+        : (state.isAnswerCorrect!
+              ? l10n.challengeCorrectFeedback
+              : l10n.challengeIncorrectFeedback);
 
     return Scaffold(
       backgroundColor: CosmicColors.background,
@@ -155,14 +89,14 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionHeader(
-              kicker: 'ALGJEBRA BAZË',
-              title: 'Zgjidh ekuacionin',
+            SectionHeader(
+              kicker: l10n.challengeKicker,
+              title: l10n.challengeTitle,
             ),
             const SizedBox(height: 18),
             CosmicProgress(
-              label: 'Pikët: $_score',
-              value: progress,
+              label: l10n.challengeScoreLabel(state.score),
+              value: state.progress,
               color: CosmicColors.secondaryContainer,
             ),
             const SizedBox(height: 24),
@@ -170,25 +104,28 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
               padding: const EdgeInsets.all(22),
               child: LayoutBuilder(
                 builder: (context, constraints) {
+                  final screenHeight = MediaQuery.sizeOf(context).height;
                   final isTablet = constraints.maxWidth >= 720;
-                  final height = isTablet ? 300.0 : 260.0;
+                  final height = isTablet
+                      ? (screenHeight * 0.34).clamp(160.0, 240.0)
+                      : (screenHeight * 0.27).clamp(120.0, 170.0);
                   final fontSize = isTablet ? 52.0 : 44.0;
                   return SizedBox(
                     height: height,
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Text(
-                            '${_question.num1} ${widget.operation.displaySymbol} ${_question.num2} = ?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: CosmicColors.secondaryContainer,
-                              fontSize: fontSize,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
+                    child: Center(
+                      child: Text(
+                        l10n.challengeEquationPrompt(
+                          state.question.num1,
+                          widget.operation.displaySymbol,
+                          state.question.num2,
                         ),
-                      ],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: CosmicColors.secondaryContainer,
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -199,32 +136,18 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
               builder: (context, constraints) {
                 final width = constraints.maxWidth;
                 final isTablet = width >= 720;
-                final isLargeTablet = width >= 1000;
-
-                late int columns;
-                late double childAspectRatio;
-
-                if (isLargeTablet) {
-                  columns = 4;
-                  childAspectRatio = 1.8;
-                } else if (isTablet) {
-                  columns = 3;
-                  childAspectRatio = 1.7;
-                } else {
-                  columns = 2;
-                  childAspectRatio = 1.9;
-                }
+                final childAspectRatio = isTablet ? 3.4 : 2.8;
 
                 return GridView.count(
-                  crossAxisCount: columns,
+                  crossAxisCount: 2,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   childAspectRatio: childAspectRatio,
                   mainAxisSpacing: 14,
                   crossAxisSpacing: 14,
-                  children: _question.options.map((option) {
-                    final isSelected = _selectedAnswer == option;
-                    final isCorrect = option == _question.answer;
+                  children: state.question.options.map((option) {
+                    final isSelected = state.selectedAnswer == option;
+                    final isCorrect = option == state.question.answer;
                     final color = isSelected && isCorrect
                         ? CosmicColors.secondaryContainer
                         : isSelected
@@ -236,7 +159,9 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                           : ValueKey('answer-$option'),
                       value: option,
                       color: color,
-                      onPressed: () => _checkAnswer(option),
+                      onPressed: () => ref
+                          .read(challengeProvider(_config).notifier)
+                          .checkAnswer(option),
                     );
                   }).toList(),
                 );
@@ -245,13 +170,13 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             const SizedBox(height: 18),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 180),
-              child: _feedback.isEmpty
+              child: feedback.isEmpty
                   ? const SizedBox(height: 28)
                   : Text(
-                      _feedback,
-                      key: ValueKey(_feedback),
+                      feedback,
+                      key: ValueKey(feedback),
                       style: TextStyle(
-                        color: _selectedAnswer == _question.answer
+                        color: state.isAnswerCorrect == true
                             ? CosmicColors.secondaryContainer
                             : CosmicColors.error,
                         fontSize: 18,

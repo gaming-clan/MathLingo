@@ -98,7 +98,7 @@ MathLingo është një aplikacion edukativ i ndërtuar me Flutter për mësimin 
 | Zona | Gjendja aktuale |
 |---|---|
 | Android `minSdk` | 26 |
-| Android namespace | `com.example.mathlingo` |
+| Android namespace | `com.mathlingo.app` |
 | Android release signing | Aktualisht përdor debug signing, jo gati për publikim |
 | Local toolchain audit | Mjedisi lokal i audituar ishte më i vjetër se kërkesa e projektit |
 

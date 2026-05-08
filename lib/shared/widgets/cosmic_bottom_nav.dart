@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../colors.dart';
+import '../../l10n/app_localizations.dart';
 
 class CosmicBottomNav extends StatelessWidget {
   const CosmicBottomNav({
@@ -14,47 +15,44 @@ class CosmicBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const items = [
-      (Icons.dashboard, 'Sfida e Ditës'),
-      (Icons.school, 'Mësime'),
-      (Icons.grid_3x3, 'Tabelat'),
-      (Icons.trending_up, 'Progresi'),
+    final l10n = AppLocalizations.of(context);
+    final bottomInset = MediaQuery.viewPaddingOf(context).bottom;
+    final items = [
+      (Icons.dashboard, l10n.tabDailyChallenge),
+      (Icons.school, l10n.tabLessons),
+      (Icons.grid_3x3, l10n.tabTables),
+      (Icons.trending_up, l10n.tabProgress),
     ];
 
-    return SafeArea(
-      top: false,
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
-        decoration: BoxDecoration(
-          color: const Color(0xCC0B0C21),
-          border: Border(
-            top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-          ),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-          boxShadow: [
-            BoxShadow(
-              color: CosmicColors.primaryContainer.withValues(alpha: 0.12),
-              blurRadius: 22,
-              offset: const Offset(0, -6),
-            ),
-          ],
+    return Container(
+      padding: EdgeInsets.fromLTRB(16, 10, 16, 12 + bottomInset),
+      decoration: BoxDecoration(
+        color: const Color(0xCC0B0C21),
+        border: Border(
+          top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 820),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                for (var i = 0; i < items.length; i++)
-                  _BottomNavItem(
-                    icon: items[i].$1,
-                    label: items[i].$2,
-                    selected: i == selectedIndex,
-                    onTap: () => onSelected(i),
-                  ),
-              ],
-            ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        boxShadow: [
+          BoxShadow(
+            color: CosmicColors.primaryContainer.withValues(alpha: 0.12),
+            blurRadius: 22,
+            offset: const Offset(0, -6),
           ),
+        ],
+      ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 820),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            for (var i = 0; i < items.length; i++)
+              _BottomNavItem(
+                icon: items[i].$1,
+                label: items[i].$2,
+                selected: i == selectedIndex,
+                onTap: () => onSelected(i),
+              ),
+          ],
         ),
       ),
     );

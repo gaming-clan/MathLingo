@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 
-import 'app/app_text.dart';
-import 'features/gamify/domain/gamify_parser.dart';
 import 'colors.dart';
+import 'l10n/app_localizations.dart';
 import 'responsive.dart';
 
 const _floatingSnackBarMargin = EdgeInsets.fromLTRB(16, 8, 16, 24);
@@ -20,62 +21,233 @@ class GamifyExerciseScreen extends StatefulWidget {
 class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
   final TextEditingController _exerciseController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
+  final TextRecognizer _textRecognizer = TextRecognizer(
+    script: TextRecognitionScript.latin,
+  );
   File? _selectedImage;
   String? _recognizedText;
   String? _solution;
   bool _isProcessing = false;
 
   Future<void> _pickImage() async {
+    final l10n = AppLocalizations.of(context);
     try {
       final XFile? pickedFile = await _imagePicker.pickImage(
         source: ImageSource.camera,
       );
 
       if (pickedFile != null) {
+        final image = File(pickedFile.path);
         setState(() {
-          _selectedImage = File(pickedFile.path);
+          _selectedImage = image;
           _recognizedText = null;
           _solution = null;
         });
-        _processImage();
+        await _processImage(image);
       }
     } catch (e) {
-      _showErrorSnackBar('${GamifyText.imagePickErrorPrefix} $e');
+      _showErrorSnackBar(l10n.gamifyImagePickError('$e'));
     }
   }
 
   Future<void> _pickImageFromGallery() async {
+    final l10n = AppLocalizations.of(context);
     try {
       final XFile? pickedFile = await _imagePicker.pickImage(
         source: ImageSource.gallery,
       );
 
       if (pickedFile != null) {
+        final image = File(pickedFile.path);
         setState(() {
-          _selectedImage = File(pickedFile.path);
+          _selectedImage = image;
           _recognizedText = null;
           _solution = null;
         });
-        _processImage();
+        await _processImage(image);
       }
     } catch (e) {
-      _showErrorSnackBar('${GamifyText.imagePickErrorPrefix} $e');
+      _showErrorSnackBar(l10n.gamifyImagePickError('$e'));
     }
   }
 
-  Future<void> _processImage() async {
-    // TODO: Implement ML Kit text recognition when available
-    // For now, show a placeholder
+  Future<void> _processImage(File image) async {
+    final l10n = AppLocalizations.of(context);
     setState(() {
-      _recognizedText = GamifyText.equationDetected;
+      _isProcessing = true;
+      _recognizedText = l10n.gamifyOcrProcessing;
+      _solution = null;
     });
+
+    try {
+      debugPrint('[OCR] Starting processImage for path: ${image.path}');
+      var recognizedText = await _runOcrAttempt(
+        label: 'fromFilePath',
+        inputImage: InputImage.fromFilePath(image.path),
+      );
+
+      // Fallback: disa pajisje/metadata japin rezultat më të mirë me fromFile.
+      if (_isOcrEmpty(recognizedText)) {
+        debugPrint(
+          '[OCR] Empty result from fromFilePath, retrying with fromFile',
+        );
+        recognizedText = await _runOcrAttempt(
+          label: 'fromFile',
+          inputImage: InputImage.fromFile(image),
+        );
+      }
+
+      // Fallback i tretë: preprocesim i figurës për raste me shkrim dore/kontrast të ulët.
+      if (_isOcrEmpty(recognizedText)) {
+        debugPrint(
+          '[OCR] Empty result after direct attempts, trying preprocessed variants',
+        );
+        final preprocessedResult = await _runPreprocessedOcr(image);
+        if (preprocessedResult != null) {
+          recognizedText = preprocessedResult;
+        }
+      }
+
+      final rawText = recognizedText.text;
+      debugPrint('[OCR] blocks=${recognizedText.blocks.length}');
+      debugPrint('[OCR] rawText="${rawText.replaceAll('\n', ' ')}"');
+      final equation = _extractEquation(recognizedText.text);
+      debugPrint('[OCR] extractedEquation=$equation');
+
+      if (!mounted) {
+        debugPrint('[OCR] Widget not mounted after OCR, aborting state update');
+        return;
+      }
+
+      if (equation == null) {
+        final visibleText = recognizedText.text.trim();
+        debugPrint(
+          '[OCR] No equation detected. visibleTextLength=${visibleText.length}',
+        );
+        setState(() {
+          _recognizedText = visibleText.isEmpty
+              ? l10n.gamifyOcrNoTextDetected
+              : visibleText;
+          _isProcessing = false;
+        });
+        _showErrorSnackBar(l10n.gamifyOcrNoEquationFound);
+        return;
+      }
+
+      _exerciseController.text = equation;
+      setState(() {
+        _recognizedText = equation;
+        _isProcessing = false;
+      });
+      _generateSolution(prefilledExercise: equation);
+    } catch (e, stack) {
+      debugPrint('[OCR] Exception while processing image: $e');
+      debugPrint('[OCR] Stack: $stack');
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _isProcessing = false;
+        _recognizedText = null;
+      });
+      _showErrorSnackBar(l10n.gamifyOcrProcessingError('$e'));
+    }
   }
 
-  void _generateSolution() {
-    final exerciseText = _recognizedText ?? _exerciseController.text;
+  bool _isOcrEmpty(RecognizedText recognizedText) {
+    return recognizedText.blocks.isEmpty && recognizedText.text.trim().isEmpty;
+  }
+
+  Future<RecognizedText> _runOcrAttempt({
+    required String label,
+    required InputImage inputImage,
+  }) async {
+    final result = await _textRecognizer.processImage(inputImage);
+    debugPrint(
+      '[OCR] Attempt($label): blocks=${result.blocks.length}, textLength=${result.text.trim().length}',
+    );
+    return result;
+  }
+
+  Future<RecognizedText?> _runPreprocessedOcr(File imageFile) async {
+    final originalBytes = await imageFile.readAsBytes();
+    final original = img.decodeImage(originalBytes);
+    if (original == null) {
+      debugPrint('[OCR] Preprocess: decodeImage failed');
+      return null;
+    }
+
+    final variants = <(String, img.Image)>[];
+
+    // Variant 1: grayscale + contrast boost.
+    final v1 = img.grayscale(original.clone());
+    variants.add((
+      'gray',
+      img.adjustColor(v1, contrast: 1.6, brightness: 0.05),
+    ));
+
+    // Variant 2: crop zonën qendrore sipër ku zakonisht është ekuacioni në foto.
+    final cropW = (original.width * 0.9).round();
+    final cropH = (original.height * 0.45).round();
+    final cropX = ((original.width - cropW) / 2).round();
+    final cropY = (original.height * 0.15).round();
+    final v2 = img.copyCrop(
+      original,
+      x: cropX.clamp(0, original.width - 1),
+      y: cropY.clamp(0, original.height - 1),
+      width: cropW.clamp(1, original.width - cropX),
+      height: cropH.clamp(1, original.height - cropY),
+    );
+    variants.add(('crop', img.adjustColor(img.grayscale(v2), contrast: 1.8)));
+
+    // Variant 3: threshold agresiv për penë mbi letër.
+    final v3 = img.grayscale(original.clone());
+    variants.add(('threshold', img.luminanceThreshold(v3, threshold: 0.62)));
+
+    for (final (label, variant) in variants) {
+      File? tempFile;
+      try {
+        final bytes = img.encodeJpg(variant, quality: 100);
+        tempFile = File(
+          '${Directory.systemTemp.path}${Platform.pathSeparator}mathlingo_ocr_${DateTime.now().microsecondsSinceEpoch}_$label.jpg',
+        );
+        await tempFile.writeAsBytes(bytes, flush: true);
+
+        final result = await _runOcrAttempt(
+          label: 'preprocessed-$label',
+          inputImage: InputImage.fromFilePath(tempFile.path),
+        );
+
+        if (!_isOcrEmpty(result)) {
+          debugPrint('[OCR] Preprocess success with variant=$label');
+          return result;
+        }
+      } catch (e) {
+        debugPrint('[OCR] Preprocess variant failed ($label): $e');
+      } finally {
+        if (tempFile != null && await tempFile.exists()) {
+          try {
+            await tempFile.delete();
+          } catch (_) {
+            // Best effort cleanup.
+          }
+        }
+      }
+    }
+
+    debugPrint('[OCR] Preprocess attempts ended with empty result');
+    return null;
+  }
+
+  void _generateSolution({String? prefilledExercise}) {
+    final l10n = AppLocalizations.of(context);
+    final rawInput = prefilledExercise ?? _exerciseController.text;
+    final exerciseText =
+        _extractEquation(rawInput) ?? _normalizeEquationText(rawInput);
 
     if (exerciseText.isEmpty) {
-      _showErrorSnackBar(GamifyText.emptyEquation);
+      _showErrorSnackBar(l10n.gamifyEmptyEquationError);
       return;
     }
 
@@ -83,152 +255,187 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
       _isProcessing = true;
     });
 
-    // Simulate processing delay
-    Future<void>.delayed(const Duration(milliseconds: 800), () {
-      if (!mounted) return;
+    final solution = _generateFunSolution(exerciseText);
 
-      // Parse and generate fun solution
-      final solution = _generateFunSolution(exerciseText);
-
-      setState(() {
-        _solution = solution;
-        _isProcessing = false;
-      });
+    setState(() {
+      _recognizedText ??= prefilledExercise;
+      _solution = solution;
+      _isProcessing = false;
     });
   }
 
+  String? _extractEquation(String text) {
+    final normalized = _normalizeEquationText(text);
+
+    final numericMatch = RegExp(
+      r'^(\d+)\s*([+\-×÷])\s*(\d+)\s*=?.*$',
+    ).firstMatch(normalized);
+    if (numericMatch != null) {
+      final leftOperand = numericMatch.group(1)!;
+      final operator = numericMatch.group(2)!;
+      final rightOperand = numericMatch.group(3)!;
+      return '$leftOperand $operator $rightOperand';
+    }
+
+    final quadraticMatch = RegExp(
+      r'^([A-Za-z])\^2\s*([+\-])\s*(\d+)([A-Za-z])\s*([+\-])\s*(\d+)\s*=\s*0$',
+    ).firstMatch(normalized);
+    if (quadraticMatch != null &&
+        quadraticMatch.group(1) == quadraticMatch.group(4)) {
+      final variable = quadraticMatch.group(1)!;
+      final middleSign = quadraticMatch.group(2)!;
+      final middleCoeff = quadraticMatch.group(3)!;
+      final constantSign = quadraticMatch.group(5)!;
+      final constantValue = quadraticMatch.group(6)!;
+      return '$variable^2 $middleSign $middleCoeff$variable $constantSign $constantValue = 0';
+    }
+
+    final symbolicMatch = RegExp(
+      r'^([A-Za-z](?:\^\d+)?)\s*([+\-×÷])\s*([A-Za-z](?:\^\d+)?)\s*=?.*$',
+    ).firstMatch(normalized);
+    if (symbolicMatch != null) {
+      final leftOperand = symbolicMatch.group(1)!;
+      final operator = symbolicMatch.group(2)!;
+      final rightOperand = symbolicMatch.group(3)!;
+      return '$leftOperand $operator $rightOperand';
+    }
+
+    return null;
+  }
+
+  String _normalizeEquationText(String text) {
+    final normalized = text
+        .replaceAll(RegExp(r'[\r\n]+'), ' ')
+        .replaceAll('²', '^2')
+        .replaceAll('³', '^3')
+        .replaceAll('⁴', '^4')
+        .replaceAll('*', '×')
+        .replaceAll('/', '÷')
+        .replaceAll(RegExp(r'(?<=\d)\s*[xX]\s*(?=\d)'), ' × ')
+        .replaceAll(RegExp(r'\s*\^\s*'), '^')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+
+    return normalized.replaceAllMapped(
+      RegExp(r'([A-Za-z])\s*([0-9]+)(?=\s*(?:[+\-=×÷)]|$))'),
+      (match) => '${match.group(1)}^${match.group(2)}',
+    );
+  }
+
   String _generateFunSolution(String exercise) {
-    final normalizedExercise = GamifyParser.normalize(exercise);
-    final parsed = GamifyParser.parse(exercise);
+    final l10n = AppLocalizations.of(context);
+    final normalizedExercise =
+        _extractEquation(exercise) ?? _normalizeEquationText(exercise);
+    final match = RegExp(
+      r'^(\d+)\s*([+\-×÷])\s*(\d+)$',
+    ).firstMatch(normalizedExercise);
 
-    try {
-      if (parsed != null) {
-        final num1 = parsed.left;
-        final num2 = parsed.right;
-
-        switch (parsed.operator) {
-          case GamifyOperator.addition:
-            final answer = num1 + num2;
-            return '''
-🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮
-
-Ekuacioni: $num1 + $num2 = ?
-
-📚 HAPI I PARË: Imagjinoni $num1 ballona humbësira në hava!
-🎈 HAPI I DYTË: Shtojmë $num2 më shumë ballona - mbi $answer ballona në total!
-✨ PËRGJIGJA FINALE: $answer
-
-💡 TRIKU ARGËTUES: Çdo shifër në $answer përfaqëson një yje në qiellin e natës! 🌟
-''';
-          case GamifyOperator.subtraction:
-            if (num1 < num2) {
-              return '''
-🎮 UDHËZIM PEDAGOGJIK 🎮
-
-Ekuacioni: $num1 - $num2
-
-Për këtë nivel, zbritja duhet të japë rezultat jo-negativ.
-Provo një ushtrim ku numri i parë është më i madh ose i barabartë me të dytin.
-''';
-            }
-            final answer = num1 - num2;
-            return '''
-🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮
-
-Ekuacioni: $num1 - $num2 = ?
-
-🍎 HAPI I PARË: Kemi $num1 mollë të shëndosha në një kosh!
-😋 HAPI I DYTË: Hanemi $num2 mollë - mbeten $answer mollë të shëndosha!
-✨ PËRGJIGJA FINALE: $answer
-
-💡 TRIKU ARGËTUES: $answer këto janë mollët më të ëmbla në kopje! 🍎
-''';
-          case GamifyOperator.multiplication:
-            final answer = num1 * num2;
-            return '''
-🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮
-
-Ekuacioni: $num1 × $num2 = ?
-
-🏗️ HAPI I PARË: Ndërtojmë një fort me $num1 kube në çdo anë!
-🏰 HAPI I DYTË: Fort ka $num2 shtresa - në total $answer kube!
-✨ PËRGJIGJA FINALE: $answer
-
-💡 TRIKU ARGËTUES: Shumëzimi është si të radhitësh lugje në raftet - sa më shumë të barturësh, aq më shumë do të kesh! 📦
-''';
-          case GamifyOperator.division:
-            if (num2 == 0) {
-              return '''
-🎮 UDHËZIM PEDAGOGJIK 🎮
-
-Pjesëtimi me zero nuk lejohet. Provo një pjesëtim me emërues > 0.
-''';
-            }
-            if (num1 % num2 != 0) {
-              return '''
-🎮 UDHËZIM PEDAGOGJIK 🎮
-
-Ekuacioni: $num1 ÷ $num2
-
-Për këtë nivel, përdorim vetëm pjesëtim pa mbetje.
-Zgjidh një ushtrim ku numri i parë pjestëtohet saktë me të dytin.
-''';
-            }
-            final answer = num1 ~/ num2;
-            return '''
-🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮
-
-Ekuacioni: $num1 ÷ $num2 = ?
-
-🍕 HAPI I PARË: Kemi $num1 pjesë pice për të ndarë!
-👨‍👩‍👧‍👦 HAPI I DYTË: Ndajmë në mes të $num2 shokëve - secili merr $answer pjesë!
-✨ PËRGJIGJA FINALE: $answer
-
-💡 TRIKU ARGËTUES: Pjesëtimi është si të ndash një surprizë - sa më shumë miq, aq më pak për secilin! 🎉
-''';
-        }
+    if (match == null) {
+      final quadraticMatch = RegExp(
+        r'^([A-Za-z])\^2\s*([+\-])\s*(\d+)([A-Za-z])\s*([+\-])\s*(\d+)\s*=\s*0$',
+      ).firstMatch(normalizedExercise);
+      if (quadraticMatch != null &&
+          quadraticMatch.group(1) == quadraticMatch.group(4)) {
+        final variable = quadraticMatch.group(1)!;
+        final middleSign = quadraticMatch.group(2)!;
+        final middleCoeff = int.parse(quadraticMatch.group(3)!);
+        final constantSign = quadraticMatch.group(5)!;
+        final constantValue = int.parse(quadraticMatch.group(6)!);
+        final signedMiddleCoeff = middleSign == '-'
+            ? -middleCoeff
+            : middleCoeff;
+        final signedConstant = constantSign == '-'
+            ? -constantValue
+            : constantValue;
+        final factorization = _factorQuadratic(
+          variable,
+          signedMiddleCoeff,
+          signedConstant,
+        );
+        return l10n.gamifyQuadraticSolution(
+          normalizedExercise,
+          variable,
+          factorization ??
+              'Nuk u gjet një faktorizim i thjeshtë me numra të plotë.',
+        );
       }
 
-      // If parsing fails, show generic solution
-      return '''
-🎮 ZGJIDHJA ARGËTUESE 🎮
+      final differenceMatch = RegExp(
+        r'^([A-Za-z])\^2\s*-\s*([A-Za-z])\^2$',
+      ).firstMatch(normalizedExercise);
+      if (differenceMatch != null) {
+        final leftOperand = differenceMatch.group(1)!;
+        final rightOperand = differenceMatch.group(2)!;
+        return l10n.gamifyDifferenceOfSquaresSolution(
+          normalizedExercise,
+          leftOperand,
+          rightOperand,
+        );
+      }
 
-Ekuacioni juaj: "$normalizedExercise"
+      final symbolicMatch = RegExp(
+        r'^([A-Za-z](?:\^\d+)?)\s*([+\-×÷])\s*([A-Za-z](?:\^\d+)?)$',
+      ).firstMatch(normalizedExercise);
+      if (symbolicMatch != null) {
+        final leftOperand = symbolicMatch.group(1)!;
+        final rightOperand = symbolicMatch.group(3)!;
+        return l10n.gamifySymbolicSolution(
+          normalizedExercise,
+          leftOperand,
+          rightOperand,
+        );
+      }
 
-📚 Duket si një sfidë interesante!
-🧮 Këtu janë disa këshilla për ta zgjidhur:
-
-1. 🔍 Shikoni me kujdes numrat në ekuacion
-2. 🧠 Mendoni se çfarë operacioni të përdorni (+, -, ×, ÷)
-3. ✍️ Shkruani hapave pas hapave
-4. ✅ Kontrolloni përgjigjen tuaj
-
-💡 Kujtohuni: Matematika është lojë argëtuese! 🎮
-
-Për shembull:
-- 5 + 3 = 8 (Mbledhje)
-- 10 - 4 = 6 (Zbritje)
-- 7 × 2 = 14 (Shumëzim)
-- 12 ÷ 3 = 4 (Pjesëtim)
-''';
-    } catch (e) {
-      return '''
-🎮 ZGJIDHJA ARGËTUESE 🎮
-
-Ekuacioni: "$normalizedExercise"
-
-Hmm, duhet të jetë më i qartë! 🤔
-📝 Përpiquni të rishkruajnë ekuacionin me numra dhe operacione të qarta.
-
-Shembuj të mirë:
-✅ "5 + 3"
-✅ "10 - 7"
-✅ "6 * 4"
-✅ "20 / 5"
-
-Përpiquni përsëri! 💪
-''';
+      return normalizedExercise.isEmpty
+          ? l10n.gamifyInvalidSolution(exercise)
+          : l10n.gamifyGenericSolution(normalizedExercise);
     }
+
+    final num1 = int.parse(match.group(1)!);
+    final operator = match.group(2)!;
+    final num2 = int.parse(match.group(3)!);
+
+    switch (operator) {
+      case '+':
+        return l10n.gamifyAdditionSolution(num1, num2, num1 + num2);
+      case '-':
+        if (num1 < num2) {
+          return l10n.gamifySubtractionNeedsPositiveResult(num1, num2);
+        }
+        return l10n.gamifySubtractionSolution(num1, num2, num1 - num2);
+      case '×':
+        return l10n.gamifyMultiplicationSolution(num1, num2, num1 * num2);
+      case '÷':
+        if (num2 == 0) {
+          return l10n.gamifyDivisionByZero;
+        }
+        if (num1 % num2 != 0) {
+          return l10n.gamifyDivisionNeedsWholeResult(num1, num2);
+        }
+        return l10n.gamifyDivisionSolution(num1, num2, num1 ~/ num2);
+    }
+
+    return l10n.gamifyGenericSolution(normalizedExercise);
+  }
+
+  String? _factorQuadratic(String variable, int middleCoeff, int constant) {
+    for (var left = -20; left <= 20; left++) {
+      for (var right = -20; right <= 20; right++) {
+        if (left + right == middleCoeff && left * right == constant) {
+          return '( $variable ${_signedNumber(left)} )( $variable ${_signedNumber(right)} ) = 0';
+        }
+      }
+    }
+
+    return null;
+  }
+
+  String _signedNumber(int value) {
+    if (value >= 0) {
+      return '+ $value';
+    }
+
+    return '- ${value.abs()}';
   }
 
   void _showErrorSnackBar(String message) {
@@ -254,19 +461,21 @@ Përpiquni përsëri! 💪
   @override
   void dispose() {
     _exerciseController.dispose();
+    _textRecognizer.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final isTablet = MediaQuery.sizeOf(context).width >= 760;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: CosmicColors.background,
       appBar: AppBar(
         backgroundColor: CosmicColors.surface,
-        title: const Text(
-          GamifyText.screenTitle,
+        title: Text(
+          l10n.gamifyScreenTitle,
           style: TextStyle(
             color: CosmicColors.primaryContainer,
             fontWeight: FontWeight.bold,
@@ -285,14 +494,14 @@ Përpiquni përsëri! 💪
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                GamifyText.inputTitle,
+                l10n.gamifyInputTitle,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   color: CosmicColors.primaryContainer,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                GamifyText.screenSubtitle,
+                l10n.gamifyInputSubtitle,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 24),
@@ -331,8 +540,8 @@ Përpiquni përsëri! 💪
                         ),
                       ),
                       onPressed: _clearInputs,
-                      child: const Text(
-                        GamifyText.clear,
+                      child: Text(
+                        l10n.gamifyClear,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -360,8 +569,8 @@ Përpiquni përsëri! 💪
                                 ),
                               ),
                             )
-                          : const Text(
-                              GamifyText.solve,
+                          : Text(
+                              l10n.gamifySolve,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                     ),
@@ -389,7 +598,7 @@ Përpiquni përsëri! 💪
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        GamifyText.solutionTitle,
+                        l10n.gamifySolutionTitle,
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(color: CosmicColors.secondaryContainer),
                       ),
@@ -414,6 +623,7 @@ Përpiquni përsëri! 💪
   }
 
   Widget _buildImageSection() {
+    final l10n = AppLocalizations.of(context);
     return Container(
       decoration: BoxDecoration(
         color: CosmicColors.surfaceHigh,
@@ -444,7 +654,7 @@ Përpiquni përsëri! 💪
               children: [
                 if (_recognizedText != null) ...[
                   Text(
-                    GamifyText.recognizedText,
+                    l10n.gamifyRecognizedTextLabel,
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                   const SizedBox(height: 8),
@@ -470,7 +680,7 @@ Përpiquni përsëri! 💪
                     Expanded(
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.camera_alt),
-                        label: const Text(GamifyText.camera),
+                        label: Text(l10n.gamifyCameraButton),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: CosmicColors.primaryContainer,
                           foregroundColor: Colors.white,
@@ -483,7 +693,7 @@ Përpiquni përsëri! 💪
                     Expanded(
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.image),
-                        label: const Text(GamifyText.gallery),
+                        label: Text(l10n.gamifyGalleryButton),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: CosmicColors.secondaryContainer,
                           foregroundColor: Colors.white,
@@ -503,11 +713,12 @@ Përpiquni përsëri! 💪
   }
 
   Widget _buildInputSection() {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          GamifyText.writeExercise,
+          l10n.gamifyWriteExerciseLabel,
           style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: 12),
@@ -515,7 +726,7 @@ Përpiquni përsëri! 💪
           controller: _exerciseController,
           style: const TextStyle(color: CosmicColors.onSurface),
           decoration: InputDecoration(
-            hintText: GamifyText.exerciseHint,
+            hintText: l10n.gamifyExerciseHint,
             hintStyle: const TextStyle(color: CosmicColors.onSurfaceVariant),
             filled: true,
             fillColor: CosmicColors.surfaceHigh,
