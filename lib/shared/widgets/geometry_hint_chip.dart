@@ -24,6 +24,10 @@ class GeometryHintChip extends StatelessWidget {
         return 'Këshillë: S = baza × lartësia ÷ 2';
       case GeometryShape.square:
         return 'Këshillë: Perimetri = baza × 4';
+      case GeometryShape.circle:
+        return 'Këshillë: Perimetri = 2 × π × r (π ≈ 3)';
+      case GeometryShape.parallelogram:
+        return 'Këshillë: S = baza × lartësia';
     }
   }
 

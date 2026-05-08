@@ -97,6 +97,10 @@ class _GeometryChallengeScreenState
         return l10n.geometryTrianglePrompt;
       case GeometryShape.square:
         return l10n.geometrySquarePrompt;
+      case GeometryShape.circle:
+        return 'Sa është perimetri i rrethit? (π ≈ 3)';
+      case GeometryShape.parallelogram:
+        return 'Sa është sipërfaqja e paralelogramit?';
     }
   }
 
@@ -109,6 +113,10 @@ class _GeometryChallengeScreenState
         return l10n.geometryTriangleMeasurement(q.width, q.height);
       case GeometryShape.square:
         return l10n.geometrySquareMeasurement(q.width);
+      case GeometryShape.circle:
+        return 'rrezja ${q.width}';
+      case GeometryShape.parallelogram:
+        return 'bazë ${q.width}, lartësi ${q.height}';
     }
   }
 
@@ -150,8 +158,8 @@ class _GeometryChallengeScreenState
     final feedback = state.isAnswerCorrect == null
         ? ''
         : (state.isAnswerCorrect!
-            ? l10n.geometryCorrectFeedback
-            : l10n.geometryIncorrectFeedback);
+              ? l10n.geometryCorrectFeedback
+              : l10n.geometryIncorrectFeedback);
 
     return Scaffold(
       backgroundColor: CosmicColors.background,
@@ -176,10 +184,7 @@ class _GeometryChallengeScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SectionHeader(
-            kicker: l10n.geometryKicker,
-            title: l10n.geometryTitle,
-          ),
+          SectionHeader(kicker: l10n.geometryKicker, title: l10n.geometryTitle),
           const SizedBox(height: 18),
           CosmicProgress(
             label: l10n.geometryScoreLabel(state.score),
@@ -382,8 +387,9 @@ class _GeometryChallengeScreenState
                   : ValueKey('geometry-answer-$option'),
               value: option,
               color: color,
-              onPressed: () =>
-                  ref.read(geometryProvider(_config).notifier).checkAnswer(option),
+              onPressed: () => ref
+                  .read(geometryProvider(_config).notifier)
+                  .checkAnswer(option),
             );
           }).toList(),
         );

@@ -1,5 +1,21 @@
 # 📝 Changelog - MathLingo
 
+## [1.2.0] - 2026-05-08
+### Added
+- Zgjerimi i sfidës së gjeometrisë me forma të reja: rreth dhe paralelogram.
+- Generator i dedikuar i pyetjeve të gjeometrisë në domain: `geometry_question_generator.dart`.
+- Parser i dedikuar i ushtrimeve për Gamify në domain: `gamify_parser.dart`.
+- Unit tests të rinj për parser-in e Gamify dhe generatorin e gjeometrisë.
+
+### Changed
+- `GeometryChallengeScreen` tani përdor generator domain në vend të logjikës inline.
+- `GeometryShapePainter` renderon edhe format e reja të gjeometrisë.
+- Tekstet UI kryesore të `LessonsPage` dhe `GamifyExerciseScreen` u centralizuan në `app_text.dart`.
+
+### Validated
+- `fvm flutter analyze` kalon pa issue.
+- `fvm flutter test` kalon me sukses pas shtimit të testeve të reja.
+
 ## [1.3.0] - 2026-05-07
 ### Added
 - Tablet landscape layouts 2-kolona për Progress, Lessons dhe Geometry (`AdaptiveScaffold`).

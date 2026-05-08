@@ -10,10 +10,7 @@ import '../../../shared/widgets/section_header.dart';
 import '../../lessons/widgets/examples_panel.dart';
 
 class LessonsPage extends StatelessWidget {
-  const LessonsPage({
-    super.key,
-    required this.onStartGeometryChallenge,
-  });
+  const LessonsPage({super.key, required this.onStartGeometryChallenge});
 
   final VoidCallback onStartGeometryChallenge;
 
@@ -187,11 +184,7 @@ class _LessonsLandscapeLayout extends StatelessWidget {
             ),
           ),
         ),
-        const VerticalDivider(
-          width: 1,
-          thickness: 1,
-          color: Color(0x1FEEEBFF),
-        ),
+        const VerticalDivider(width: 1, thickness: 1, color: Color(0x1FEEEBFF)),
         // Kolona e djathtë (flex 1) — panel shembujsh interaktiv
         Expanded(
           child: Padding(

@@ -47,6 +47,16 @@
 - [x] **T04:** ResultsScreen layout adaptive (mascot responsive + buton `Vazhdo` gjithmonë i dukshëm).
 - [x] **T05:** Renditja e Dashboard mobile: `Veprime të Shpejta` para `Sfidës`.
 
+## Sprint 7: Code & Docs Sync - IN PROGRESS
+- [x] **Task 1:** Krijimi i branch-it të sprintit (`fix/sprint-7-code-doc-sync`).
+- [x] **Task 2:** Nxjerrja e parser-it të Gamify në domain (`gamify_parser.dart`).
+- [x] **Task 3:** Shtimi i unit tests për parser-in e Gamify.
+- [x] **Task 4:** Zgjerimi i sfidës së gjeometrisë me forma të reja (rreth, paralelogram).
+- [x] **Task 5:** Nxjerrja e generatorit të pyetjeve të gjeometrisë në domain.
+- [x] **Task 6:** Shtimi i unit tests për generatorin e gjeometrisë.
+- [x] **Task 7:** Validimi me `fvm flutter analyze` dhe `fvm flutter test`.
+- [ ] **Task 8:** Finalizimi i sinkronizimit të dokumentacionit (README + SSOT + changelog).
+
 ## Hardening & Release Ops
 - [x] **Task 1:** Credentials signing të shtuara në `.gitignore` (key.properties, *.keystore).
 - [x] **Task 2:** R8/ProGuard release build i korrigjuar (commit a8c2c92).

@@ -52,10 +52,12 @@ class GeometryState {
       answered: answered ?? this.answered,
       correct: correct ?? this.correct,
       sessionLength: sessionLength ?? this.sessionLength,
-      selectedAnswer:
-          clearSelectedAnswer == true ? null : selectedAnswer ?? this.selectedAnswer,
-      isAnswerCorrect:
-          clearIsAnswerCorrect == true ? null : isAnswerCorrect ?? this.isAnswerCorrect,
+      selectedAnswer: clearSelectedAnswer == true
+          ? null
+          : selectedAnswer ?? this.selectedAnswer,
+      isAnswerCorrect: clearIsAnswerCorrect == true
+          ? null
+          : isAnswerCorrect ?? this.isAnswerCorrect,
       isAdvancing: isAdvancing ?? this.isAdvancing,
     );
   }
@@ -65,10 +67,7 @@ class GeometryState {
 // Config (family key)
 // ---------------------------------------------------------------------------
 class GeometryConfig {
-  const GeometryConfig({
-    this.sessionLength = 4,
-    required this.random,
-  });
+  const GeometryConfig({this.sessionLength = 4, required this.random});
 
   final int sessionLength;
   final Random random;
@@ -89,15 +88,15 @@ class GeometryConfig {
 // ---------------------------------------------------------------------------
 class GeometryNotifier extends StateNotifier<GeometryState> {
   GeometryNotifier(this._config)
-      : super(
-          GeometryState(
-            question: _buildQuestion(_config.random),
-            score: 0,
-            answered: 0,
-            correct: 0,
-            sessionLength: _config.sessionLength,
-          ),
-        );
+    : super(
+        GeometryState(
+          question: _buildQuestion(_config.random),
+          score: 0,
+          answered: 0,
+          correct: 0,
+          sessionLength: _config.sessionLength,
+        ),
+      );
 
   final GeometryConfig _config;
 
@@ -121,6 +120,14 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
         width = random.nextInt(8) + 3;
         height = width;
         answer = width * 4;
+      case GeometryShape.circle:
+        width = random.nextInt(7) + 2; // radius
+        height = width;
+        answer = width * 6; // 2 * pi * r with pi ~= 3
+      case GeometryShape.parallelogram:
+        width = random.nextInt(8) + 3;
+        height = random.nextInt(6) + 2;
+        answer = width * height;
     }
 
     return GeometryQuestion(
@@ -160,10 +167,7 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
         isAdvancing: true,
       );
     } else {
-      state = state.copyWith(
-        selectedAnswer: answer,
-        isAnswerCorrect: false,
-      );
+      state = state.copyWith(selectedAnswer: answer, isAnswerCorrect: false);
     }
   }
 
@@ -184,5 +188,5 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
 // ---------------------------------------------------------------------------
 final geometryProvider = StateNotifierProvider.autoDispose
     .family<GeometryNotifier, GeometryState, GeometryConfig>(
-  (ref, config) => GeometryNotifier(config),
-);
+      (ref, config) => GeometryNotifier(config),
+    );

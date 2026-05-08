@@ -9,10 +9,7 @@ import '../../../shared/widgets/glass_panel.dart';
 /// Panel referimi statik me formulat e 3 formave gjeometrike.
 /// Karta e formës aktuale theksohet me border magenta.
 class FormulaReferencePanel extends StatelessWidget {
-  const FormulaReferencePanel({
-    super.key,
-    required this.activeShape,
-  });
+  const FormulaReferencePanel({super.key, required this.activeShape});
 
   final GeometryShape activeShape;
 
@@ -25,8 +22,7 @@ class FormulaReferencePanel extends StatelessWidget {
         Row(
           children: [
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
                 color: CosmicColors.tertiaryContainer.withValues(alpha: 0.18),
                 borderRadius: BorderRadius.circular(8),
@@ -74,6 +70,16 @@ class FormulaReferencePanel extends StatelessWidget {
                 shape: GeometryShape.square,
                 isActive: activeShape == GeometryShape.square,
               ),
+              const SizedBox(height: 12),
+              _FormulaCard(
+                shape: GeometryShape.circle,
+                isActive: activeShape == GeometryShape.circle,
+              ),
+              const SizedBox(height: 12),
+              _FormulaCard(
+                shape: GeometryShape.parallelogram,
+                isActive: activeShape == GeometryShape.parallelogram,
+              ),
             ],
           ),
         ),
@@ -96,6 +102,10 @@ class _FormulaCard extends StatelessWidget {
         return 'S = (b × h) ÷ 2';
       case GeometryShape.square:
         return 'P = b × 4';
+      case GeometryShape.circle:
+        return 'P = 2 × π × r';
+      case GeometryShape.parallelogram:
+        return 'S = b × h';
     }
   }
 
@@ -107,6 +117,10 @@ class _FormulaCard extends StatelessWidget {
         return 'baza × lartësia, pjesëtuar 2';
       case GeometryShape.square:
         return 'baza × 4 (katrori ka 4 anë të barabarta)';
+      case GeometryShape.circle:
+        return '2 × π × rrezja (në këtë modul, π ≈ 3)';
+      case GeometryShape.parallelogram:
+        return 'baza × lartësia';
     }
   }
 
@@ -244,6 +258,19 @@ class _MiniShapePainter extends CustomPainter {
         );
         canvas.drawRect(rect, paint);
         canvas.drawRect(rect, stroke);
+      case GeometryShape.circle:
+        final radius = math.min(w, h) * 0.35;
+        canvas.drawCircle(Offset(w / 2, h / 2), radius, paint);
+        canvas.drawCircle(Offset(w / 2, h / 2), radius, stroke);
+      case GeometryShape.parallelogram:
+        final path = Path()
+          ..moveTo(w * 0.25, h * 0.2)
+          ..lineTo(w * 0.9, h * 0.2)
+          ..lineTo(w * 0.75, h * 0.8)
+          ..lineTo(w * 0.1, h * 0.8)
+          ..close();
+        canvas.drawPath(path, paint);
+        canvas.drawPath(path, stroke);
     }
   }
 

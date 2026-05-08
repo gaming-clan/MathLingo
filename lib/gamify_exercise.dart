@@ -88,7 +88,9 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
 
       // Fallback: disa pajisje/metadata japin rezultat më të mirë me fromFile.
       if (_isOcrEmpty(recognizedText)) {
-        debugPrint('[OCR] Empty result from fromFilePath, retrying with fromFile');
+        debugPrint(
+          '[OCR] Empty result from fromFilePath, retrying with fromFile',
+        );
         recognizedText = await _runOcrAttempt(
           label: 'fromFile',
           inputImage: InputImage.fromFile(image),
@@ -97,7 +99,9 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
 
       // Fallback i tretë: preprocesim i figurës për raste me shkrim dore/kontrast të ulët.
       if (_isOcrEmpty(recognizedText)) {
-        debugPrint('[OCR] Empty result after direct attempts, trying preprocessed variants');
+        debugPrint(
+          '[OCR] Empty result after direct attempts, trying preprocessed variants',
+        );
         final preprocessedResult = await _runPreprocessedOcr(image);
         if (preprocessedResult != null) {
           recognizedText = preprocessedResult;
@@ -117,7 +121,9 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
 
       if (equation == null) {
         final visibleText = recognizedText.text.trim();
-        debugPrint('[OCR] No equation detected. visibleTextLength=${visibleText.length}');
+        debugPrint(
+          '[OCR] No equation detected. visibleTextLength=${visibleText.length}',
+        );
         setState(() {
           _recognizedText = visibleText.isEmpty
               ? l10n.gamifyOcrNoTextDetected
@@ -176,7 +182,10 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
 
     // Variant 1: grayscale + contrast boost.
     final v1 = img.grayscale(original.clone());
-    variants.add(('gray', img.adjustColor(v1, contrast: 1.6, brightness: 0.05)));
+    variants.add((
+      'gray',
+      img.adjustColor(v1, contrast: 1.6, brightness: 0.05),
+    ));
 
     // Variant 2: crop zonën qendrore sipër ku zakonisht është ekuacioni në foto.
     final cropW = (original.width * 0.9).round();
@@ -271,7 +280,8 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
     final quadraticMatch = RegExp(
       r'^([A-Za-z])\^2\s*([+\-])\s*(\d+)([A-Za-z])\s*([+\-])\s*(\d+)\s*=\s*0$',
     ).firstMatch(normalized);
-    if (quadraticMatch != null && quadraticMatch.group(1) == quadraticMatch.group(4)) {
+    if (quadraticMatch != null &&
+        quadraticMatch.group(1) == quadraticMatch.group(4)) {
       final variable = quadraticMatch.group(1)!;
       final middleSign = quadraticMatch.group(2)!;
       final middleCoeff = quadraticMatch.group(3)!;
@@ -316,27 +326,37 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
     final l10n = AppLocalizations.of(context);
     final normalizedExercise =
         _extractEquation(exercise) ?? _normalizeEquationText(exercise);
-    final match = RegExp(r'^(\d+)\s*([+\-×÷])\s*(\d+)$').firstMatch(
-      normalizedExercise,
-    );
+    final match = RegExp(
+      r'^(\d+)\s*([+\-×÷])\s*(\d+)$',
+    ).firstMatch(normalizedExercise);
 
     if (match == null) {
       final quadraticMatch = RegExp(
         r'^([A-Za-z])\^2\s*([+\-])\s*(\d+)([A-Za-z])\s*([+\-])\s*(\d+)\s*=\s*0$',
       ).firstMatch(normalizedExercise);
-      if (quadraticMatch != null && quadraticMatch.group(1) == quadraticMatch.group(4)) {
+      if (quadraticMatch != null &&
+          quadraticMatch.group(1) == quadraticMatch.group(4)) {
         final variable = quadraticMatch.group(1)!;
         final middleSign = quadraticMatch.group(2)!;
         final middleCoeff = int.parse(quadraticMatch.group(3)!);
         final constantSign = quadraticMatch.group(5)!;
         final constantValue = int.parse(quadraticMatch.group(6)!);
-        final signedMiddleCoeff = middleSign == '-' ? -middleCoeff : middleCoeff;
-        final signedConstant = constantSign == '-' ? -constantValue : constantValue;
-        final factorization = _factorQuadratic(variable, signedMiddleCoeff, signedConstant);
+        final signedMiddleCoeff = middleSign == '-'
+            ? -middleCoeff
+            : middleCoeff;
+        final signedConstant = constantSign == '-'
+            ? -constantValue
+            : constantValue;
+        final factorization = _factorQuadratic(
+          variable,
+          signedMiddleCoeff,
+          signedConstant,
+        );
         return l10n.gamifyQuadraticSolution(
           normalizedExercise,
           variable,
-          factorization ?? 'Nuk u gjet një faktorizim i thjeshtë me numra të plotë.',
+          factorization ??
+              'Nuk u gjet një faktorizim i thjeshtë me numra të plotë.',
         );
       }
 
@@ -549,7 +569,7 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
                                 ),
                               ),
                             )
-                            : Text(
+                          : Text(
                               l10n.gamifySolve,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -664,9 +684,7 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: CosmicColors.primaryContainer,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         onPressed: _pickImage,
                       ),
@@ -679,9 +697,7 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: CosmicColors.secondaryContainer,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         onPressed: _pickImageFromGallery,
                       ),
@@ -711,9 +727,7 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
           style: const TextStyle(color: CosmicColors.onSurface),
           decoration: InputDecoration(
             hintText: l10n.gamifyExerciseHint,
-            hintStyle: const TextStyle(
-              color: CosmicColors.onSurfaceVariant,
-            ),
+            hintStyle: const TextStyle(color: CosmicColors.onSurfaceVariant),
             filled: true,
             fillColor: CosmicColors.surfaceHigh,
             border: OutlineInputBorder(
