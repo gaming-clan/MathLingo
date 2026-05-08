@@ -1,6 +1,10 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'app/app_text.dart';
+import 'features/gamify/domain/gamify_parser.dart';
 import 'colors.dart';
 import 'responsive.dart';
 
@@ -36,7 +40,7 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
         _processImage();
       }
     } catch (e) {
-      _showErrorSnackBar('Gabim në zgjedhjen e imazhit: $e');
+      _showErrorSnackBar('${GamifyText.imagePickErrorPrefix} $e');
     }
   }
 
@@ -55,7 +59,7 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
         _processImage();
       }
     } catch (e) {
-      _showErrorSnackBar('Gabim në zgjedhjen e imazhit: $e');
+      _showErrorSnackBar('${GamifyText.imagePickErrorPrefix} $e');
     }
   }
 
@@ -63,7 +67,7 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
     // TODO: Implement ML Kit text recognition when available
     // For now, show a placeholder
     setState(() {
-      _recognizedText = 'Ekuacioni u identifikua nga imazhi...';
+      _recognizedText = GamifyText.equationDetected;
     });
   }
 
@@ -71,7 +75,7 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
     final exerciseText = _recognizedText ?? _exerciseController.text;
 
     if (exerciseText.isEmpty) {
-      _showErrorSnackBar('Ju lutemi shkruajnë ose fotografoni një ekuacion.');
+      _showErrorSnackBar(GamifyText.emptyEquation);
       return;
     }
 
@@ -94,27 +98,18 @@ class _GamifyExerciseScreenState extends State<GamifyExerciseScreen> {
   }
 
   String _generateFunSolution(String exercise) {
-    // Simple math expression parser and solver
-    exercise = exercise.toLowerCase().trim();
-
-    // Remove common words in Albanian
-    exercise = exercise
-        .replaceAll('zgjidh', '')
-        .replaceAll('llogarit', '')
-        .replaceAll('sa është', '')
-        .replaceAll('janë', '')
-        .trim();
+    final normalizedExercise = GamifyParser.normalize(exercise);
+    final parsed = GamifyParser.parse(exercise);
 
     try {
-      // Try to parse simple expressions
-      if (exercise.contains('+')) {
-        final parts = exercise.split('+');
-        if (parts.length == 2) {
-          final num1 = int.parse(parts[0].trim());
-          final num2 = int.parse(parts[1].trim());
-          final answer = num1 + num2;
+      if (parsed != null) {
+        final num1 = parsed.left;
+        final num2 = parsed.right;
 
-          return '''
+        switch (parsed.operator) {
+          case GamifyOperator.addition:
+            final answer = num1 + num2;
+            return '''
 🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮
 
 Ekuacioni: $num1 + $num2 = ?
@@ -125,15 +120,19 @@ Ekuacioni: $num1 + $num2 = ?
 
 💡 TRIKU ARGËTUES: Çdo shifër në $answer përfaqëson një yje në qiellin e natës! 🌟
 ''';
-        }
-      } else if (exercise.contains('-')) {
-        final parts = exercise.split('-');
-        if (parts.length == 2) {
-          final num1 = int.parse(parts[0].trim());
-          final num2 = int.parse(parts[1].trim());
-          final answer = num1 - num2;
+          case GamifyOperator.subtraction:
+            if (num1 < num2) {
+              return '''
+🎮 UDHËZIM PEDAGOGJIK 🎮
 
-          return '''
+Ekuacioni: $num1 - $num2
+
+Për këtë nivel, zbritja duhet të japë rezultat jo-negativ.
+Provo një ushtrim ku numri i parë është më i madh ose i barabartë me të dytin.
+''';
+            }
+            final answer = num1 - num2;
+            return '''
 🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮
 
 Ekuacioni: $num1 - $num2 = ?
@@ -144,22 +143,9 @@ Ekuacioni: $num1 - $num2 = ?
 
 💡 TRIKU ARGËTUES: $answer këto janë mollët më të ëmbla në kopje! 🍎
 ''';
-        }
-      } else if (exercise.contains('*') ||
-          exercise.contains('×') ||
-          exercise.contains('x')) {
-        final delimiter = exercise.contains('*')
-            ? '*'
-            : exercise.contains('×')
-            ? '×'
-            : 'x';
-        final parts = exercise.split(delimiter);
-        if (parts.length == 2) {
-          final num1 = int.parse(parts[0].trim());
-          final num2 = int.parse(parts[1].trim());
-          final answer = num1 * num2;
-
-          return '''
+          case GamifyOperator.multiplication:
+            final answer = num1 * num2;
+            return '''
 🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮
 
 Ekuacioni: $num1 × $num2 = ?
@@ -170,16 +156,25 @@ Ekuacioni: $num1 × $num2 = ?
 
 💡 TRIKU ARGËTUES: Shumëzimi është si të radhitësh lugje në raftet - sa më shumë të barturësh, aq më shumë do të kesh! 📦
 ''';
-        }
-      } else if (exercise.contains('/') || exercise.contains('÷')) {
-        final delimiter = exercise.contains('/') ? '/' : '÷';
-        final parts = exercise.split(delimiter);
-        if (parts.length == 2) {
-          final num1 = int.parse(parts[0].trim());
-          final num2 = int.parse(parts[1].trim());
-          if (num2 != 0) {
-            final answer = num1 ~/ num2;
+          case GamifyOperator.division:
+            if (num2 == 0) {
+              return '''
+🎮 UDHËZIM PEDAGOGJIK 🎮
 
+Pjesëtimi me zero nuk lejohet. Provo një pjesëtim me emërues > 0.
+''';
+            }
+            if (num1 % num2 != 0) {
+              return '''
+🎮 UDHËZIM PEDAGOGJIK 🎮
+
+Ekuacioni: $num1 ÷ $num2
+
+Për këtë nivel, përdorim vetëm pjesëtim pa mbetje.
+Zgjidh një ushtrim ku numri i parë pjestëtohet saktë me të dytin.
+''';
+            }
+            final answer = num1 ~/ num2;
             return '''
 🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮
 
@@ -191,7 +186,6 @@ Ekuacioni: $num1 ÷ $num2 = ?
 
 💡 TRIKU ARGËTUES: Pjesëtimi është si të ndash një surprizë - sa më shumë miq, aq më pak për secilin! 🎉
 ''';
-          }
         }
       }
 
@@ -199,7 +193,7 @@ Ekuacioni: $num1 ÷ $num2 = ?
       return '''
 🎮 ZGJIDHJA ARGËTUESE 🎮
 
-Ekuacioni juaj: "$exercise"
+Ekuacioni juaj: "$normalizedExercise"
 
 📚 Duket si një sfidë interesante!
 🧮 Këtu janë disa këshilla për ta zgjidhur:
@@ -221,7 +215,7 @@ Për shembull:
       return '''
 🎮 ZGJIDHJA ARGËTUESE 🎮
 
-Ekuacioni: "$exercise"
+Ekuacioni: "$normalizedExercise"
 
 Hmm, duhet të jetë më i qartë! 🤔
 📝 Përpiquni të rishkruajnë ekuacionin me numra dhe operacione të qarta.
@@ -266,13 +260,13 @@ Përpiquni përsëri! 💪
   @override
   Widget build(BuildContext context) {
     final isTablet = MediaQuery.sizeOf(context).width >= 760;
-    
+
     return Scaffold(
       backgroundColor: CosmicColors.background,
       appBar: AppBar(
         backgroundColor: CosmicColors.surface,
         title: const Text(
-          'Argëto Ushtrimet',
+          GamifyText.screenTitle,
           style: TextStyle(
             color: CosmicColors.primaryContainer,
             fontWeight: FontWeight.bold,
@@ -291,14 +285,14 @@ Përpiquni përsëri! 💪
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Fotografo ose Shkruaj Ushtrimin',
+                GamifyText.inputTitle,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   color: CosmicColors.primaryContainer,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Zgjedh çfarëdo mënyre që të preferosh për të futur ushtrimin matematikor.',
+                GamifyText.screenSubtitle,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 24),
@@ -338,7 +332,7 @@ Përpiquni përsëri! 💪
                       ),
                       onPressed: _clearInputs,
                       child: const Text(
-                        'Fshij',
+                        GamifyText.clear,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -367,7 +361,7 @@ Përpiquni përsëri! 💪
                               ),
                             )
                           : const Text(
-                              'Zgjidh',
+                              GamifyText.solve,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                     ),
@@ -395,7 +389,7 @@ Përpiquni përsëri! 💪
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '✨ Zgjidhja Argëtuese ✨',
+                        GamifyText.solutionTitle,
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(color: CosmicColors.secondaryContainer),
                       ),
@@ -450,7 +444,7 @@ Përpiquni përsëri! 💪
               children: [
                 if (_recognizedText != null) ...[
                   Text(
-                    'Teksti i Njohur:',
+                    GamifyText.recognizedText,
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                   const SizedBox(height: 8),
@@ -476,14 +470,11 @@ Përpiquni përsëri! 💪
                     Expanded(
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.camera_alt),
-                        label: const Text('Fotografo'),
+                        label: const Text(GamifyText.camera),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              CosmicColors.primaryContainer,
+                          backgroundColor: CosmicColors.primaryContainer,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         onPressed: _pickImage,
                       ),
@@ -492,14 +483,11 @@ Përpiquni përsëri! 💪
                     Expanded(
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.image),
-                        label: const Text('Galeria'),
+                        label: const Text(GamifyText.gallery),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              CosmicColors.secondaryContainer,
+                          backgroundColor: CosmicColors.secondaryContainer,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         onPressed: _pickImageFromGallery,
                       ),
@@ -519,7 +507,7 @@ Përpiquni përsëri! 💪
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Shkruaj Ushtrimin',
+          GamifyText.writeExercise,
           style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: 12),
@@ -527,10 +515,8 @@ Përpiquni përsëri! 💪
           controller: _exerciseController,
           style: const TextStyle(color: CosmicColors.onSurface),
           decoration: InputDecoration(
-            hintText: 'Shembull: 15 + 7',
-            hintStyle: const TextStyle(
-              color: CosmicColors.onSurfaceVariant,
-            ),
+            hintText: GamifyText.exerciseHint,
+            hintStyle: const TextStyle(color: CosmicColors.onSurfaceVariant),
             filled: true,
             fillColor: CosmicColors.surfaceHigh,
             border: OutlineInputBorder(

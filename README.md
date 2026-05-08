@@ -33,16 +33,16 @@ MathLingo is a gamified math learning app built with Flutter, designed for Alban
 ---
 
 ### Gjeometria — Geometry Challenges
-**Shqip:** Sfida të bazuara në figura gjeometrike që mbulojnë drejtkëndësha, trekëndësha dhe katrorë. Nxënësit llogaritsin sipërfaqen, perimetrin dhe të dhëna të tjera duke zgjedhur nga përgjigjet e mundshme.
+**Shqip:** Sfida të bazuara në figura gjeometrike që mbulojnë drejtkëndësha, trekëndësha, katrorë, rrethe dhe paralelograme. Nxënësit llogarisin sipërfaqen, perimetrin dhe të dhëna të tjera duke zgjedhur nga përgjigjet e mundshme.
 
-**English:** Shape-based challenges covering rectangles, triangles, and squares. Users calculate area, perimeter, and other measurements by selecting from multiple choice answers.
+**English:** Shape-based challenges covering rectangles, triangles, squares, circles, and parallelograms. Users calculate area, perimeter, and other measurements by selecting from multiple choice answers.
 
 ---
 
 ### Gamify Exercise — AI Solver
-**Shqip:** Një zgjidhës ushtrimesh i fuqizuar nga kamera. Nxënësit mund të fotografojnë një problem matematike të shkruar me dorë nga fletoret e tyre ose ta shkruajnë manualisht, dhe aplikacioni e analizon e zgjidh atë — me mbështetje të planifikuar për shpjegim hap-pas-hapi nëpërmjet ML Kit.
+**Shqip:** Një zgjidhës ushtrimesh i fuqizuar nga kamera. Nxënësit mund të fotografojnë një problem matematike të shkruar me dorë nga fletoret e tyre ose ta shkruajnë manualisht, dhe aplikacioni e analizon e zgjidh atë. Parser-i i ushtrimeve për operacionet bazë është i testuar me unit tests; OCR real me ML Kit mbetet në roadmap.
 
-**English:** A camera-powered exercise solver. Students can photograph a handwritten math problem from their notebook or type it manually, and the app parses and solves it — with step-by-step explanation support planned via ML Kit integration.
+**English:** A camera-powered exercise solver. Students can photograph a handwritten math problem from their notebook or type it manually, and the app parses and solves it. The arithmetic parser is unit-tested; real OCR via ML Kit remains on the roadmap.
 
 ---
 

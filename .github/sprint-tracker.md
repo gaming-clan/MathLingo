@@ -19,6 +19,16 @@
 - [ ] **Task 3:** Implementimi i Riverpod për State Management.
 - [ ] **Task 4:** Persistenca lokale e progresit (Hive).
 
+## Sprint 7: Code & Docs Sync - IN PROGRESS
+- [x] **Task 1:** Krijimi i branch-it të sprintit (`fix/sprint-7-code-doc-sync`).
+- [x] **Task 2:** Nxjerrja e parser-it të Gamify në domain (`gamify_parser.dart`).
+- [x] **Task 3:** Shtimi i unit tests për parser-in e Gamify.
+- [x] **Task 4:** Zgjerimi i sfidës së gjeometrisë me forma të reja (rreth, paralelogram).
+- [x] **Task 5:** Nxjerrja e generatorit të pyetjeve të gjeometrisë në domain.
+- [x] **Task 6:** Shtimi i unit tests për generatorin e gjeometrisë.
+- [x] **Task 7:** Validimi me `fvm flutter analyze` dhe `fvm flutter test`.
+- [ ] **Task 8:** Finalizimi i sinkronizimit të dokumentacionit (README + SSOT + changelog).
+
 ## Hardening & Release Ops
 - [ ] **Task 1:** Konfigurimi i Android Release Signing.
 - [ ] **Task 2:** Verifikimi i AAPT2 në mjedise ARM64 Linux.

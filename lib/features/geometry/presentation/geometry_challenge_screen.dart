@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../colors.dart';
+import '../domain/geometry_question_generator.dart';
 import '../../../models/geometry_question.dart';
-import '../../../models/geometry_shape.dart';
 import '../../../responsive.dart';
 import '../../../shared/painting/geometry_shape_painter.dart';
 import '../../../shared/utils/default_random.dart';
@@ -31,6 +31,7 @@ class GeometryChallengeScreen extends StatefulWidget {
 }
 
 class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
+  static const _questionGenerator = GeometryQuestionGenerator();
   late GeometryQuestion _question;
   int _score = 0;
   int _answered = 0;
@@ -46,61 +47,7 @@ class _GeometryChallengeScreenState extends State<GeometryChallengeScreen> {
   }
 
   GeometryQuestion _generateQuestion() {
-    final random = widget.random;
-    final shape =
-        GeometryShape.values[random.nextInt(GeometryShape.values.length)];
-    late int width;
-    late int height;
-    late int answer;
-    late String prompt;
-    late String measurement;
-
-    switch (shape) {
-      case GeometryShape.rectangle:
-        width = random.nextInt(7) + 3;
-        height = random.nextInt(6) + 2;
-        answer = width * height;
-        prompt = 'Sa është sipërfaqja e drejtkëndëshit?';
-        measurement = 'gjerësi $width, lartësi $height';
-      case GeometryShape.triangle:
-        width = (random.nextInt(5) + 3) * 2;
-        height = random.nextInt(6) + 2;
-        answer = (width * height) ~/ 2;
-        prompt = 'Sa është sipërfaqja e trekëndëshit?';
-        measurement = 'bazë $width, lartësi $height';
-      case GeometryShape.square:
-        width = random.nextInt(8) + 3;
-        height = width;
-        answer = width * 4;
-        prompt = 'Sa është perimetri i katrorit?';
-        measurement = 'brinja $width';
-    }
-
-    return GeometryQuestion(
-      shape: shape,
-      prompt: prompt,
-      measurement: measurement,
-      answer: answer,
-      options: _generateOptions(answer),
-      width: width,
-      height: height,
-    );
-  }
-
-  List<int> _generateOptions(int correctAnswer) {
-    final random = widget.random;
-    final options = <int>{correctAnswer};
-    while (options.length < 4) {
-      var offset = random.nextInt(14) - 7;
-      if (offset == 0) {
-        offset = 2;
-      }
-      final wrongAnswer = correctAnswer + offset;
-      if (wrongAnswer > 0) {
-        options.add(wrongAnswer);
-      }
-    }
-    return options.toList()..shuffle(random);
+    return _questionGenerator.generate(widget.random);
   }
 
   void _checkAnswer(int answer) {

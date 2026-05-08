@@ -234,6 +234,8 @@ Ky seksion përkufizon sjelljen e aprovuar të produktit. Kur implementimi aktua
 | Drejtkëndësh | Sipërfaqe |
 | Trekëndësh | Sipërfaqe |
 | Katror | Perimetër |
+| Rreth | Perimetër (`π ≈ 3`) |
+| Paralelogram | Sipërfaqe |
 
 #### Rregullat e sesionit
 
@@ -248,6 +250,8 @@ Ky seksion përkufizon sjelljen e aprovuar të produktit. Kur implementimi aktua
 - Drejtkëndëshi llogaritet me `gjerësi * lartësi`.
 - Trekëndëshi llogaritet me `(bazë * lartësi) / 2`.
 - Katrori llogaritet me `brinja * 4` për perimetrin.
+- Rrethi llogaritet me `2 * π * r`, ku për modul bazë përdoret `π ≈ 3`.
+- Paralelogrami llogaritet me `bazë * lartësi`.
 - Opsionet duhet të jenë pozitive dhe të plausibile.
 
 ### 6.5 Tabelat matematikore
@@ -435,7 +439,7 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 | Shell i aplikacionit | Implementuar | `MathLingoApp` me Material 3 dhe theme custom |
 | Dashboard | Implementuar | Ka 4 tabs dhe kartat kryesore |
 | Sfida aritmetike | Implementuar | 4 operacione, 3 nivele, sesion i shkurtër |
-| Sfida gjeometrike | Implementuar | 3 forma, painter custom, scoring aktiv |
+| Sfida gjeometrike | Implementuar | 5 forma, painter custom, scoring aktiv |
 | Results screen | Implementuar | Pikë, saktësi, kthim në dashboard |
 | Tabelat matematikore | Implementuar | Zbritja shmang negativet dhe pjesëtimi shfaq vetëm raste pa mbetje |
 | Gamify me input manual | Implementuar | Parser funksional për operacione bazë |
@@ -448,7 +452,7 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 | State management i shkallëzueshëm | Jo i implementuar | Ende `setState` |
 | Release signing real | Jo i implementuar | Release përdor debug key |
 | Testim widget bazik | Implementuar dhe verifikuar | `fvm flutter analyze` dhe `fvm flutter test` kalojnë në mjedisin aktual |
-| Unit tests të logjikës | Jo të implementuara | Mungojnë generatorët dhe parser tests |
+| Unit tests të logjikës | Implementuar pjesërisht | Parser-i Gamify dhe generatori i gjeometrisë janë të testuar |
 | Integration tests | Jo të implementuara | Mungojnë flows fundorë |
 
 ### 8.2 Statusi i QA dhe build-it

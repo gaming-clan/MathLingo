@@ -56,6 +56,22 @@ class GeometryShapePainter extends CustomPainter {
         canvas.drawPath(path, glow);
         canvas.drawPath(path, paint);
         canvas.drawPath(path, stroke);
+      case GeometryShape.circle:
+        final radius = min(rect.width, rect.height) / 2;
+        canvas.drawCircle(center, radius, glow);
+        canvas.drawCircle(center, radius, paint);
+        canvas.drawCircle(center, radius, stroke);
+      case GeometryShape.parallelogram:
+        final skew = rect.width * 0.18;
+        final path = Path()
+          ..moveTo(rect.left + skew, rect.top)
+          ..lineTo(rect.right, rect.top)
+          ..lineTo(rect.right - skew, rect.bottom)
+          ..lineTo(rect.left, rect.bottom)
+          ..close();
+        canvas.drawPath(path, glow);
+        canvas.drawPath(path, paint);
+        canvas.drawPath(path, stroke);
     }
   }
 

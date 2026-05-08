@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/app_text.dart';
 import '../../../colors.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/cosmic_button.dart';
@@ -8,10 +9,7 @@ import '../../../shared/widgets/mascot_frame.dart';
 import '../../../shared/widgets/section_header.dart';
 
 class LessonsPage extends StatelessWidget {
-  const LessonsPage({
-    super.key,
-    required this.onStartGeometryChallenge,
-  });
+  const LessonsPage({super.key, required this.onStartGeometryChallenge});
 
   final VoidCallback onStartGeometryChallenge;
 
@@ -23,8 +21,8 @@ class LessonsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SectionHeader(
-            kicker: 'ALGJEBRA BAZË',
-            title: 'Zgjidh ekuacionin',
+            kicker: LessonsText.kicker,
+            title: LessonsText.title,
           ),
           const SizedBox(height: 24),
           const GlassPanel(
@@ -35,7 +33,7 @@ class LessonsPage extends StatelessWidget {
                 children: [
                   Center(
                     child: Text(
-                      '5 + 3 = 8',
+                      LessonsText.sampleEquation,
                       style: TextStyle(
                         color: CosmicColors.secondaryContainer,
                         fontSize: 46,
@@ -54,7 +52,7 @@ class LessonsPage extends StatelessWidget {
           ),
           const SizedBox(height: 28),
           Text(
-            'Mjetet e Llogaritjes',
+            LessonsText.tools,
             style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: 16),
@@ -69,7 +67,7 @@ class LessonsPage extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           CosmicButton(
-            label: 'Vazhdo',
+            label: LessonsText.continueLabel,
             icon: Icons.arrow_forward,
             onPressed: onStartGeometryChallenge,
           ),
