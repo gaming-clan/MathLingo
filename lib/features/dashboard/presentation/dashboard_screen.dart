@@ -149,14 +149,14 @@ class _DashboardPage extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 28),
-          _DailyChallengeCard(onStart: onStartGeometryChallenge),
-          const SizedBox(height: 24),
-          _GamifyCard(onStart: onStartGamifyExercise),
-          const SizedBox(height: 24),
           _QuickActionsCard(
             onStartChallenge: onStartChallenge,
             onStartGamifyExercise: onStartGamifyExercise,
           ),
+          const SizedBox(height: 20),
+          _DailyChallengeCard(onStart: onStartGeometryChallenge),
+          const SizedBox(height: 24),
+          _GamifyCard(onStart: onStartGamifyExercise),
           const SizedBox(height: 24),
           const _ProgressModuleCard(),
         ],
@@ -200,11 +200,7 @@ class _DashboardPage extends StatelessWidget {
             ),
           ),
         ),
-        const VerticalDivider(
-          width: 1,
-          thickness: 1,
-          color: Color(0x1FEEEBFF),
-        ),
+        const VerticalDivider(width: 1, thickness: 1, color: Color(0x1FEEEBFF)),
         // Panel i djathtë — Control Center: QuickActions + Progress
         Expanded(
           flex: 5,
