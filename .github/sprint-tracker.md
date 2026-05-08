@@ -40,7 +40,7 @@
 - [x] **D1:** Fix overflow i dashboard quick-action tiles (`_ActionTile` responsive: padding, icon size, maxLines:2).
 - [x] **D2:** Ignore signing credentials & toolchain artifacts (`.gitignore` i përditësuar). *(D2 manual QA e shtyrë)*
 
-## Sprint 6: UX Layout Stabilizimi - IN PROGRESS
+## Sprint 6: UX Layout Stabilizimi - DONE
 - [x] **T01:** Tablet portrait breakpoint me bazë gjerësie (`AdaptiveLayout.isTablet` dhe scaffold adaptive).
 - [x] **T02:** ChallengeScreen layout compact (kartë pyetjeje adaptive + grid përgjigjesh 2x2 në mobile).
 - [x] **T03:** BottomNav safe-area/inset handling për gesture bar Android.
