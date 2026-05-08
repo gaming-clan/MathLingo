@@ -78,8 +78,8 @@ class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
     final feedback = state.isAnswerCorrect == null
         ? ''
         : (state.isAnswerCorrect!
-            ? l10n.challengeCorrectFeedback
-            : l10n.challengeIncorrectFeedback);
+              ? l10n.challengeCorrectFeedback
+              : l10n.challengeIncorrectFeedback);
 
     return Scaffold(
       backgroundColor: CosmicColors.background,
@@ -104,8 +104,11 @@ class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
               padding: const EdgeInsets.all(22),
               child: LayoutBuilder(
                 builder: (context, constraints) {
+                  final screenHeight = MediaQuery.sizeOf(context).height;
                   final isTablet = constraints.maxWidth >= 720;
-                  final height = isTablet ? 300.0 : 260.0;
+                  final height = isTablet
+                      ? (screenHeight * 0.34).clamp(160.0, 240.0)
+                      : (screenHeight * 0.27).clamp(120.0, 170.0);
                   final fontSize = isTablet ? 52.0 : 44.0;
                   return SizedBox(
                     height: height,
@@ -133,24 +136,10 @@ class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
               builder: (context, constraints) {
                 final width = constraints.maxWidth;
                 final isTablet = width >= 720;
-                final isLargeTablet = width >= 1000;
-
-                late int columns;
-                late double childAspectRatio;
-
-                if (isLargeTablet) {
-                  columns = 4;
-                  childAspectRatio = 1.8;
-                } else if (isTablet) {
-                  columns = 3;
-                  childAspectRatio = 1.7;
-                } else {
-                  columns = 2;
-                  childAspectRatio = 1.9;
-                }
+                final childAspectRatio = isTablet ? 3.4 : 2.8;
 
                 return GridView.count(
-                  crossAxisCount: columns,
+                  crossAxisCount: 2,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   childAspectRatio: childAspectRatio,

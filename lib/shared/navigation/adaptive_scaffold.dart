@@ -34,6 +34,8 @@ class AdaptiveScaffold extends StatelessWidget {
       return Scaffold(
         backgroundColor: CosmicColors.background,
         appBar: appBar,
+        extendBody: true,
+        resizeToAvoidBottomInset: true,
         body: body,
         bottomNavigationBar: CosmicBottomNav(
           selectedIndex: selectedIndex,
@@ -95,9 +97,7 @@ class _CosmicRail extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: CosmicColors.surface,
-        border: Border(
-          right: BorderSide(color: Color(0x1FEEEBFF)),
-        ),
+        border: Border(right: BorderSide(color: Color(0x1FEEEBFF))),
       ),
       child: NavigationRail(
         extended: extended,

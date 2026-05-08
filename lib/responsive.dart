@@ -7,8 +7,8 @@ class AdaptiveLayout {
 
   static bool isTablet(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    // Shortest side >= 600 is the standard for 7-inch tablets
-    return size.shortestSide >= 600;
+    // Për layout-et e app-it, gjerësia aktuale është më e besueshme në portrait.
+    return size.width >= 600;
   }
 
   static bool isLargeTablet(BuildContext context) {
@@ -19,7 +19,9 @@ class AdaptiveLayout {
 
   static EdgeInsets pagePadding(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    final horizontal = width >= 1100 ? 56.0 : (width >= 900 ? 48.0 : (width >= 760 ? 40.0 : 24.0));
+    final horizontal = width >= 1100
+        ? 56.0
+        : (width >= 900 ? 48.0 : (width >= 760 ? 40.0 : 24.0));
     final top = width >= 760 ? 32.0 : 24.0;
     return EdgeInsets.fromLTRB(horizontal, top, horizontal, 36);
   }
