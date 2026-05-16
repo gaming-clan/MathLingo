@@ -8,6 +8,7 @@ import '../../../responsive.dart';
 import '../../../shared/widgets/glass_panel.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
+import 'parent_report_screen.dart';
 
 /// Ekrani i ndërrimit të profilit dhe shtimit të fëmijëve të rinj.
 class FamilySwitcherScreen extends ConsumerStatefulWidget {
@@ -44,9 +45,27 @@ class _FamilySwitcherScreenState
                   ),
             ),
             const SizedBox(height: 6),
-            Text(
-              'Zgjidh profilin ose shto fëmijë të ri.',
-              style: Theme.of(context).textTheme.bodyMedium,
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Zgjidh profilin ose shto fëmijë të ri.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                TextButton.icon(
+                  icon: const Icon(Icons.bar_chart, size: 18),
+                  label: const Text('Raporti'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: CosmicColors.tertiaryContainer,
+                  ),
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const ParentReportScreen(),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
             ...children.map(

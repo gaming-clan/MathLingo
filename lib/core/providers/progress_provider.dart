@@ -2,15 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/user_progress.dart';
 import '../../shared/utils/user_progress_storage.dart';
-import '../services/family_profile_service.dart';
+import 'family_provider.dart';
 
 // ---------------------------------------------------------------------------
 // Notifier
 // ---------------------------------------------------------------------------
 class ProgressNotifier extends StateNotifier<AsyncValue<UserProgress>> {
-  ProgressNotifier() : super(const AsyncValue.loading()) {
+  ProgressNotifier(this._ref) : super(const AsyncValue.loading()) {
     _load();
   }
+
+  final Ref _ref;
 
   Future<void> _load() async {
     try {
@@ -35,8 +37,8 @@ class ProgressNotifier extends StateNotifier<AsyncValue<UserProgress>> {
         accuracy: accuracy,
         moduleKey: moduleKey,
       );
-      // Shkrim per-child (dual-write B-01)
-      await FamilyProfileService.recordSession(
+      // Shkrim per-child + rifresko familyProvider state (B-01)
+      await _ref.read(familyProvider.notifier).recordSession(
         points: points,
         accuracy: accuracy,
         moduleKey: moduleKey,
@@ -53,5 +55,5 @@ class ProgressNotifier extends StateNotifier<AsyncValue<UserProgress>> {
 // ---------------------------------------------------------------------------
 final progressProvider =
     StateNotifierProvider<ProgressNotifier, AsyncValue<UserProgress>>(
-  (ref) => ProgressNotifier(),
+  (ref) => ProgressNotifier(ref),
 );
