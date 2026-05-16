@@ -14,9 +14,10 @@ import '../../../shared/utils/default_random.dart';
 import '../../../shared/widgets/cosmic_progress.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
 import '../../../shared/widgets/glass_panel.dart';
+import '../../../shared/painting/multiplication_grid_painter.dart';
 import '../../../shared/widgets/section_header.dart';
-import 'results_screen.dart';
 import 'widgets/answer_button.dart';
+import 'results_screen.dart';
 
 class ChallengeScreen extends ConsumerStatefulWidget {
   const ChallengeScreen({
@@ -38,6 +39,7 @@ class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
   late final ChallengeConfig _config;
   bool _sessionRecorded = false;
   bool _leveledUp = false;
+  bool _showGrid = false;
 
   @override
   void initState() {
@@ -170,6 +172,13 @@ class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
               ),
             ),
             const SizedBox(height: 24),
+            if (widget.operation == Operation.multiplication)
+              _MultiplicationGridSection(
+                num1: state.question.num1,
+                num2: state.question.num2,
+                showGrid: _showGrid,
+                onToggle: () => setState(() => _showGrid = !_showGrid),
+              ),
             LayoutBuilder(
               builder: (context, constraints) {
                 final width = constraints.maxWidth;
@@ -268,6 +277,120 @@ class _NeonLevelChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 4),
         visualDensity: VisualDensity.compact,
       ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// _MultiplicationGridSection — grilë animuar për shumëzim
+// ---------------------------------------------------------------------------
+class _MultiplicationGridSection extends StatefulWidget {
+  const _MultiplicationGridSection({
+    required this.num1,
+    required this.num2,
+    required this.showGrid,
+    required this.onToggle,
+  });
+
+  final int num1;
+  final int num2;
+  final bool showGrid;
+  final VoidCallback onToggle;
+
+  @override
+  State<_MultiplicationGridSection> createState() =>
+      _MultiplicationGridSectionState();
+}
+
+class _MultiplicationGridSectionState
+    extends State<_MultiplicationGridSection>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _colAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300 * widget.num2),
+    );
+    _colAnim = Tween<double>(begin: 0, end: widget.num2.toDouble()).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void didUpdateWidget(_MultiplicationGridSection old) {
+    super.didUpdateWidget(old);
+    if (widget.num2 != old.num2) {
+      _ctrl.duration = Duration(milliseconds: 300 * widget.num2);
+      _colAnim = Tween<double>(begin: 0, end: widget.num2.toDouble()).animate(
+        CurvedAnimation(parent: _ctrl, curve: Curves.easeOut),
+      );
+    }
+    if (widget.showGrid && !old.showGrid) {
+      _ctrl
+        ..reset()
+        ..forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = widget.num1.clamp(1, 12);
+    final cols = widget.num2.clamp(1, 12);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        OutlinedButton.icon(
+          onPressed: widget.onToggle,
+          icon: Icon(
+            widget.showGrid ? Icons.grid_off : Icons.grid_on,
+            size: 18,
+          ),
+          label: Text(widget.showGrid ? 'Fshih Grilën' : 'Shfaq Grilën'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: CosmicColors.secondaryContainer,
+            side: BorderSide(
+              color: CosmicColors.secondaryContainer.withValues(alpha: 0.5),
+            ),
+            visualDensity: VisualDensity.compact,
+          ),
+        ),
+        AnimatedCrossFade(
+          duration: const Duration(milliseconds: 250),
+          crossFadeState: widget.showGrid
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
+          firstChild: const SizedBox.shrink(),
+          secondChild: Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: AnimatedBuilder(
+              animation: _colAnim,
+              builder: (_, __) => SizedBox(
+                height: (rows * 28.0).clamp(60, 200),
+                child: CustomPaint(
+                  painter: MultiplicationGridPainter(
+                    rows: rows,
+                    cols: cols,
+                    animatedCols: _colAnim.value.round(),
+                  ),
+                  size: Size.infinite,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+      ],
     );
   }
 }

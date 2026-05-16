@@ -391,6 +391,61 @@ class AppLocalizationsSq extends AppLocalizations {
   }
 
   @override
+  String get fractionKicker => 'FRAKSIONET';
+
+  @override
+  String get fractionTitle => 'Identifiko fraksionin';
+
+  @override
+  String get fractionPrompt => 'Cili fraksion tregon pjesën e ngjyrosur?';
+
+  @override
+  String get fractionCorrectFeedback => 'Saktë! Vazhdon fluturimi.';
+
+  @override
+  String get fractionIncorrectFeedback => 'Provo përsëri. Je shumë afër.';
+
+  @override
+  String get fractionOneHalf => 'gjysmë (½)';
+
+  @override
+  String get fractionOneThird => 'një e treta (⅓)';
+
+  @override
+  String get fractionOneQuarter => 'një e katërta (¼)';
+
+  @override
+  String get fractionThreeQuarters => 'tre të katërtat (¾)';
+
+  @override
+  String get fractionTwoThirds => 'dy të tretat (⅔)';
+
+  @override
+  String get fractionOneEighth => 'një e teta (⅛)';
+
+  @override
+  String get fractionThreeEighths => 'tre të tetat (⅜)';
+
+  @override
+  String get fractionFiveEighths => 'pesë të tetat (⅝)';
+
+  @override
+  String get fractionSevenEighths => 'shtatë të tetat (⅞)';
+
+  @override
+  String get dashboardFractionsChip => 'Fraksionet';
+
+  @override
+  String get dashboardFractionsTitle => 'Mëso Fraksionet';
+
+  @override
+  String get dashboardFractionsDescription =>
+      'Identifiko fraksionet duke shikuar figura vizuale si tarte dhe shirita të ndarë.';
+
+  @override
+  String get dashboardFractionsButton => 'Fillo sfidën';
+
+  @override
   String gamifySymbolicSolution(
     Object exercise,
     Object leftOperand,

@@ -337,6 +337,24 @@
       "exercise": {}
     }
   },
+  "fractionKicker": "FRAKSIONET",
+  "fractionTitle": "Identifiko fraksionin",
+  "fractionPrompt": "Cili fraksion tregon pjesën e ngjyrosur?",
+  "fractionCorrectFeedback": "Saktë! Vazhdon fluturimi.",
+  "fractionIncorrectFeedback": "Provo përsëri. Je shumë afër.",
+  "fractionOneHalf": "gjysmë (½)",
+  "fractionOneThird": "një e treta (⅓)",
+  "fractionOneQuarter": "një e katërta (¼)",
+  "fractionThreeQuarters": "tre të katërtat (¾)",
+  "fractionTwoThirds": "dy të tretat (⅔)",
+  "fractionOneEighth": "një e teta (⅛)",
+  "fractionThreeEighths": "tre të tetat (⅜)",
+  "fractionFiveEighths": "pesë të tetat (⅝)",
+  "fractionSevenEighths": "shtatë të tetat (⅞)",
+  "dashboardFractionsChip": "Fraksionet",
+  "dashboardFractionsTitle": "Mëso Fraksionet",
+  "dashboardFractionsDescription": "Identifiko fraksionet duke shikuar figura vizuale si tarte dhe shirita të ndarë.",
+  "dashboardFractionsButton": "Fillo sfidën",
   "gamifySymbolicSolution": "✨ SHPREHJE ALGJEBRIKE ✨\n\nShprehja: {exercise}\n\n🔤 Kjo është një shprehje me ndryshore, jo një llogaritje me numra të gatshëm.\n🧩 Termat {leftOperand} dhe {rightOperand} duhen zëvendësuar me vlera për të gjetur përgjigjen.\n\n📘 Shembull:\nNëse a = 3 dhe b = 4, atëherë a^2 + b^2 = 3^2 + 4^2 = 9 + 16 = 25.\n\n💡 Pa vlerat e ndryshoreve, shprehja nuk ka një përgjigje numerike të vetme.",
   "@gamifySymbolicSolution": {
     "placeholders": {
