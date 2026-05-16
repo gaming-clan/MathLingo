@@ -6,7 +6,7 @@
 |---|---|
 | Emri i projektit | MathLingo |
 | Lloji i dokumentit | SSOT - Single Source of Truth |
-| Versioni i dokumentit | 1.1.0 |
+| Versioni i dokumentit | 1.2.0 |
 | Data | 16 Maj 2026 |
 | Gjuha e dokumentit | Shqip |
 | Audienca | Zhvillues, QA, UI/UX, Product, stakeholders |
@@ -500,8 +500,11 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 | State management i shkallëzueshëm | Implementuar | Riverpod `StateNotifierProvider` + `autoDispose.family` |
 | DistractorEngine | Implementuar | Domain Layer, gabimet tipike pedagogjike, 11 teste (Sprint 7 B-01–B-03) |
 | MissingX "Gjej X-in" | Implementuar | Model + generator + ekran + karta dashboard, 9 teste (Sprint 7 C-01–C-04) |
-| DifficultyEngine adaptiv | Jo i implementuar | Planifikuar Sprint 8 |
-| Release signing real | Jo i implementuar | Release përdor debug key — bllokues Play Store (Sprint 8 B-01/B-02) |
+| DifficultyEngine adaptiv | Implementuar | Level-up/down automatik; SessionTracker Hive sliding window; NeonChip UI (Sprint 8 A-01–A-04) |
+| MissingX "Gjej X-in" | Implementuar | Model + generator + ekran + karta dashboard, 9 teste (Sprint 7 C-01–C-04) |
+| Fraksionet vizuale | Jo i implementuar | Planifikuar Sprint 9 |
+| Vizualizimi Grilë Shumëzimi | Jo i implementuar | Planifikuar Sprint 9 |
+| Release signing real | Jo i implementuar | Shtyer pas Sprint 9 (B-01/B-02) |
 | Testim widget bazik | Implementuar dhe verifikuar | `fvm flutter test` 98/98 ✅ · `fvm flutter analyze` 0 issues ✅ |
 | Unit tests të logjikës | Implementuar | DistractorEngine, MissingXGenerator, GeometryGenerator, Tables inverse, GamifyParser |
 | Integration tests | Jo të implementuara | Mungojnë flows fundorë |
@@ -535,6 +538,8 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 - Moduli bazë i tabelave me modalitet klasik dhe invers.
 - Moduli bazë Gamify me input tekstual dhe media picker.
 - Sfida "Gjej X-in" (MissingX) për të menduarit inversal.
+- Sistem adaptiv niveli `DifficultyEngine` + `SessionTracker` me Hive.
+- `_NeonLevelChip` në `ChallengeScreen` — nivel aktual visible.
 - Arkitektura e modularizuar për ekranet kryesore dhe komponentët shared.
 - Riverpod StateNotifier si state management kryesor.
 

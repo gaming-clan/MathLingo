@@ -84,20 +84,39 @@
 
 ---
 
-## Sprint 8: Adaptiviteti & Android Release Signing - IN PROGRESS
+## Sprint 8: Adaptiviteti & DifficultyEngine - DONE
 **Versioni:** v1.5.0 | **Branch:** `feature/sprint-8-difficulty-engine`
 
 ### Track A — DifficultyEngine Adaptiv
-- [ ] **A-01:** `DifficultyEngine` si klasë pure Dart në Domain Layer. Level-up pas 3 sesionesh ≥90%, level-down pas 3 sesionesh <50%.
-- [ ] **A-02:** `SessionTracker` me Hive — sliding window 5 sesionesh për çdo operacion.
-- [ ] **A-03:** Integro `DifficultyEngine` me `ChallengeProvider` dhe `GeometryProvider`.
-- [ ] **A-04:** UI `NeonChip` "Niveli 1/2/3" në `ChallengeScreen` + animacion level-up.
+- [x] **A-01:** `DifficultyEngine` klasë pure Dart — level-up pas 3 sesionesh ≥90%, level-down pas 3 sesionesh <50%.
+- [x] **A-02:** `SessionTracker` me Hive — sliding window 5 sesionesh për operacion; `getCurrentLevel`/`setCurrentLevel`.
+- [x] **A-03:** Integrimi me `ChallengeProvider` — `ChallengeConfig.difficultyLevel`, `maxNumber` nga `DifficultyLevel`; regjistrim sesioni në `ChallengeScreen`.
+- [x] **A-04:** `_NeonLevelChip` widget (cyan/gold/neon-orange) në `ChallengeScreen`; SnackBar level-up me `addPostFrameCallback`.
 
-### Track B — Android Release Signing
-- [ ] **B-01 BLLOKUES:** Gjenero `keystore`, konfigurim `key.properties`, update `build.gradle.kts`.
-- [ ] **B-02 BLLOKUES:** Verifiko `fvm flutter build appbundle --release` me certificate release.
-- [ ] **B-03:** Verifiko AAPT2 ARM64 Linux (bug B005). Mbyll bug B005.
+### Track B — Android Release Signing — SHTYER
+- [ ] **B-01 BLLOKUES:** Gjenero `keystore` release; konfigurim `key.properties`; update `build.gradle.kts`. *(Shtyer — kryhet pas Sprint 9)*
+- [ ] **B-02 BLLOKUES:** Verifiko `fvm flutter build appbundle --release`. *(Shtyer)*
+- [ ] **B-03:** Verifiko AAPT2 ARM64 Linux (bug B005). *(Shtyer)*
 
-### Track C — Unit Tests & QA
-- [ ] **C-01:** Unit tests `DifficultyEngine` (level-up, level-down, stabilitet).
-- [ ] **C-02:** Integration test sesion → SessionTracker → DifficultyEngine → nivel i ri.
+### Track C — Unit Tests
+- [x] **C-01:** 20 unit tests `DifficultyEngine` (level-up, level-down, stabil, extension `maxNumber`/`label`).
+- [ ] **C-02:** Integration test sesion → SessionTracker → DifficultyEngine → nivel i ri. *(Shtyer)*
+
+- [x] **Final:** `fvm flutter test` 118/118 ✅ · `fvm flutter analyze` 0 issues ✅
+
+---
+
+## Sprint 9: Fraksionet & Vizualizimi Konceptual - IN PROGRESS
+**Versioni:** v1.5.1 | **Branch:** `feature/sprint-9-fractions`
+
+### Track A — Moduli i Fraksioneve
+- [ ] **A-01:** Model `FractionQuestion` në Domain Layer (numerator, denominator, answer, options, visualType).
+- [ ] **A-02:** `FractionGenerator` — fraksione të mbuluar: ½, ⅓, ¼, ¾, ⅔, ⅛, ⅜, ⅝, ⅞.
+- [ ] **A-03:** `FractionPainter` (CustomPainter) — pie dhe bar vizualizim; ngjyra adaptive Cosmic.
+- [ ] **A-04:** `FractionChallengeScreen` si feature e ndarë (`lib/features/fraction/`); 4 pyetje, +15 pikë.
+- [ ] **A-05:** Kartë "Fraksionet" në dashboard + ARB strings shqip për fraksionet.
+
+### Track B — Vizualizimi Grilë Shumëzimi
+- [ ] **B-01:** `MultiplicationGridPainter` — grilë N×M me animacion sekuencial (300ms mes kolonave).
+- [ ] **B-02:** Buton "Shfaq Grilën" në `ChallengeScreen` për shumëzim.
+- [ ] **B-03:** Widget tests për `FractionPainter` dhe `MultiplicationGridPainter`.
