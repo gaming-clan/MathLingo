@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../domain/distractor_engine.dart';
 import '../../models/math_question.dart';
 import '../../models/operation.dart';
 
@@ -146,19 +147,14 @@ class ChallengeNotifier extends StateNotifier<ChallengeState> {
       num1: num1,
       num2: num2,
       answer: answer,
-      options: _buildOptions(answer, random),
+      options: DistractorEngine.generateFor(
+        operation: cfg.operation,
+        correctAnswer: answer,
+        num1: num1,
+        num2: num2,
+        random: random,
+      ),
     );
-  }
-
-  static List<int> _buildOptions(int correctAnswer, Random random) {
-    final options = <int>{correctAnswer};
-    while (options.length < 4) {
-      var offset = random.nextInt(12) - 6;
-      if (offset == 0) offset = 1;
-      final wrong = correctAnswer + offset;
-      if (wrong >= 0) options.add(wrong);
-    }
-    return (options.toList()..shuffle(random));
   }
 
   // ----- actions -----------------------------------------------------------
