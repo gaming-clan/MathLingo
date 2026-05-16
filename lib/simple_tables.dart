@@ -104,15 +104,17 @@ class _OperationTablesScreenState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final selectedTable = ref.watch(tablesProvider).selectedTable;
+    final tablesState = ref.watch(tablesProvider);
+    final selectedTable = tablesState.selectedTable;
+    final isInverseMode = tablesState.isInverseMode;
     final width = MediaQuery.sizeOf(context).width;
     final isMasterDetail = width >= 840;
 
     return DefaultTabController(
       length: 4,
       child: isMasterDetail
-          ? _buildMasterDetailLayout(context, l10n, selectedTable)
-          : _buildMobileLayout(context, l10n, selectedTable),
+          ? _buildMasterDetailLayout(context, l10n, selectedTable, isInverseMode)
+          : _buildMobileLayout(context, l10n, selectedTable, isInverseMode),
     );
   }
 
@@ -121,15 +123,16 @@ class _OperationTablesScreenState
     BuildContext context,
     AppLocalizations l10n,
     int selectedTable,
+    bool isInverseMode,
   ) {
     return Column(
       children: [
-        _buildHeader(context, l10n),
+        _buildHeader(context, l10n, isInverseMode),
         _buildTabBar(context, l10n),
         const SizedBox(height: 12),
         Expanded(
           child: TabBarView(
-            children: _buildTabViews(l10n, selectedTable),
+            children: _buildTabViews(l10n, selectedTable, isInverseMode),
           ),
         ),
       ],
@@ -141,6 +144,7 @@ class _OperationTablesScreenState
     BuildContext context,
     AppLocalizations l10n,
     int selectedTable,
+    bool isInverseMode,
   ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,7 +154,7 @@ class _OperationTablesScreenState
           width: 280,
           child: Column(
             children: [
-              _buildHeader(context, l10n),
+              _buildHeader(context, l10n, isInverseMode),
               Expanded(
                 child: _NumberMasterPanel(
                   selectedTable: selectedTable,
@@ -186,6 +190,7 @@ class _OperationTablesScreenState
                   children: _buildTabViews(
                     l10n,
                     selectedTable,
+                    isInverseMode,
                     showNumberSelector: false,
                   ),
                 ),
@@ -199,7 +204,8 @@ class _OperationTablesScreenState
 
   List<Widget> _buildTabViews(
     AppLocalizations l10n,
-    int selectedTable, {
+    int selectedTable,
+    bool isInverseMode, {
     bool showNumberSelector = true,
   }) {
     return [
@@ -208,6 +214,7 @@ class _OperationTablesScreenState
         (a, b) => a + b,
         Colors.green,
         selectedTable,
+        isInverseMode: false,
         showNumberSelector: showNumberSelector,
       ),
       _buildOperationTable(
@@ -215,6 +222,7 @@ class _OperationTablesScreenState
         (a, b) => a - b,
         Colors.red,
         selectedTable,
+        isInverseMode: isInverseMode,
         showNumberSelector: showNumberSelector,
       ),
       _buildOperationTable(
@@ -222,6 +230,7 @@ class _OperationTablesScreenState
         (a, b) => a * b,
         Colors.orange,
         selectedTable,
+        isInverseMode: false,
         showNumberSelector: showNumberSelector,
       ),
       _buildOperationTable(
@@ -229,12 +238,17 @@ class _OperationTablesScreenState
         (a, b) => a ~/ b,
         Colors.blue,
         selectedTable,
+        isInverseMode: isInverseMode,
         showNumberSelector: showNumberSelector,
       ),
     ];
   }
 
-  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
+  Widget _buildHeader(
+    BuildContext context,
+    AppLocalizations l10n,
+    bool isInverseMode,
+  ) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
         AdaptiveLayout.pagePadding(context).left,
@@ -266,6 +280,12 @@ class _OperationTablesScreenState
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
+                ),
+                const SizedBox(height: 12),
+                _InverseModeToggle(
+                  isInverseMode: isInverseMode,
+                  onToggle: () =>
+                      ref.read(tablesProvider.notifier).toggleInverseMode(),
                 ),
               ],
             ),
@@ -338,10 +358,34 @@ class _OperationTablesScreenState
     Color color,
     int selectedTable, {
     bool showNumberSelector = true,
+    bool isInverseMode = false,
   }) {
     final l10n = AppLocalizations.of(context);
     final entries = _buildVisibleEntries(operation, calculate, selectedTable);
     final operationLabel = operation.label(l10n);
+
+    // Funksioni që ndërton tekstin e ekuacionit per çdo hyrje të tabelës.
+    // Modaliteti invers: zbritja → "? + b = a", pjesëtimi → "? × b = a"
+    String equationText(int num) {
+      if (isInverseMode) {
+        if (operation == _TableOperation.subtraction) {
+          return '? + $num = $selectedTable';
+        }
+        if (operation == _TableOperation.division) {
+          return '? × $num = $selectedTable';
+        }
+      }
+      return '$selectedTable ${operation.symbol} $num';
+    }
+
+    // Badge symbol ndryshon gjithashtu në modalitetin invers
+    String badgeSymbol() {
+      if (isInverseMode) {
+        if (operation == _TableOperation.subtraction) return '+';
+        if (operation == _TableOperation.division) return '×';
+      }
+      return operation.symbol;
+    }
 
     return Column(
       children: [
@@ -439,7 +483,6 @@ class _OperationTablesScreenState
                   final entry = entries[index];
                   final num = entry.operand;
                   final result = entry.result;
-                  final op = operation.symbol;
                   return Card(
                     color: color.withValues(alpha: 0.2),
                     elevation: 10,
@@ -455,7 +498,7 @@ class _OperationTablesScreenState
                             content: Text(
                               l10n.tablesEquationSnackBar(
                                 selectedTable,
-                                op,
+                                badgeSymbol(),
                                 num,
                                 result,
                               ),
@@ -485,7 +528,7 @@ class _OperationTablesScreenState
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  '$selectedTable $op $num',
+                                  equationText(num),
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w900,
@@ -525,7 +568,7 @@ class _OperationTablesScreenState
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                op,
+                                badgeSymbol(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
@@ -544,6 +587,63 @@ class _OperationTablesScreenState
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Toggle chip Klasik ↔ Invers për tabelat e zbritjes dhe pjesëtimit.
+class _InverseModeToggle extends StatelessWidget {
+  const _InverseModeToggle({
+    required this.isInverseMode,
+    required this.onToggle,
+  });
+
+  final bool isInverseMode;
+  final VoidCallback onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onToggle,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: isInverseMode
+                ? CosmicColors.secondaryContainer
+                : CosmicColors.primaryContainer,
+            width: 1.6,
+          ),
+          color: isInverseMode
+              ? CosmicColors.secondaryContainer.withValues(alpha: 0.12)
+              : CosmicColors.primaryContainer.withValues(alpha: 0.1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isInverseMode ? Icons.sync_alt : Icons.format_list_numbered,
+              size: 16,
+              color: isInverseMode
+                  ? CosmicColors.secondaryContainer
+                  : CosmicColors.primaryContainer,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              isInverseMode ? 'Modalitet Invers' : 'Modalitet Klasik',
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 13,
+                color: isInverseMode
+                    ? CosmicColors.secondaryContainer
+                    : CosmicColors.primaryContainer,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

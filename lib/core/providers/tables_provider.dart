@@ -7,16 +7,25 @@ class TablesState {
   const TablesState({
     this.selectedTable = 1,
     this.selectedOperationIndex = 0,
+    this.isInverseMode = false,
   });
 
   final int selectedTable;
   final int selectedOperationIndex;
 
-  TablesState copyWith({int? selectedTable, int? selectedOperationIndex}) {
+  /// Kur true: zbritja shfaqet si "? + b = a", pjesëtimi si "? × b = a"
+  final bool isInverseMode;
+
+  TablesState copyWith({
+    int? selectedTable,
+    int? selectedOperationIndex,
+    bool? isInverseMode,
+  }) {
     return TablesState(
       selectedTable: selectedTable ?? this.selectedTable,
       selectedOperationIndex:
           selectedOperationIndex ?? this.selectedOperationIndex,
+      isInverseMode: isInverseMode ?? this.isInverseMode,
     );
   }
 }
@@ -33,6 +42,10 @@ class TablesNotifier extends StateNotifier<TablesState> {
 
   void selectOperation(int index) {
     state = state.copyWith(selectedOperationIndex: index);
+  }
+
+  void toggleInverseMode() {
+    state = state.copyWith(isInverseMode: !state.isInverseMode);
   }
 }
 
