@@ -231,9 +231,9 @@ Ky seksion përkufizon sjelljen e aprovuar të produktit. Kur implementimi aktua
 
 | Forma | Llogaritja |
 |---|---|
-| Drejtkëndësh | Sipërfaqe |
+| Drejtkëndësh | Sipërfaqe / Perimetër |
 | Trekëndësh | Sipërfaqe |
-| Katror | Perimetër |
+| Katror | Sipërfaqe / Perimetër |
 | Rreth | Perimetër (`π ≈ 3`) |
 | Paralelogram | Sipërfaqe |
 
@@ -247,9 +247,9 @@ Ky seksion përkufizon sjelljen e aprovuar të produktit. Kur implementimi aktua
 
 #### Rregullat e gjenerimit
 
-- Drejtkëndëshi llogaritet me `gjerësi * lartësi`.
+- Drejtkëndëshi llogaritet me `gjerësi * lartësi` për sipërfaqe ose `2 * (gjerësi + lartësi)` për perimetër.
 - Trekëndëshi llogaritet me `(bazë * lartësi) / 2`.
-- Katrori llogaritet me `brinja * 4` për perimetrin.
+- Katrori llogaritet me `brinja * brinja` për sipërfaqe ose `brinja * 4` për perimetrin.
 - Rrethi llogaritet me `2 * π * r`, ku për modul bazë përdoret `π ≈ 3`.
 - Paralelogrami llogaritet me `bazë * lartësi`.
 - Opsionet duhet të jenë pozitive dhe të plausibile.
@@ -439,7 +439,7 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 | Shell i aplikacionit | Implementuar | `MathLingoApp` me Material 3 dhe theme custom |
 | Dashboard | Implementuar | Ka 4 tabs dhe kartat kryesore |
 | Sfida aritmetike | Implementuar | 4 operacione, 3 nivele, sesion i shkurtër |
-| Sfida gjeometrike | Implementuar | 5 forma, painter custom, scoring aktiv |
+| Sfida gjeometrike | Implementuar | 5 forma, generator me sipërfaqe/perimetër për drejtkëndëshin dhe katrorin, painter custom, scoring aktiv |
 | Results screen | Implementuar | Pikë, saktësi, kthim në dashboard |
 | Tabelat matematikore | Implementuar | Zbritja shmang negativet dhe pjesëtimi shfaq vetëm raste pa mbetje |
 | Gamify me input manual | Implementuar | Parser funksional për operacione bazë |
@@ -452,7 +452,7 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 | State management i shkallëzueshëm | Jo i implementuar | Ende `setState` |
 | Release signing real | Jo i implementuar | Release përdor debug key |
 | Testim widget bazik | Implementuar dhe verifikuar | `fvm flutter analyze` dhe `fvm flutter test` kalojnë në mjedisin aktual |
-| Unit tests të logjikës | Implementuar pjesërisht | Parser-i Gamify dhe generatori i gjeometrisë janë të testuar |
+| Unit tests të logjikës | Implementuar pjesërisht | Parser-i Gamify dhe generatori i gjeometrisë me calculationType janë të testuar |
 | Integration tests | Jo të implementuara | Mungojnë flows fundorë |
 
 ### 8.2 Statusi i QA dhe build-it

@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../features/geometry/domain/geometry_question_generator.dart';
 import '../../models/geometry_question.dart';
-import '../../models/geometry_shape.dart';
 
 // ---------------------------------------------------------------------------
 // State
@@ -99,46 +99,11 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
       );
 
   final GeometryConfig _config;
+  static const GeometryQuestionGenerator _generator =
+      GeometryQuestionGenerator();
 
   static GeometryQuestion _buildQuestion(Random random) {
-    final shape =
-        GeometryShape.values[random.nextInt(GeometryShape.values.length)];
-    late int width;
-    late int height;
-    late int answer;
-
-    switch (shape) {
-      case GeometryShape.rectangle:
-        width = random.nextInt(7) + 3;
-        height = random.nextInt(6) + 2;
-        answer = width * height;
-      case GeometryShape.triangle:
-        width = (random.nextInt(5) + 3) * 2;
-        height = random.nextInt(6) + 2;
-        answer = (width * height) ~/ 2;
-      case GeometryShape.square:
-        width = random.nextInt(8) + 3;
-        height = width;
-        answer = width * 4;
-      case GeometryShape.circle:
-        width = random.nextInt(7) + 2; // radius
-        height = width;
-        answer = width * 6; // 2 * pi * r with pi ~= 3
-      case GeometryShape.parallelogram:
-        width = random.nextInt(8) + 3;
-        height = random.nextInt(6) + 2;
-        answer = width * height;
-    }
-
-    return GeometryQuestion(
-      shape: shape,
-      prompt: '',
-      measurement: '',
-      answer: answer,
-      options: _buildOptions(answer, random),
-      width: width,
-      height: height,
-    );
+    return _generator.generate(random);
   }
 
   static List<int> _buildOptions(int correctAnswer, Random random) {

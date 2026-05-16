@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../colors.dart';
 import '../../../core/providers/geometry_provider.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../models/geometry_shape.dart';
 import '../../../responsive.dart';
 import '../../../shared/painting/geometry_shape_painter.dart';
 import '../../../shared/utils/default_random.dart';
@@ -59,7 +58,7 @@ class _GeometryChallengeScreenState
     _hintTimer?.cancel();
     _hintHideTimer?.cancel();
     if (_hintShownThisQuestion) return;
-    _hintTimer = Timer(const Duration(seconds: 8), () {
+    _hintTimer = Timer(const Duration(seconds: 2), () {
       if (!mounted || _hintShownThisQuestion) return;
       setState(() {
         _showHint = true;
@@ -87,37 +86,6 @@ class _GeometryChallengeScreenState
     _hintTimer?.cancel();
     _hintHideTimer?.cancel();
     super.dispose();
-  }
-
-  String _promptForShape(GeometryShape shape, AppLocalizations l10n) {
-    switch (shape) {
-      case GeometryShape.rectangle:
-        return l10n.geometryRectanglePrompt;
-      case GeometryShape.triangle:
-        return l10n.geometryTrianglePrompt;
-      case GeometryShape.square:
-        return l10n.geometrySquarePrompt;
-      case GeometryShape.circle:
-        return 'Sa është perimetri i rrethit? (π ≈ 3)';
-      case GeometryShape.parallelogram:
-        return 'Sa është sipërfaqja e paralelogramit?';
-    }
-  }
-
-  String _measurementForShape(GeometryState state, AppLocalizations l10n) {
-    final q = state.question;
-    switch (q.shape) {
-      case GeometryShape.rectangle:
-        return l10n.geometryRectangleMeasurement(q.width, q.height);
-      case GeometryShape.triangle:
-        return l10n.geometryTriangleMeasurement(q.width, q.height);
-      case GeometryShape.square:
-        return l10n.geometrySquareMeasurement(q.width);
-      case GeometryShape.circle:
-        return 'rrezja ${q.width}';
-      case GeometryShape.parallelogram:
-        return 'bazë ${q.width}, lartësi ${q.height}';
-    }
   }
 
   @override
@@ -199,6 +167,7 @@ class _GeometryChallengeScreenState
           Center(
             child: GeometryHintChip(
               shape: state.question.shape,
+              calculationType: state.question.calculationType,
               visible: _showHint,
             ),
           ),
@@ -264,6 +233,7 @@ class _GeometryChallengeScreenState
                       Center(
                         child: GeometryHintChip(
                           shape: state.question.shape,
+                          calculationType: state.question.calculationType,
                           visible: _showHint,
                         ),
                       ),
@@ -330,13 +300,13 @@ class _GeometryChallengeScreenState
           ),
           const SizedBox(height: 18),
           Text(
-            _promptForShape(state.question.shape, l10n),
+            state.question.prompt,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            _measurementForShape(state, l10n),
+            state.question.measurement,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
