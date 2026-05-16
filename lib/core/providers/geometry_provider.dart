@@ -106,17 +106,6 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
     return _generator.generate(random);
   }
 
-  static List<int> _buildOptions(int correctAnswer, Random random) {
-    final options = <int>{correctAnswer};
-    while (options.length < 4) {
-      var offset = random.nextInt(14) - 7;
-      if (offset == 0) offset = 2;
-      final wrong = correctAnswer + offset;
-      if (wrong > 0) options.add(wrong);
-    }
-    return options.toList()..shuffle(random);
-  }
-
   void checkAnswer(int answer) {
     if (state.isAdvancing) return;
 

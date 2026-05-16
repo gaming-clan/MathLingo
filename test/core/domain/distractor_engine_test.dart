@@ -47,7 +47,7 @@ void main() {
       int num1,
       int num2,
       int ans,
-    ) _question(Operation op, Random r) {
+    ) question(Operation op, Random r) {
       switch (op) {
         case Operation.addition:
           final a = r.nextInt(19) + 1;
@@ -72,7 +72,7 @@ void main() {
       test('$op — 500 pyetje: 0 duplicate, 1 e saktë, të gjitha pozitive', () {
         final rng = Random(999);
         for (var i = 0; i < 500; i++) {
-          final q = _question(op, rng);
+          final q = question(op, rng);
           final opts = DistractorEngine.generateFor(
             operation: op,
             correctAnswer: q.$3,

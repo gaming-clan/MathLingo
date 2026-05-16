@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/missing_x_question.dart';
-import '../missing_x/domain/missing_x_generator.dart';
+import '../../features/missing_x/domain/missing_x_generator.dart';
 
 // ---------------------------------------------------------------------------
 // State

@@ -27,14 +27,34 @@ class GeometryShapePainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final shapeWidth = size.width * 0.62;
     final shapeHeight = size.height * 0.58;
+
+    // D-01: për drejtkëndësh, respekto raportin e dimensioneve të pyetjes
+    // (nëse h > w, drejtkëndëshi duhet të duket vertikal dhe anasjelltas).
+    double rectW = shapeWidth;
+    double rectH = shapeHeight;
+    if (question.shape == GeometryShape.rectangle &&
+        question.width > 0 &&
+        question.height > 0) {
+      final aspectRatio = question.width / question.height;
+      if (aspectRatio > shapeWidth / shapeHeight) {
+        // gjerësi > lartësi → kufizo sipas gjerësisë
+        rectW = shapeWidth;
+        rectH = shapeWidth / aspectRatio;
+      } else {
+        // lartësi > gjerësi (ose e barabartë) → kufizo sipas lartësisë
+        rectH = shapeHeight;
+        rectW = shapeHeight * aspectRatio;
+      }
+    }
+
     final rect = Rect.fromCenter(
       center: center,
       width: question.shape == GeometryShape.square
           ? min(shapeWidth, shapeHeight)
-          : shapeWidth,
+          : rectW,
       height: question.shape == GeometryShape.square
           ? min(shapeWidth, shapeHeight)
-          : shapeHeight,
+          : rectH,
     );
 
     switch (question.shape) {
