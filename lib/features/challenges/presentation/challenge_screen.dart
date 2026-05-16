@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../colors.dart';
+import '../../../core/domain/difficulty_engine.dart';
 import '../../../core/providers/challenge_provider.dart';
+import '../../../core/services/session_tracker.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../models/operation.dart';
 import '../../../responsive.dart';
@@ -20,13 +22,11 @@ class ChallengeScreen extends ConsumerStatefulWidget {
   const ChallengeScreen({
     super.key,
     this.operation = Operation.addition,
-    this.level = 1,
     this.sessionLength = 5,
     Random? random,
   }) : random = random ?? const DefaultRandom();
 
   final Operation operation;
-  final int level;
   final int sessionLength;
   final Random random;
 
@@ -36,16 +36,43 @@ class ChallengeScreen extends ConsumerStatefulWidget {
 
 class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
   late final ChallengeConfig _config;
+  bool _sessionRecorded = false;
+  bool _leveledUp = false;
 
   @override
   void initState() {
     super.initState();
+    final operationKey = widget.operation.name;
+    final previousLevel = SessionTracker.getCurrentLevel(operationKey);
+    final recent = SessionTracker.getRecentAccuracies(operationKey);
+    final difficultyLevel = DifficultyEngine.evaluate(
+      currentLevel: previousLevel,
+      recentAccuracies: recent,
+    );
+    _leveledUp = difficultyLevel.index > previousLevel.index;
     _config = ChallengeConfig(
       operation: widget.operation,
-      level: widget.level,
+      difficultyLevel: difficultyLevel,
       sessionLength: widget.sessionLength,
       random: widget.random,
     );
+    if (_leveledUp) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '🎉 Kalove në ${difficultyLevel.label}!',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            backgroundColor: CosmicColors.secondaryContainer,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(bottom: 80, left: 16, right: 16),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -59,6 +86,15 @@ class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
         Future<void>.delayed(const Duration(milliseconds: 450), () {
           if (!mounted) return;
           if (next.isComplete) {
+            if (!_sessionRecorded) {
+              _sessionRecorded = true;
+              final operationKey = widget.operation.name;
+              SessionTracker.recordSession(operationKey, next.accuracy);
+              SessionTracker.setCurrentLevel(
+                operationKey,
+                next.difficultyLevel,
+              );
+            }
             navigator.pushReplacement(
               MaterialPageRoute<void>(
                 builder: (_) => ResultsScreen(
@@ -93,7 +129,9 @@ class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
               kicker: l10n.challengeKicker,
               title: l10n.challengeTitle,
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 8),
+            _NeonLevelChip(level: state.difficultyLevel),
+            const SizedBox(height: 14),
             CosmicProgress(
               label: l10n.challengeScoreLabel(state.score),
               value: state.progress,
@@ -186,6 +224,49 @@ class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// _NeonLevelChip
+// ---------------------------------------------------------------------------
+class _NeonLevelChip extends StatelessWidget {
+  const _NeonLevelChip({required this.level});
+
+  final DifficultyLevel level;
+
+  Color get _color {
+    switch (level) {
+      case DifficultyLevel.level1:
+        return CosmicColors.secondaryContainer;
+      case DifficultyLevel.level2:
+        return const Color(0xFFFFD700); // gold
+      case DifficultyLevel.level3:
+        return const Color(0xFFFF6B35); // neon orange
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: Chip(
+        key: ValueKey(level),
+        label: Text(
+          level.label,
+          style: TextStyle(
+            color: _color,
+            fontWeight: FontWeight.w800,
+            fontSize: 12,
+            letterSpacing: 0.5,
+          ),
+        ),
+        backgroundColor: _color.withValues(alpha: 0.12),
+        side: BorderSide(color: _color, width: 1.2),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        visualDensity: VisualDensity.compact,
       ),
     );
   }

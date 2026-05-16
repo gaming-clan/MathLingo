@@ -1,5 +1,27 @@
 # 📝 Changelog - MathLingo
 
+## [1.5.0] - 2026-05-16
+### Added
+- `DifficultyEngine` (Domain Layer) — sistem adaptiv niveli; level-up pas 3 sesionesh ≥90%, level-down pas <50%. 20 unit tests.
+- `SessionTracker` (Hive) — sliding window 5 sesionesh për operacion; ruan dhe lexon `DifficultyLevel` aktual per operacion.
+- `_NeonLevelChip` widget në `ChallengeScreen` — shfaq "Niveli 1/2/3" me ngjyrë dinamike (cyan/gold/neon-orange).
+- Animacion SnackBar level-up në fillim të sesionit kur ndodh level-up.
+- `ChallengeConfig.difficultyLevel` (zvëndëson `int level`) — përdor `DifficultyLevel.maxNumber` për diapazoning numerave.
+- `ChallengeState.difficultyLevel` — UI lexon nivelin aktual nga state.
+- `SessionTracker.init()` i thirrur në `main()` pas `UserProgressStorage.initialize()`.
+
+### Changed
+- `ChallengeScreen` nuk pranon më `level: int` — niveli llogaritet automatikisht nga `SessionTracker` + `DifficultyEngine` në `initState`.
+- `ChallengeScreen` regjistron sesionin dhe ruan nivelin e ri në Hive kur sfida përfundon.
+
+### Deferred
+- Android Release Signing (B-01/B-02/B-03) — shtyer pas Sprint 9.
+- Integration test C-02 — shtyer.
+
+### Validated
+- `fvm flutter test` — 118/118 ✅
+- `fvm flutter analyze` — No issues found ✅
+
 ## [1.4.0] - 2026-05-16
 ### Added
 - `DistractorEngine` (Domain Layer) — gjeneron gabime pedagogjike tipike për 4 operacionet bazë (mbledhje, zbritje, shumëzim, pjesëtim). 11 unit tests.
