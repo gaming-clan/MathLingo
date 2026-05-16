@@ -19,6 +19,7 @@ import '../../challenges/presentation/challenge_screen.dart';
 import '../../geometry/presentation/geometry_challenge_screen.dart';
 import '../../fraction/presentation/fraction_challenge_screen.dart';
 import '../../missing_x/presentation/missing_x_challenge_screen.dart';
+import '../../family/presentation/family_switcher_screen.dart';
 import 'lessons_page.dart';
 import 'progress_page.dart';
 
@@ -33,11 +34,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
   void _onProfilePressed() {
-    final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n.dashboardProfileComingSoon),
-        behavior: SnackBarBehavior.floating,
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const FamilySwitcherScreen(),
       ),
     );
   }

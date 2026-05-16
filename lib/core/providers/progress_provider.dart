@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/user_progress.dart';
 import '../../shared/utils/user_progress_storage.dart';
+import '../services/family_profile_service.dart';
 
 // ---------------------------------------------------------------------------
 // Notifier
@@ -28,7 +29,14 @@ class ProgressNotifier extends StateNotifier<AsyncValue<UserProgress>> {
     String? moduleKey,
   }) async {
     try {
+      // Shkrim global (retrokompatibël)
       final updated = await UserProgressStorage.addSession(
+        points: points,
+        accuracy: accuracy,
+        moduleKey: moduleKey,
+      );
+      // Shkrim per-child (dual-write B-01)
+      await FamilyProfileService.recordSession(
         points: points,
         accuracy: accuracy,
         moduleKey: moduleKey,
