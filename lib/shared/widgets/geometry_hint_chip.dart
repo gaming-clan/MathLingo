@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../colors.dart';
+import '../../models/geometry_question.dart';
 import '../../models/geometry_shape.dart';
 
 /// Chip hint që shfaqet fade-in pas 8 sekondash inaktiviteti.
@@ -10,20 +11,32 @@ class GeometryHintChip extends StatelessWidget {
   const GeometryHintChip({
     super.key,
     required this.shape,
+    required this.calculationType,
     required this.visible,
   });
 
   final GeometryShape shape;
+  final GeometryCalculationType calculationType;
   final bool visible;
 
   String _hintText() {
     switch (shape) {
       case GeometryShape.rectangle:
-        return 'Këshillë: S = gjerësia × lartësia';
+        switch (calculationType) {
+          case GeometryCalculationType.area:
+            return 'Këshillë: S = gjerësia × lartësia';
+          case GeometryCalculationType.perimeter:
+            return 'Këshillë: P = 2 × (gjerësia + lartësia)';
+        }
       case GeometryShape.triangle:
         return 'Këshillë: S = baza × lartësia ÷ 2';
       case GeometryShape.square:
-        return 'Këshillë: Perimetri = baza × 4';
+        switch (calculationType) {
+          case GeometryCalculationType.area:
+            return 'Këshillë: S = brinja × brinja';
+          case GeometryCalculationType.perimeter:
+            return 'Këshillë: P = brinja × 4';
+        }
       case GeometryShape.circle:
         return 'Këshillë: Perimetri = 2 × π × r (π ≈ 3)';
       case GeometryShape.parallelogram:

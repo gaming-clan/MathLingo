@@ -2,14 +2,14 @@ import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../features/geometry/domain/geometry_question_generator.dart';
-import '../../models/geometry_question.dart';
+import '../../models/missing_x_question.dart';
+import '../../features/missing_x/domain/missing_x_generator.dart';
 
 // ---------------------------------------------------------------------------
 // State
 // ---------------------------------------------------------------------------
-class GeometryState {
-  const GeometryState({
+class MissingXState {
+  const MissingXState({
     required this.question,
     required this.score,
     required this.answered,
@@ -20,7 +20,7 @@ class GeometryState {
     this.isAdvancing = false,
   });
 
-  final GeometryQuestion question;
+  final MissingXQuestion question;
   final int score;
   final int answered;
   final int correct;
@@ -34,8 +34,8 @@ class GeometryState {
   int get accuracy =>
       sessionLength > 0 ? ((correct / sessionLength) * 100).round() : 0;
 
-  GeometryState copyWith({
-    GeometryQuestion? question,
+  MissingXState copyWith({
+    MissingXQuestion? question,
     int? score,
     int? answered,
     int? correct,
@@ -46,7 +46,7 @@ class GeometryState {
     bool? clearIsAnswerCorrect,
     bool? isAdvancing,
   }) {
-    return GeometryState(
+    return MissingXState(
       question: question ?? this.question,
       score: score ?? this.score,
       answered: answered ?? this.answered,
@@ -64,33 +64,43 @@ class GeometryState {
 }
 
 // ---------------------------------------------------------------------------
-// Config (family key)
+// Config
 // ---------------------------------------------------------------------------
-class GeometryConfig {
-  const GeometryConfig({this.sessionLength = 4, required this.random});
+class MissingXConfig {
+  const MissingXConfig({
+    this.sessionLength = 4,
+    this.maxNumber = 20,
+    required this.random,
+  });
 
   final int sessionLength;
+  final int maxNumber;
   final Random random;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is GeometryConfig &&
+      other is MissingXConfig &&
           sessionLength == other.sessionLength &&
+          maxNumber == other.maxNumber &&
           identical(random, other.random);
 
   @override
-  int get hashCode => Object.hash(sessionLength, identityHashCode(random));
+  int get hashCode =>
+      Object.hash(sessionLength, maxNumber, identityHashCode(random));
 }
 
 // ---------------------------------------------------------------------------
 // Notifier
 // ---------------------------------------------------------------------------
-class GeometryNotifier extends StateNotifier<GeometryState> {
-  GeometryNotifier(this._config)
+class MissingXNotifier extends StateNotifier<MissingXState> {
+  MissingXNotifier(this._config)
     : super(
-        GeometryState(
-          question: _buildQuestion(_config.random),
+        MissingXState(
+          question: _generator.generate(
+            _config.random,
+            maxNumber: _config.maxNumber,
+          ),
           score: 0,
           answered: 0,
           correct: 0,
@@ -98,37 +108,36 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
         ),
       );
 
-  final GeometryConfig _config;
-  static const GeometryQuestionGenerator _generator =
-      GeometryQuestionGenerator();
-
-  static GeometryQuestion _buildQuestion(Random random) {
-    return _generator.generate(random);
-  }
+  final MissingXConfig _config;
+  static const _generator = MissingXGenerator();
 
   void checkAnswer(int answer) {
     if (state.isAdvancing) return;
-
     final isCorrect = answer == state.question.answer;
-
     if (isCorrect) {
       state = state.copyWith(
         selectedAnswer: answer,
         isAnswerCorrect: true,
-        score: state.score + 15,
+        score: state.score + 10,
         correct: state.correct + 1,
         answered: state.answered + 1,
         isAdvancing: true,
       );
     } else {
-      state = state.copyWith(selectedAnswer: answer, isAnswerCorrect: false);
+      state = state.copyWith(
+        selectedAnswer: answer,
+        isAnswerCorrect: false,
+      );
     }
   }
 
   void advance() {
     if (!state.isComplete) {
       state = state.copyWith(
-        question: _buildQuestion(_config.random),
+        question: _generator.generate(
+          _config.random,
+          maxNumber: _config.maxNumber,
+        ),
         clearSelectedAnswer: true,
         clearIsAnswerCorrect: true,
         isAdvancing: false,
@@ -140,7 +149,7 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
 // ---------------------------------------------------------------------------
 // Provider
 // ---------------------------------------------------------------------------
-final geometryProvider = StateNotifierProvider.autoDispose
-    .family<GeometryNotifier, GeometryState, GeometryConfig>(
-      (ref, config) => GeometryNotifier(config),
-    );
+final missingXProvider = StateNotifierProvider.autoDispose
+    .family<MissingXNotifier, MissingXState, MissingXConfig>(
+  (ref, config) => MissingXNotifier(config),
+);

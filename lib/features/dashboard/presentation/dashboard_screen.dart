@@ -17,6 +17,7 @@ import '../../../shared/widgets/skeleton_card.dart';
 import '../../../simple_tables.dart';
 import '../../challenges/presentation/challenge_screen.dart';
 import '../../geometry/presentation/geometry_challenge_screen.dart';
+import '../../missing_x/presentation/missing_x_challenge_screen.dart';
 import 'lessons_page.dart';
 import 'progress_page.dart';
 
@@ -61,6 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           onStartChallenge: _startChallenge,
           onStartGeometryChallenge: _startGeometryChallenge,
           onStartGamifyExercise: _startGamifyExercise,
+          onStartMissingXChallenge: _startMissingXChallenge,
         );
       case 1:
         return LessonsPage(onStartGeometryChallenge: _startGeometryChallenge);
@@ -73,6 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           onStartChallenge: _startChallenge,
           onStartGeometryChallenge: _startGeometryChallenge,
           onStartGamifyExercise: _startGamifyExercise,
+          onStartMissingXChallenge: _startMissingXChallenge,
         );
     }
   }
@@ -97,6 +100,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  void _startMissingXChallenge() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const MissingXChallengeScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AdaptiveScaffold(
@@ -116,11 +127,13 @@ class _DashboardPage extends StatelessWidget {
     required this.onStartChallenge,
     required this.onStartGeometryChallenge,
     required this.onStartGamifyExercise,
+    required this.onStartMissingXChallenge,
   });
 
   final ValueChanged<Operation> onStartChallenge;
   final VoidCallback onStartGeometryChallenge;
   final VoidCallback onStartGamifyExercise;
+  final VoidCallback onStartMissingXChallenge;
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +168,9 @@ class _DashboardPage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           _DailyChallengeCard(onStart: onStartGeometryChallenge),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
+          _MissingXCard(onStart: onStartMissingXChallenge),
+          const SizedBox(height: 20),
           _GamifyCard(onStart: onStartGamifyExercise),
           const SizedBox(height: 24),
           const _ProgressModuleCard(),
@@ -194,6 +209,8 @@ class _DashboardPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 _DailyChallengeCard(onStart: onStartGeometryChallenge),
+                const SizedBox(height: 20),
+                _MissingXCard(onStart: onStartMissingXChallenge),
                 const SizedBox(height: 20),
                 _GamifyCard(onStart: onStartGamifyExercise),
               ],
@@ -263,6 +280,46 @@ class _DailyChallengeCard extends StatelessWidget {
           CosmicButton(
             key: const ValueKey('start-challenge'),
             label: l10n.dashboardStartChallenge,
+            icon: Icons.arrow_forward,
+            onPressed: onStart,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MissingXCard extends StatelessWidget {
+  const _MissingXCard({required this.onStart});
+
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassPanel(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _NeonChip(
+            icon: Icons.search,
+            label: 'Gjej X-in',
+            color: CosmicColors.secondaryContainer,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Gjej X-in',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Zgjidh ekuacionin duke gjetur numrin e munguar. Stërvit logjikën!\n'
+            '5 + ? = 12    ? × 4 = 20    9 − ? = 3',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 22),
+          CosmicButton(
+            label: 'Fillo sfidën',
             icon: Icons.arrow_forward,
             onPressed: onStart,
           ),

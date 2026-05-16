@@ -14,35 +14,53 @@ class GeometryQuestionGenerator {
     late int answer;
     late String prompt;
     late String measurement;
+    late GeometryCalculationType calculationType;
 
     switch (shape) {
       case GeometryShape.rectangle:
         width = random.nextInt(7) + 3;
         height = random.nextInt(6) + 2;
-        answer = width * height;
-        prompt = 'Sa është sipërfaqja e drejtkëndëshit?';
+        if (random.nextBool()) {
+          calculationType = GeometryCalculationType.area;
+          answer = width * height;
+          prompt = 'Sa është sipërfaqja e drejtkëndëshit?';
+        } else {
+          calculationType = GeometryCalculationType.perimeter;
+          answer = 2 * (width + height);
+          prompt = 'Sa është perimetri i drejtkëndëshit?';
+        }
         measurement = 'gjerësi $width, lartësi $height';
       case GeometryShape.triangle:
         width = (random.nextInt(5) + 3) * 2;
         height = random.nextInt(6) + 2;
+        calculationType = GeometryCalculationType.area;
         answer = (width * height) ~/ 2;
         prompt = 'Sa është sipërfaqja e trekëndëshit?';
         measurement = 'bazë $width, lartësi $height';
       case GeometryShape.square:
         width = random.nextInt(8) + 3;
         height = width;
-        answer = width * 4;
-        prompt = 'Sa është perimetri i katrorit?';
+        if (random.nextBool()) {
+          calculationType = GeometryCalculationType.area;
+          answer = width * width;
+          prompt = 'Sa është sipërfaqja e katrorit?';
+        } else {
+          calculationType = GeometryCalculationType.perimeter;
+          answer = width * 4;
+          prompt = 'Sa është perimetri i katrorit?';
+        }
         measurement = 'brinja $width';
       case GeometryShape.circle:
         width = random.nextInt(7) + 2; // radius
         height = width;
+        calculationType = GeometryCalculationType.perimeter;
         answer = width * 6; // 2 * pi * r with pi ~= 3
         prompt = 'Sa është perimetri i rrethit? (π ≈ 3)';
         measurement = 'rrezja $width';
       case GeometryShape.parallelogram:
         width = random.nextInt(8) + 3; // base
         height = random.nextInt(6) + 2; // height
+        calculationType = GeometryCalculationType.area;
         answer = width * height;
         prompt = 'Sa është sipërfaqja e paralelogramit?';
         measurement = 'bazë $width, lartësi $height';
@@ -50,6 +68,7 @@ class GeometryQuestionGenerator {
 
     return GeometryQuestion(
       shape: shape,
+      calculationType: calculationType,
       prompt: prompt,
       measurement: measurement,
       answer: answer,
