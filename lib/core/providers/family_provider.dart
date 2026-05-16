@@ -62,11 +62,20 @@ class FamilyNotifier extends StateNotifier<FamilyState> {
     );
   }
 
-  /// Shton fëmijë të ri.
+  /// Shton fëmijë të ri. Nëse nuk ekziston familje, e krijon automatikisht.
   Future<ChildProfile?> addChild({
     required String pseudonym,
     required int avatarIndex,
   }) async {
+    // Rast i parë: nuk ka familje ende — krijo familje me këtë fëmijë si të parin
+    if (!FamilyProfileService.hasFamily) {
+      final family = await FamilyProfileService.createFamily(
+        pseudonym: pseudonym,
+        avatarIndex: avatarIndex,
+      );
+      _load();
+      return family.children.first;
+    }
     final child = await FamilyProfileService.addChild(
       pseudonym: pseudonym,
       avatarIndex: avatarIndex,

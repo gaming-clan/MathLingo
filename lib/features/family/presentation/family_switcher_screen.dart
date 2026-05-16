@@ -296,6 +296,14 @@ class _AddChildFormState extends ConsumerState<_AddChildForm> {
         );
     if (!mounted) return;
     setState(() => _saving = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$name u shtua me sukses!'),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 80),
+        backgroundColor: CosmicColors.secondaryContainer.withValues(alpha: 0.9),
+      ),
+    );
     widget.onAdded();
   }
 
