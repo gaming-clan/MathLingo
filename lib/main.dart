@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/app_routes.dart';
 import 'colors.dart';
+import 'core/services/session_tracker.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'shared/utils/user_progress_storage.dart';
@@ -11,6 +12,7 @@ import 'shared/utils/user_progress_storage.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserProgressStorage.initialize();
+  await SessionTracker.init();
   runApp(const ProviderScope(child: MathLingoApp()));
 }
 
