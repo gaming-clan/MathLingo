@@ -1,5 +1,27 @@
 # 📝 Changelog - MathLingo
 
+## [1.4.0] - 2026-05-16
+### Added
+- `DistractorEngine` (Domain Layer) — gjeneron gabime pedagogjike tipike për 4 operacionet bazë (mbledhje, zbritje, shumëzim, pjesëtim). 11 unit tests.
+- Sfida "Gjej X-in" (`MissingXChallengeScreen`) — 3 lloje ekuacionesh (`addMissingAddend`, `multMissingFactor`, `subMissingSubtrahend`) me `?` cyan/bold.
+- Dashboard card "Gjej X-in" — aksesueshe nga ekrani kryesor (mobile + master-detail).
+- Modaliteti Invers i Tabelave — zbritja si `? + b = a`, pjesëtimi si `? × b = a`, toggle `_InverseModeToggle` chip në header. 21 unit tests.
+- `TableQuestion` model dhe `isInverseMode` në `TablesState`/`TablesNotifier`.
+- `MissingXQuestion` model + `MissingXType` enum.
+- `MissingXGenerator` (Domain Layer) me 4 opsione plausible. 9 unit tests.
+- `MissingXNotifier` me Riverpod `autoDispose.family`.
+- `GeometryCalculationType` enum (`area | perimeter`) — drejtkëndëshi dhe katrori gjenerojnë të dy llojet.
+- `GeometryHintChip` shfaq formulën e saktë pas 2 sekondash.
+
+### Fixed
+- `GeometryShapePainter`: drejtkëndëshi respekton raportin gjerësi/lartësi (D-01).
+- `geometry_provider.dart`: hequr `_buildOptions` i papërdorur.
+- Import path i gabuar në `missing_x_provider.dart`.
+
+### Validated
+- `fvm flutter test` — 98/98 ✅
+- `fvm flutter analyze` — No issues found ✅
+
 ## [1.2.0] - 2026-05-08
 ### Added
 - Zgjerimi i sfidës së gjeometrisë me forma të reja: rreth dhe paralelogram.

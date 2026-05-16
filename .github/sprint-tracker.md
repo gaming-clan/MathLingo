@@ -47,7 +47,8 @@
 - [x] **T04:** ResultsScreen layout adaptive (mascot responsive + buton `Vazhdo` gjithmonë i dukshëm).
 - [x] **T05:** Renditja e Dashboard mobile: `Veprime të Shpejta` para `Sfidës`.
 
-## Sprint 7: Code & Docs Sync - IN PROGRESS
+## Sprint 7: Code & Docs Sync + Thellimi Pedagogjik - DONE
+### Sprint 7a — Code & Docs Sync
 - [x] **Task 1:** Krijimi i branch-it të sprintit (`fix/sprint-7-code-doc-sync`).
 - [x] **Task 2:** Nxjerrja e parser-it të Gamify në domain (`gamify_parser.dart`).
 - [x] **Task 3:** Shtimi i unit tests për parser-in e Gamify.
@@ -55,10 +56,48 @@
 - [x] **Task 5:** Nxjerrja e generatorit të pyetjeve të gjeometrisë në domain.
 - [x] **Task 6:** Shtimi i unit tests për generatorin e gjeometrisë.
 - [x] **Task 7:** Validimi me `fvm flutter analyze` dhe `fvm flutter test`.
-- [ ] **Task 8:** Finalizimi i sinkronizimit të dokumentacionit (README + SSOT + changelog).
+- [x] **Task 8:** Finalizimi i sinkronizimit të dokumentacionit (README + SSOT + changelog).
+
+### Sprint 7b — Thellimi Pedagogjik & Logjika Matematikore (v1.4.0)
+- [x] **D-02:** Enum `GeometryCalculationType` (area/perimeter) — drejtkëndësh dhe katror gjenerojnë të dy llojet.
+- [x] **D-03:** `GeometryHintChip` shfaq formulën e saktë pas 2 sekondash.
+- [x] **D-01:** `GeometryShapePainter` respekton raportin gjerësi/lartësi të drejtkëndëshit.
+- [x] **B-01:** `DistractorEngine` si klasë pure Dart në Domain Layer.
+- [x] **B-02:** Gabimet tipike pedagogjike per operacion (carry, tabela ngjitur, inversim).
+- [x] **B-03:** 11 unit tests — 500 pyetje/operacion, 0 duplicate, shpërndarje statistikore.
+- [x] **C-01:** Model `MissingXQuestion` + enum `MissingXType`.
+- [x] **C-02:** `MissingXGenerator` në Domain Layer me 4 opsione plausible.
+- [x] **C-03:** `MissingXChallengeScreen` — `?` cyan/bold, Riverpod StateNotifier.
+- [x] **C-04:** Kartë "Gjej X-in" në dashboard (mobile + master-detail).
+- [x] **A-01:** Tabela Zbritje shfaqet si `? + b = a` në modalitetin invers.
+- [x] **A-02:** Tabela Pjesëtim shfaqet si `? × b = a` (plotëso shumëzimin).
+- [x] **A-03:** Model `TableQuestion` + `isInverseMode` në `TablesState`/`TablesNotifier`.
+- [x] **A-04:** `_InverseModeToggle` chip në header të tabelave.
+- [x] **A-05:** 21 teste kalojnë — modaliteti klasik/invers, konsistencë rezultatesh.
+- [x] **Final:** `fvm flutter test` 98/98 ✅ · `fvm flutter analyze` 0 issues ✅
 
 ## Hardening & Release Ops
 - [x] **Task 1:** Credentials signing të shtuara në `.gitignore` (key.properties, *.keystore).
 - [x] **Task 2:** R8/ProGuard release build i korrigjuar (commit a8c2c92).
 - [ ] **Task 3:** Konfigurimi final i Android Release Signing për Play Store.
 - [ ] **Task 4:** Verifikimi i AAPT2 në mjedise ARM64 Linux.
+
+---
+
+## Sprint 8: Adaptiviteti & Android Release Signing - IN PROGRESS
+**Versioni:** v1.5.0 | **Branch:** `feature/sprint-8-difficulty-engine`
+
+### Track A — DifficultyEngine Adaptiv
+- [ ] **A-01:** `DifficultyEngine` si klasë pure Dart në Domain Layer. Level-up pas 3 sesionesh ≥90%, level-down pas 3 sesionesh <50%.
+- [ ] **A-02:** `SessionTracker` me Hive — sliding window 5 sesionesh për çdo operacion.
+- [ ] **A-03:** Integro `DifficultyEngine` me `ChallengeProvider` dhe `GeometryProvider`.
+- [ ] **A-04:** UI `NeonChip` "Niveli 1/2/3" në `ChallengeScreen` + animacion level-up.
+
+### Track B — Android Release Signing
+- [ ] **B-01 BLLOKUES:** Gjenero `keystore`, konfigurim `key.properties`, update `build.gradle.kts`.
+- [ ] **B-02 BLLOKUES:** Verifiko `fvm flutter build appbundle --release` me certificate release.
+- [ ] **B-03:** Verifiko AAPT2 ARM64 Linux (bug B005). Mbyll bug B005.
+
+### Track C — Unit Tests & QA
+- [ ] **C-01:** Unit tests `DifficultyEngine` (level-up, level-down, stabilitet).
+- [ ] **C-02:** Integration test sesion → SessionTracker → DifficultyEngine → nivel i ri.

@@ -6,8 +6,8 @@
 |---|---|
 | Emri i projektit | MathLingo |
 | Lloji i dokumentit | SSOT - Single Source of Truth |
-| Versioni i dokumentit | 1.0.0 |
-| Data | 07 Maj 2026 |
+| Versioni i dokumentit | 1.1.0 |
+| Data | 16 Maj 2026 |
 | Gjuha e dokumentit | Shqip |
 | Audienca | Zhvillues, QA, UI/UX, Product, stakeholders |
 | Statusi | Aktiv |
@@ -267,6 +267,19 @@ Ky seksion përkufizon sjelljen e aprovuar të produktit. Kur implementimi aktua
 - Sistemi shfaq 10 rezultate për tabelën e përzgjedhur.
 - Rezultatet duhet të jenë pedagogjikisht të përshtatshme për audiencën kryesore.
 
+#### Modaliteti Invers (Sprint 7 A-01/A-02)
+
+Tabela ka dy modalitete të aktivizueshme me toggle:
+
+| Modaliteti | Zbritja | Pjesëtimi |
+|---|---|---|
+| Klasik | `8 − 3 = ?` | `12 ÷ 3 = ?` |
+| Invers | `? + 3 = 8` (inverse i mbledhjes) | `? × 3 = 12` (plotëso shumëzimin) |
+
+- Toggle `_InverseModeToggle` chip shfaqet në header të tabelave.
+- Mbledhja dhe shumëzimi nuk ndryshojnë në modalitetin invers.
+- Persisti i modalitetit: planifikuar për Sprint 8 A-04 (Hive).
+
 #### Statusi normativ i sjelljes së pritshme
 
 - Mbledhja dhe shumëzimi mund të shfaqen drejtpërdrejt.
@@ -319,6 +332,41 @@ Ky seksion përkufizon sjelljen e aprovuar të produktit. Kur implementimi aktua
 ### 6.7 Progresi dhe rezultatet
 
 #### Rregullat aktuale
+
+- `ResultsScreen` shfaq gjithmonë:
+  - pikët totale,
+  - saktësinë në përqindje,
+  - CTA për kthim në dashboard.
+- Moduli `Progresi` në dashboard është aktualisht informues dhe statik, jo i lidhur me persistence reale.
+
+### 6.8 Sfida "Gjej X-in" (MissingX)
+
+#### Qëllimi i modulit
+
+- Të stërvitë të menduarit inversal duke gjetur numrin e munguar në ekuacion.
+
+#### Llojet e pyetjeve
+
+| Tipi | Shembull | Zgjidhja |
+|---|---|---|
+| `addMissingAddend` | `5 + ? = 12` | `? = 7` |
+| `multMissingFactor` | `? × 4 = 20` | `? = 5` |
+| `subMissingSubtrahend` | `9 − ? = 3` | `? = 6` |
+
+#### Rregullat e sesionit
+
+| Parametri | Vlera |
+|---|---|
+| Session length default | 4 pyetje |
+| Numri i opsioneve | 4 |
+| Pikë për përgjigje të saktë | 10 |
+| Shfaqja e `?` | Cyan, bold, font ×1.1 |
+
+#### Rregullat e gjenerimit
+
+- Të gjithë numrat (knownNum, answer, result) janë pozitivë.
+- `answer` ≥ 1 gjithmonë.
+- 4 opsione unike — asnjë negativ ose zero.
 
 - `ResultsScreen` shfaq gjithmonë:
   - pikët totale,
@@ -438,10 +486,10 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 |---|---|---|
 | Shell i aplikacionit | Implementuar | `MathLingoApp` me Material 3 dhe theme custom |
 | Dashboard | Implementuar | Ka 4 tabs dhe kartat kryesore |
-| Sfida aritmetike | Implementuar | 4 operacione, 3 nivele, sesion i shkurtër |
-| Sfida gjeometrike | Implementuar | 5 forma, generator me sipërfaqe/perimetër për drejtkëndëshin dhe katrorin, painter custom, scoring aktiv |
+| Sfida aritmetike | Implementuar | 4 operacione, 3 nivele, DistractorEngine pedagogjik (Sprint 7 B-01/B-02) |
+| Sfida gjeometrike | Implementuar | 5 forma, area/perimetër (Sprint 7 D-02), CustomPainter me raport dimensional korrekt (D-01), painter custom, scoring aktiv |
 | Results screen | Implementuar | Pikë, saktësi, kthim në dashboard |
-| Tabelat matematikore | Implementuar | Zbritja shmang negativet dhe pjesëtimi shfaq vetëm raste pa mbetje |
+| Tabelat matematikore | Implementuar | Zbritja shmang negativet, pjesëtimi pa mbetje, modalitet invers (Sprint 7 A-01–A-04) |
 | Gamify me input manual | Implementuar | Parser funksional për operacione bazë |
 | Gamify me kamerë/galeri | Implementuar pjesërisht | Input-i merret, por OCR real mungon |
 | OCR / ML-based recognition | Jo i implementuar | `_processImage()` është placeholder |
@@ -449,10 +497,13 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 | Persistence e progresit | Jo e implementuar | Progresi është statik dhe jo i ruajtur |
 | Authentication | Jo i implementuar | Nuk ka login ose user identity |
 | Arkitektura e ekraneve | Implementuar | Ekranet kryesore janë modularizuar në `lib/features/` dhe komponentët shared në `lib/shared/` |
-| State management i shkallëzueshëm | Jo i implementuar | Ende `setState` |
-| Release signing real | Jo i implementuar | Release përdor debug key |
-| Testim widget bazik | Implementuar dhe verifikuar | `fvm flutter analyze` dhe `fvm flutter test` kalojnë në mjedisin aktual |
-| Unit tests të logjikës | Implementuar pjesërisht | Parser-i Gamify dhe generatori i gjeometrisë me calculationType janë të testuar |
+| State management i shkallëzueshëm | Implementuar | Riverpod `StateNotifierProvider` + `autoDispose.family` |
+| DistractorEngine | Implementuar | Domain Layer, gabimet tipike pedagogjike, 11 teste (Sprint 7 B-01–B-03) |
+| MissingX "Gjej X-in" | Implementuar | Model + generator + ekran + karta dashboard, 9 teste (Sprint 7 C-01–C-04) |
+| DifficultyEngine adaptiv | Jo i implementuar | Planifikuar Sprint 8 |
+| Release signing real | Jo i implementuar | Release përdor debug key — bllokues Play Store (Sprint 8 B-01/B-02) |
+| Testim widget bazik | Implementuar dhe verifikuar | `fvm flutter test` 98/98 ✅ · `fvm flutter analyze` 0 issues ✅ |
+| Unit tests të logjikës | Implementuar | DistractorEngine, MissingXGenerator, GeometryGenerator, Tables inverse, GamifyParser |
 | Integration tests | Jo të implementuara | Mungojnë flows fundorë |
 
 ### 8.2 Statusi i QA dhe build-it
@@ -478,12 +529,14 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 
 - Identiteti vizual Cosmic Dark.
 - Dashboard me navigim të qartë.
-- Sfidat bazë aritmetike.
-- Sfida gjeometrike me forma të vizatuara.
+- Sfidat bazë aritmetike me DistractorEngine pedagogjik.
+- Sfida gjeometrike me forma të vizatuara, area/perimetër, raport dimensional korrekt.
 - Ekrani i rezultateve.
-- Moduli bazë i tabelave.
+- Moduli bazë i tabelave me modalitet klasik dhe invers.
 - Moduli bazë Gamify me input tekstual dhe media picker.
+- Sfida "Gjej X-in" (MissingX) për të menduarit inversal.
 - Arkitektura e modularizuar për ekranet kryesore dhe komponentët shared.
+- Riverpod StateNotifier si state management kryesor.
 
 ### 9.2 Jo e përfunduar për fazën product-ready
 
