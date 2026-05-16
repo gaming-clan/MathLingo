@@ -729,6 +729,114 @@ abstract class AppLocalizations {
   /// **'🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni: \"{exercise}\"\n\nHmm, duhet të jetë më i qartë! 🤔\n📝 Përpiquni ta rishkruani ekuacionin me numra dhe operacione të qarta.\n\nShembuj të mirë:\n✅ \"5 + 3\"\n✅ \"10 - 7\"\n✅ \"6 * 4\"\n✅ \"20 / 5\"\n\nPërpiquni përsëri! 💪'**
   String gamifyInvalidSolution(Object exercise);
 
+  /// No description provided for @fractionKicker.
+  ///
+  /// In sq, this message translates to:
+  /// **'FRAKSIONET'**
+  String get fractionKicker;
+
+  /// No description provided for @fractionTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Identifiko fraksionin'**
+  String get fractionTitle;
+
+  /// No description provided for @fractionPrompt.
+  ///
+  /// In sq, this message translates to:
+  /// **'Cili fraksion tregon pjesën e ngjyrosur?'**
+  String get fractionPrompt;
+
+  /// No description provided for @fractionCorrectFeedback.
+  ///
+  /// In sq, this message translates to:
+  /// **'Saktë! Vazhdon fluturimi.'**
+  String get fractionCorrectFeedback;
+
+  /// No description provided for @fractionIncorrectFeedback.
+  ///
+  /// In sq, this message translates to:
+  /// **'Provo përsëri. Je shumë afër.'**
+  String get fractionIncorrectFeedback;
+
+  /// No description provided for @fractionOneHalf.
+  ///
+  /// In sq, this message translates to:
+  /// **'gjysmë (½)'**
+  String get fractionOneHalf;
+
+  /// No description provided for @fractionOneThird.
+  ///
+  /// In sq, this message translates to:
+  /// **'një e treta (⅓)'**
+  String get fractionOneThird;
+
+  /// No description provided for @fractionOneQuarter.
+  ///
+  /// In sq, this message translates to:
+  /// **'një e katërta (¼)'**
+  String get fractionOneQuarter;
+
+  /// No description provided for @fractionThreeQuarters.
+  ///
+  /// In sq, this message translates to:
+  /// **'tre të katërtat (¾)'**
+  String get fractionThreeQuarters;
+
+  /// No description provided for @fractionTwoThirds.
+  ///
+  /// In sq, this message translates to:
+  /// **'dy të tretat (⅔)'**
+  String get fractionTwoThirds;
+
+  /// No description provided for @fractionOneEighth.
+  ///
+  /// In sq, this message translates to:
+  /// **'një e teta (⅛)'**
+  String get fractionOneEighth;
+
+  /// No description provided for @fractionThreeEighths.
+  ///
+  /// In sq, this message translates to:
+  /// **'tre të tetat (⅜)'**
+  String get fractionThreeEighths;
+
+  /// No description provided for @fractionFiveEighths.
+  ///
+  /// In sq, this message translates to:
+  /// **'pesë të tetat (⅝)'**
+  String get fractionFiveEighths;
+
+  /// No description provided for @fractionSevenEighths.
+  ///
+  /// In sq, this message translates to:
+  /// **'shtatë të tetat (⅞)'**
+  String get fractionSevenEighths;
+
+  /// No description provided for @dashboardFractionsChip.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fraksionet'**
+  String get dashboardFractionsChip;
+
+  /// No description provided for @dashboardFractionsTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Mëso Fraksionet'**
+  String get dashboardFractionsTitle;
+
+  /// No description provided for @dashboardFractionsDescription.
+  ///
+  /// In sq, this message translates to:
+  /// **'Identifiko fraksionet duke shikuar figura vizuale si tarte dhe shirita të ndarë.'**
+  String get dashboardFractionsDescription;
+
+  /// No description provided for @dashboardFractionsButton.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fillo sfidën'**
+  String get dashboardFractionsButton;
+
   /// No description provided for @gamifySymbolicSolution.
   ///
   /// In sq, this message translates to:

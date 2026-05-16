@@ -17,6 +17,7 @@ import '../../../shared/widgets/skeleton_card.dart';
 import '../../../simple_tables.dart';
 import '../../challenges/presentation/challenge_screen.dart';
 import '../../geometry/presentation/geometry_challenge_screen.dart';
+import '../../fraction/presentation/fraction_challenge_screen.dart';
 import '../../missing_x/presentation/missing_x_challenge_screen.dart';
 import 'lessons_page.dart';
 import 'progress_page.dart';
@@ -63,6 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           onStartGeometryChallenge: _startGeometryChallenge,
           onStartGamifyExercise: _startGamifyExercise,
           onStartMissingXChallenge: _startMissingXChallenge,
+          onStartFractionChallenge: _startFractionChallenge,
         );
       case 1:
         return LessonsPage(onStartGeometryChallenge: _startGeometryChallenge);
@@ -76,6 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           onStartGeometryChallenge: _startGeometryChallenge,
           onStartGamifyExercise: _startGamifyExercise,
           onStartMissingXChallenge: _startMissingXChallenge,
+          onStartFractionChallenge: _startFractionChallenge,
         );
     }
   }
@@ -108,6 +111,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  void _startFractionChallenge() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const FractionChallengeScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AdaptiveScaffold(
@@ -128,12 +139,14 @@ class _DashboardPage extends StatelessWidget {
     required this.onStartGeometryChallenge,
     required this.onStartGamifyExercise,
     required this.onStartMissingXChallenge,
+    required this.onStartFractionChallenge,
   });
 
   final ValueChanged<Operation> onStartChallenge;
   final VoidCallback onStartGeometryChallenge;
   final VoidCallback onStartGamifyExercise;
   final VoidCallback onStartMissingXChallenge;
+  final VoidCallback onStartFractionChallenge;
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +183,8 @@ class _DashboardPage extends StatelessWidget {
           _DailyChallengeCard(onStart: onStartGeometryChallenge),
           const SizedBox(height: 20),
           _MissingXCard(onStart: onStartMissingXChallenge),
+          const SizedBox(height: 20),
+          _FractionsCard(onStart: onStartFractionChallenge),
           const SizedBox(height: 20),
           _GamifyCard(onStart: onStartGamifyExercise),
           const SizedBox(height: 24),
@@ -211,6 +226,8 @@ class _DashboardPage extends StatelessWidget {
                 _DailyChallengeCard(onStart: onStartGeometryChallenge),
                 const SizedBox(height: 20),
                 _MissingXCard(onStart: onStartMissingXChallenge),
+                const SizedBox(height: 20),
+                _FractionsCard(onStart: onStartFractionChallenge),
                 const SizedBox(height: 20),
                 _GamifyCard(onStart: onStartGamifyExercise),
               ],
@@ -320,6 +337,46 @@ class _MissingXCard extends StatelessWidget {
           const SizedBox(height: 22),
           CosmicButton(
             label: 'Fillo sfidën',
+            icon: Icons.arrow_forward,
+            onPressed: onStart,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FractionsCard extends StatelessWidget {
+  const _FractionsCard({required this.onStart});
+
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return GlassPanel(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _NeonChip(
+            icon: Icons.pie_chart_outline,
+            label: l10n.dashboardFractionsChip,
+            color: CosmicColors.secondaryContainer,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            l10n.dashboardFractionsTitle,
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            l10n.dashboardFractionsDescription,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 22),
+          CosmicButton(
+            label: l10n.dashboardFractionsButton,
             icon: Icons.arrow_forward,
             onPressed: onStart,
           ),

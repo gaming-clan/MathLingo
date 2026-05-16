@@ -106,17 +106,17 @@
 
 ---
 
-## Sprint 9: Fraksionet & Vizualizimi Konceptual - IN PROGRESS
+## Sprint 9: Fraksionet & Vizualizimi Konceptual - DONE
 **Versioni:** v1.5.1 | **Branch:** `feature/sprint-9-fractions`
 
 ### Track A — Moduli i Fraksioneve
-- [ ] **A-01:** Model `FractionQuestion` në Domain Layer (numerator, denominator, answer, options, visualType).
-- [ ] **A-02:** `FractionGenerator` — fraksione të mbuluar: ½, ⅓, ¼, ¾, ⅔, ⅛, ⅜, ⅝, ⅞.
-- [ ] **A-03:** `FractionPainter` (CustomPainter) — pie dhe bar vizualizim; ngjyra adaptive Cosmic.
-- [ ] **A-04:** `FractionChallengeScreen` si feature e ndarë (`lib/features/fraction/`); 4 pyetje, +15 pikë.
-- [ ] **A-05:** Kartë "Fraksionet" në dashboard + ARB strings shqip për fraksionet.
+- [x] **A-01:** Model `FractionQuestion` në Domain Layer (numerator, denominator, answer, options, visualType).
+- [x] **A-02:** `FractionGenerator` — fraksione të mbuluar: ½, ⅓, ¼, ¾, ⅔, ⅛, ⅜, ⅝, ⅞.
+- [x] **A-03:** `FractionPainter` (CustomPainter) — pie dhe bar vizualizim; ngjyra adaptive Cosmic.
+- [x] **A-04:** `FractionChallengeScreen` si feature e ndarë (`lib/features/fraction/`); 4 pyetje, +15 pikë.
+- [x] **A-05:** Kartë "Fraksionet" në dashboard + ARB strings shqip për fraksionet.
 
 ### Track B — Vizualizimi Grilë Shumëzimi
-- [ ] **B-01:** `MultiplicationGridPainter` — grilë N×M me animacion sekuencial (300ms mes kolonave).
-- [ ] **B-02:** Buton "Shfaq Grilën" në `ChallengeScreen` për shumëzim.
-- [ ] **B-03:** Widget tests për `FractionPainter` dhe `MultiplicationGridPainter`.
+- [x] **B-01:** `MultiplicationGridPainter` — grilë N×M me animacion sekuencial (300ms mes kolonave).
+- [x] **B-02:** Buton "Shfaq Grilën" në `ChallengeScreen` për shumëzim.
+- [x] **B-03:** Widget tests për `FractionPainter` dhe `MultiplicationGridPainter`.

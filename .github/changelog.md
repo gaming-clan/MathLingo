@@ -1,5 +1,22 @@
 # 📝 Changelog - MathLingo
 
+## [1.5.1] - 2026-05-16
+### Added
+- `FractionQuestion` model (Domain Layer) — numerator, denominator, answer, options, visualType (pie|bar).
+- `FractionGenerator` — gjeneron pyetje për 9 fraksionet e mbuluar (½, ⅓, ¼, ¾, ⅔, ⅛, ⅜, ⅝, ⅞) me 3 distractor plausible.
+- `FractionPainter` (CustomPainter) — pie (tarte) + bar (shirit); qeliza cyan të ngjyrosura kundrejt `surfaceLow`.
+- `FractionChallengeScreen` (`lib/features/fraction/`) — 4 pyetje/sesion, +15 pikë/pyetje, integrim me `ResultsScreen`.
+- `FractionProvider` (Riverpod `StateNotifierProvider.autoDispose.family`) — menaxhon state të sfidës.
+- Kartë "Fraksionet" në `DashboardScreen` (mobile + master-detail) — me `_NeonChip` cyan dhe buton navigimi.
+- ARB strings shqip: `fractionKicker`, `fractionTitle`, `fractionPrompt`, `fractionCorrectFeedback`, `fractionIncorrectFeedback`, `dashboardFractionsChip/Title/Description/Button`, + 9 emra fraksionesh.
+- `MultiplicationGridPainter` (CustomPainter) — grilë N×M me `animatedCols` kolonë të ngjyrosura cyan.
+- Buton "Shfaq Grilën" / "Fshih Grilën" në `ChallengeScreen` (vetëm për shumëzim) — animacion `AnimatedCrossFade` + `AnimationController` 300ms/kolonë.
+- Widget tests: `fraction_painter_test.dart` (6 tests), `multiplication_grid_painter_test.dart` (6 tests).
+
+### Validated
+- `fvm flutter test` — 134/134 ✅
+- `fvm flutter analyze` — No issues found ✅
+
 ## [1.5.0] - 2026-05-16
 ### Added
 - `DifficultyEngine` (Domain Layer) — sistem adaptiv niveli; level-up pas 3 sesionesh ≥90%, level-down pas <50%. 20 unit tests.
