@@ -198,6 +198,26 @@ class FamilyProfileService {
     await _box.put(_familyKey, family.toMap());
   }
 
+  static const String _pinKey = 'parent_pin';
+
+  /// Vendos PIN-in prindëror (4 shifra).
+  static Future<void> setParentPin(String pin) async {
+    await _box.put(_pinKey, pin);
+  }
+
+  /// Kthen `true` nëse PIN-i i vendosur është i saktë.
+  static bool verifyParentPin(String pin) {
+    final stored = _box.get(_pinKey) as String?;
+    if (stored == null) return true; // pa PIN → lejo gjithmonë
+    return stored == pin;
+  }
+
+  /// A është konfiguruar PIN-i prindëror.
+  static bool get hasParentPin {
+    if (!Hive.isBoxOpen(_boxName)) return false;
+    return _box.get(_pinKey) != null;
+  }
+
   static String _generateId() =>
       '${DateTime.now().millisecondsSinceEpoch}_'
       '${(DateTime.now().microsecondsSinceEpoch % 9999).toString().padLeft(4, '0')}';

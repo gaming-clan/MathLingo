@@ -8,6 +8,7 @@ import '../../../responsive.dart';
 import '../../../shared/widgets/glass_panel.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
+import 'parent_pin_dialog.dart';
 import 'parent_report_screen.dart';
 
 /// Ekrani i ndërrimit të profilit dhe shtimit të fëmijëve të rinj.
@@ -82,7 +83,7 @@ class _FamilySwitcherScreenState
                     Navigator.of(context).pop();
                   },
                   onDelete: children.length > 1
-                      ? () => _confirmDelete(context, child)
+                      ? () => _confirmDelete(child)
                       : null,
                 ),
               ),
@@ -100,7 +101,10 @@ class _FamilySwitcherScreenState
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                onPressed: () => setState(() => _showAddForm = true),
+                onPressed: () async {
+                  final ok = await ParentPinDialog.verify(context);
+                  if (ok && mounted) setState(() => _showAddForm = true);
+                },
               ),
             ],
             if (_showAddForm) ...[
@@ -116,7 +120,12 @@ class _FamilySwitcherScreenState
     );
   }
 
-  Future<void> _confirmDelete(BuildContext context, ChildProfile child) async {
+  Future<void> _confirmDelete(ChildProfile child) async {
+    // Verifikim PIN prindëror para fshirjes
+    if (!mounted) return;
+    final pinOk = await ParentPinDialog.verify(context);
+    if (!pinOk || !mounted) return;
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
