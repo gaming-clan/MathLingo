@@ -118,8 +118,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                     onPressed: () async {
                       final navigator = Navigator.of(context);
                       await ref
-                          .read(progressProvider.notifier)
-                          .addSession(
+                          .read(activeProgressNotifierProvider)
+                          ?.addSession(
                             points: widget.points,
                             accuracy: widget.accuracy,
                             moduleKey: widget.moduleKey,

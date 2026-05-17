@@ -10,29 +10,29 @@ import 'package:math_lingo/core/providers/progress_provider.dart';
 import 'package:math_lingo/models/user_progress.dart';
 import 'package:math_lingo/shared/utils/user_progress_storage.dart';
 
+// childId i përdorur në të gjitha testet — izolim i plotë
+const _testChildId = 'global';
+
 /// Rrugë e përkohshme për Hive (izolim per-test).
 Future<String> _tempHivePath(String name) async {
   final dir = await Directory.systemTemp.createTemp('hive_test_$name');
   return dir.path;
 }
 
-/// Aspeton derisa progressProvider kalon nga Loading.
+/// Aspeton derisa progressProvider('global') kalon nga Loading.
 Future<void> _waitForLoad(ProviderContainer container) async {
-  // Provider e nisur me AsyncLoading; _load() është Future → pump microtasks.
   for (var i = 0; i < 100; i++) {
     await Future<void>.delayed(Duration.zero);
-    if (container.read(progressProvider) is! AsyncLoading) return;
+    if (container.read(progressProvider(_testChildId)) is! AsyncLoading) return;
   }
   throw StateError('progressProvider nuk u azhurnua brenda kohe');
 }
 
-
-/// Mbyll Hive kur container shkatërrohet.
+/// Ndërton ProviderContainer me Hive të izoluar.
 Future<({ProviderContainer container, String hivePath})> _buildContainer(
   String testName,
 ) async {
   final hivePath = await _tempHivePath(testName);
-  // resetForTests shlyen _initializeFuture dhe hap box me rrugë të re
   await UserProgressStorage.resetForTests(testPath: hivePath);
 
   final container = ProviderContainer();
@@ -41,7 +41,6 @@ Future<({ProviderContainer container, String hivePath})> _buildContainer(
 
 Future<void> _teardown(ProviderContainer container, String hivePath) async {
   container.dispose();
-  // Mbyll box-in (resetForTests do ta rihapë per test tjetër me rrugë të re)
   if (Hive.isBoxOpen('user_progress')) {
     await Hive.box<dynamic>('user_progress').close();
   }
@@ -53,7 +52,7 @@ void main() {
       final (:container, :hivePath) = await _buildContainer('start');
       addTearDown(() => _teardown(container, hivePath));
 
-      final state = container.read(progressProvider);
+      final state = container.read(progressProvider(_testChildId));
       expect(state, const AsyncValue<UserProgress>.loading());
     });
 
@@ -61,10 +60,9 @@ void main() {
       final (:container, :hivePath) = await _buildContainer('load');
       addTearDown(() => _teardown(container, hivePath));
 
-      // Pres që provider të kryejë IO
       await _waitForLoad(container);
 
-      final state = container.read(progressProvider);
+      final state = container.read(progressProvider(_testChildId));
       expect(state, isA<AsyncData<UserProgress>>());
       final data = state.asData!.value;
       expect(data.totalPoints, 0);
@@ -79,10 +77,10 @@ void main() {
 
       await _waitForLoad(container);
 
-      final notifier = container.read(progressProvider.notifier);
+      final notifier = container.read(progressProvider(_testChildId).notifier);
       await notifier.addSession(points: 30, accuracy: 90);
 
-      final state = container.read(progressProvider);
+      final state = container.read(progressProvider(_testChildId));
       expect(state, isA<AsyncData<UserProgress>>());
       final data = state.asData!.value;
       expect(data.totalPoints, 30);
@@ -94,11 +92,11 @@ void main() {
 
       await _waitForLoad(container);
 
-      final notifier = container.read(progressProvider.notifier);
+      final notifier = container.read(progressProvider(_testChildId).notifier);
       await notifier.addSession(points: 10, accuracy: 80);
       await notifier.addSession(points: 20, accuracy: 60);
 
-      final data = container.read(progressProvider).asData!.value;
+      final data = container.read(progressProvider(_testChildId)).asData!.value;
       expect(data.totalPoints, 30);
       // Mesatare: (80*1 + 60) / 2 = 70
       expect(data.averageAccuracy, closeTo(70.0, 0.001));
@@ -109,10 +107,10 @@ void main() {
       addTearDown(() => _teardown(container, hivePath));
 
       await _waitForLoad(container);
-      final notifier = container.read(progressProvider.notifier);
+      final notifier = container.read(progressProvider(_testChildId).notifier);
       await notifier.addSession(points: 10, accuracy: 50);
 
-      final state = container.read(progressProvider);
+      final state = container.read(progressProvider(_testChildId));
       expect(state, isA<AsyncData<UserProgress>>());
     });
   });
