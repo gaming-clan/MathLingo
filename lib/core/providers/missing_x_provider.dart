@@ -18,6 +18,7 @@ class MissingXState {
     this.selectedAnswer,
     this.isAnswerCorrect,
     this.isAdvancing = false,
+    this.hadWrongAttemptOnCurrent = false,
   });
 
   final MissingXQuestion question;
@@ -28,6 +29,9 @@ class MissingXState {
   final int? selectedAnswer;
   final bool? isAnswerCorrect;
   final bool isAdvancing;
+  /// true nëse pyetja aktuale ka patur të paktën një përgjigje të gabuar.
+  /// Saktësia llogaritet vetëm nga tentativa e parë (first-attempt accuracy).
+  final bool hadWrongAttemptOnCurrent;
 
   bool get isComplete => answered >= sessionLength;
   double get progress => sessionLength > 0 ? answered / sessionLength : 0;
@@ -45,6 +49,7 @@ class MissingXState {
     bool? isAnswerCorrect,
     bool? clearIsAnswerCorrect,
     bool? isAdvancing,
+    bool? hadWrongAttemptOnCurrent,
   }) {
     return MissingXState(
       question: question ?? this.question,
@@ -59,6 +64,8 @@ class MissingXState {
           ? null
           : isAnswerCorrect ?? this.isAnswerCorrect,
       isAdvancing: isAdvancing ?? this.isAdvancing,
+      hadWrongAttemptOnCurrent:
+          hadWrongAttemptOnCurrent ?? this.hadWrongAttemptOnCurrent,
     );
   }
 }
@@ -115,11 +122,13 @@ class MissingXNotifier extends StateNotifier<MissingXState> {
     if (state.isAdvancing) return;
     final isCorrect = answer == state.question.answer;
     if (isCorrect) {
+      // Saktësia first-attempt: incremento vetëm nëse nuk ka pasur gabim më parë
+      final countAsCorrect = !state.hadWrongAttemptOnCurrent;
       state = state.copyWith(
         selectedAnswer: answer,
         isAnswerCorrect: true,
         score: state.score + 10,
-        correct: state.correct + 1,
+        correct: countAsCorrect ? state.correct + 1 : state.correct,
         answered: state.answered + 1,
         isAdvancing: true,
       );
@@ -127,6 +136,7 @@ class MissingXNotifier extends StateNotifier<MissingXState> {
       state = state.copyWith(
         selectedAnswer: answer,
         isAnswerCorrect: false,
+        hadWrongAttemptOnCurrent: true,
       );
     }
   }
@@ -141,6 +151,7 @@ class MissingXNotifier extends StateNotifier<MissingXState> {
         clearSelectedAnswer: true,
         clearIsAnswerCorrect: true,
         isAdvancing: false,
+        hadWrongAttemptOnCurrent: false,
       );
     }
   }
