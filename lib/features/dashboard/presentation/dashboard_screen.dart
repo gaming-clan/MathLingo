@@ -431,7 +431,7 @@ class _ProgressModuleCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final progressAsync = ref.watch(progressProvider);
+    final progressAsync = ref.watch(activeProgressProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

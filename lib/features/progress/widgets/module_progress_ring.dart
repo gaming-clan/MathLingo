@@ -59,7 +59,7 @@ class _ModuleProgressRingState extends ConsumerState<ModuleProgressRing>
 
   @override
   Widget build(BuildContext context) {
-    final progressAsync = ref.watch(progressProvider);
+    final progressAsync = ref.watch(activeProgressProvider);
     final isTablet = AdaptiveLayout.isTablet(context);
     final ringSize = isTablet ? 240.0 : 160.0;
 

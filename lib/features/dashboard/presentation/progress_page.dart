@@ -16,6 +16,8 @@ const _moduleKeys = [
   'Shumëzim',
   'Pjesëtim',
   'Gjeometri',
+  'Gjej X-in',
+  'Fraksionet',
 ];
 
 const _moduleColors = [
@@ -24,6 +26,8 @@ const _moduleColors = [
   Color(0xFFFF9800),
   Color(0xFF2196F3),
   Color(0xFF00EEFC),
+  Color(0xFFAB47BC), // vjollcë për Gjej X-in
+  Color(0xFFFFD700), // ari për Fraksionet
 ];
 
 class ProgressPage extends ConsumerWidget {
@@ -55,7 +59,7 @@ class _ProgressPortraitLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final progressAsync = ref.watch(progressProvider);
+    final progressAsync = ref.watch(activeProgressProvider);
     return ResponsivePage(
       maxWidth: 820,
       child: progressAsync.when(
@@ -121,7 +125,7 @@ class _ProgressLandscapeLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final progressAsync = ref.watch(progressProvider);
+    final progressAsync = ref.watch(activeProgressProvider);
     final pad = AdaptiveLayout.pagePadding(context);
 
     return Row(

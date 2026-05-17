@@ -18,6 +18,7 @@ class FractionState {
     this.selectedAnswer,
     this.isAnswerCorrect,
     this.isAdvancing = false,
+    this.hadWrongAttemptOnCurrent = false,
   });
 
   final FractionQuestion question;
@@ -28,6 +29,7 @@ class FractionState {
   final String? selectedAnswer;
   final bool? isAnswerCorrect;
   final bool isAdvancing;
+  final bool hadWrongAttemptOnCurrent;
 
   bool get isComplete => answered >= sessionLength;
   double get progress => sessionLength > 0 ? answered / sessionLength : 0;
@@ -45,6 +47,7 @@ class FractionState {
     bool? isAnswerCorrect,
     bool? clearIsAnswerCorrect,
     bool? isAdvancing,
+    bool? hadWrongAttemptOnCurrent,
   }) {
     return FractionState(
       question: question ?? this.question,
@@ -57,6 +60,8 @@ class FractionState {
       isAnswerCorrect:
           clearIsAnswerCorrect == true ? null : isAnswerCorrect ?? this.isAnswerCorrect,
       isAdvancing: isAdvancing ?? this.isAdvancing,
+      hadWrongAttemptOnCurrent:
+          hadWrongAttemptOnCurrent ?? this.hadWrongAttemptOnCurrent,
     );
   }
 }
@@ -103,16 +108,21 @@ class FractionNotifier extends StateNotifier<FractionState> {
     if (state.isAdvancing) return;
     final isCorrect = answer == state.question.answer;
     if (isCorrect) {
+      final countAsCorrect = !state.hadWrongAttemptOnCurrent;
       state = state.copyWith(
         selectedAnswer: answer,
         isAnswerCorrect: true,
         score: state.score + 15,
-        correct: state.correct + 1,
+        correct: countAsCorrect ? state.correct + 1 : state.correct,
         answered: state.answered + 1,
         isAdvancing: true,
       );
     } else {
-      state = state.copyWith(selectedAnswer: answer, isAnswerCorrect: false);
+      state = state.copyWith(
+        selectedAnswer: answer,
+        isAnswerCorrect: false,
+        hadWrongAttemptOnCurrent: true,
+      );
     }
   }
 
@@ -123,6 +133,7 @@ class FractionNotifier extends StateNotifier<FractionState> {
         clearSelectedAnswer: true,
         clearIsAnswerCorrect: true,
         isAdvancing: false,
+        hadWrongAttemptOnCurrent: false,
       );
     }
   }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../features/geometry/domain/geometry_question_generator.dart';
 import '../../models/geometry_question.dart';
+import '../../models/geometry_shape.dart';
 
 // ---------------------------------------------------------------------------
 // State
@@ -18,6 +19,7 @@ class GeometryState {
     this.selectedAnswer,
     this.isAnswerCorrect,
     this.isAdvancing = false,
+    this.hadWrongAttemptOnCurrent = false,
   });
 
   final GeometryQuestion question;
@@ -28,6 +30,7 @@ class GeometryState {
   final int? selectedAnswer;
   final bool? isAnswerCorrect;
   final bool isAdvancing;
+  final bool hadWrongAttemptOnCurrent;
 
   bool get isComplete => answered >= sessionLength;
   double get progress => sessionLength > 0 ? answered / sessionLength : 0;
@@ -45,6 +48,7 @@ class GeometryState {
     bool? isAnswerCorrect,
     bool? clearIsAnswerCorrect,
     bool? isAdvancing,
+    bool? hadWrongAttemptOnCurrent,
   }) {
     return GeometryState(
       question: question ?? this.question,
@@ -59,6 +63,8 @@ class GeometryState {
           ? null
           : isAnswerCorrect ?? this.isAnswerCorrect,
       isAdvancing: isAdvancing ?? this.isAdvancing,
+      hadWrongAttemptOnCurrent:
+          hadWrongAttemptOnCurrent ?? this.hadWrongAttemptOnCurrent,
     );
   }
 }
@@ -90,7 +96,7 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
   GeometryNotifier(this._config)
     : super(
         GeometryState(
-          question: _buildQuestion(_config.random),
+          question: _generator.generate(_config.random),
           score: 0,
           answered: 0,
           correct: 0,
@@ -102,8 +108,23 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
   static const GeometryQuestionGenerator _generator =
       GeometryQuestionGenerator();
 
-  static GeometryQuestion _buildQuestion(Random random) {
-    return _generator.generate(random);
+  GeometryShape? _lastShape;
+  GeometryCalculationType? _lastCalcType;
+
+  GeometryQuestion _nextQuestion() {
+    GeometryQuestion q;
+    var tries = 0;
+    do {
+      q = _generator.generate(_config.random);
+      tries++;
+    } while (
+      tries < 10 &&
+      q.shape == _lastShape &&
+      q.calculationType == _lastCalcType
+    );
+    _lastShape = q.shape;
+    _lastCalcType = q.calculationType;
+    return q;
   }
 
   void checkAnswer(int answer) {
@@ -112,26 +133,32 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
     final isCorrect = answer == state.question.answer;
 
     if (isCorrect) {
+      final countAsCorrect = !state.hadWrongAttemptOnCurrent;
       state = state.copyWith(
         selectedAnswer: answer,
         isAnswerCorrect: true,
         score: state.score + 15,
-        correct: state.correct + 1,
+        correct: countAsCorrect ? state.correct + 1 : state.correct,
         answered: state.answered + 1,
         isAdvancing: true,
       );
     } else {
-      state = state.copyWith(selectedAnswer: answer, isAnswerCorrect: false);
+      state = state.copyWith(
+        selectedAnswer: answer,
+        isAnswerCorrect: false,
+        hadWrongAttemptOnCurrent: true,
+      );
     }
   }
 
   void advance() {
     if (!state.isComplete) {
       state = state.copyWith(
-        question: _buildQuestion(_config.random),
+        question: _nextQuestion(),
         clearSelectedAnswer: true,
         clearIsAnswerCorrect: true,
         isAdvancing: false,
+        hadWrongAttemptOnCurrent: false,
       );
     }
   }

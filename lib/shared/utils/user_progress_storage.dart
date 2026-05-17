@@ -6,7 +6,7 @@ import '../../models/user_progress.dart';
 class UserProgressStorage {
   UserProgressStorage._();
 
-  static const String _boxName = 'user_progress';
+  static const String _defaultBoxName = 'user_progress';
   static const String _totalPointsKey = 'total_points';
   static const String _averageAccuracyKey = 'average_accuracy';
   static const String _completedSessionsKey = 'completed_sessions';
@@ -14,27 +14,49 @@ class UserProgressStorage {
   static const String _recentSessionsKey = 'recent_sessions';
   static const int _maxRecentSessions = 10;
 
-  static Future<void>? _initializeFuture;
+  // -------------------------------------------------------------------------
+  // Inicializim
+  // -------------------------------------------------------------------------
+  static Future<void>? _hiveFuture;
 
+  /// Inicializo Hive (vetëm një herë). Boxet hapen lazily per childId.
   static Future<void> initialize({String? testPath}) {
-    _initializeFuture ??= _initializeInternal(testPath: testPath);
-    return _initializeFuture!;
+    _hiveFuture ??= _initHive(testPath: testPath);
+    return _hiveFuture!;
   }
 
-  static Future<void> _initializeInternal({String? testPath}) async {
+  static Future<void> _initHive({String? testPath}) async {
     if (testPath != null) {
       Hive.init(testPath);
     } else {
       await Hive.initFlutter();
     }
-
-    if (!Hive.isBoxOpen(_boxName)) {
-      await Hive.openBox<dynamic>(_boxName);
+    // Hap box-in default për backward compat
+    if (!Hive.isBoxOpen(_defaultBoxName)) {
+      await Hive.openBox<dynamic>(_defaultBoxName);
     }
   }
 
-  static Future<UserProgress> load() async {
-    final box = await _box();
+  // -------------------------------------------------------------------------
+  // Box name dhe hapje lazy
+  // -------------------------------------------------------------------------
+  static String _boxName(String childId) =>
+      childId == 'global' ? _defaultBoxName : 'user_progress_$childId';
+
+  static Future<Box<dynamic>> _box(String childId) async {
+    await initialize();
+    final name = _boxName(childId);
+    if (!Hive.isBoxOpen(name)) {
+      await Hive.openBox<dynamic>(name);
+    }
+    return Hive.box<dynamic>(name);
+  }
+
+  // -------------------------------------------------------------------------
+  // API
+  // -------------------------------------------------------------------------
+  static Future<UserProgress> load({String childId = 'global'}) async {
+    final box = await _box(childId);
     final rawModules = box.get(_moduleSessionsKey);
     final moduleSessions = <String, int>{};
     if (rawModules is Map) {
@@ -70,8 +92,9 @@ class UserProgressStorage {
     required int points,
     required int accuracy,
     String? moduleKey,
+    String childId = 'global',
   }) async {
-    final box = await _box();
+    final box = await _box(childId);
     final currentPoints = box.get(_totalPointsKey, defaultValue: 0) as int;
     final currentAverage =
         (box.get(_averageAccuracyKey, defaultValue: 0.0) as num).toDouble();
@@ -120,7 +143,6 @@ class UserProgressStorage {
     }
     await box.put(_recentSessionsKey, recentList);
 
-    // Build updated recentSessions list
     final recentSessions =
         recentList.map((m) => SessionRecord.fromMap(m)).toList();
 
@@ -133,22 +155,17 @@ class UserProgressStorage {
   }
 
   @visibleForTesting
-  static Future<void> clearForTests() async {
-    final box = await _box();
+  static Future<void> clearForTests({String childId = 'global'}) async {
+    final box = await _box(childId);
     await box.clear();
   }
 
   @visibleForTesting
   static Future<void> resetForTests({String? testPath}) async {
-    if (Hive.isBoxOpen(_boxName)) {
-      await Hive.box<dynamic>(_boxName).close();
+    if (Hive.isBoxOpen(_defaultBoxName)) {
+      await Hive.box<dynamic>(_defaultBoxName).close();
     }
-    _initializeFuture = null;
+    _hiveFuture = null;
     await initialize(testPath: testPath);
-  }
-
-  static Future<Box<dynamic>> _box() async {
-    await initialize();
-    return Hive.box<dynamic>(_boxName);
   }
 }

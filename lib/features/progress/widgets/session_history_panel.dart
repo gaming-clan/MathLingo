@@ -29,7 +29,7 @@ class SessionHistoryPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final progressAsync = ref.watch(progressProvider);
+    final progressAsync = ref.watch(activeProgressProvider);
 
     return progressAsync.when(
       loading: () =>
