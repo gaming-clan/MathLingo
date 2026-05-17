@@ -34,7 +34,7 @@ class AdaptiveScaffold extends StatelessWidget {
       return Scaffold(
         backgroundColor: CosmicColors.background,
         appBar: appBar,
-        extendBody: true,
+        extendBody: false,
         resizeToAvoidBottomInset: true,
         body: body,
         bottomNavigationBar: CosmicBottomNav(
