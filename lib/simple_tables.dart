@@ -366,14 +366,16 @@ class _OperationTablesScreenState
 
     // Funksioni që ndërton tekstin e ekuacionit per çdo hyrje të tabelës.
     // Modaliteti invers: mbledhja (N/A), zbritja → "? + b = a",
-    // shumëzimi → "? × b = a×b", pjesëtimi → "? × b = a"
+    // shumëzimi → "? ÷ b = a" (bulbla tregon a*b = përgjigja e saktë),
+    // pjesëtimi → "? × b = a"
     String equationText(int num) {
       if (isInverseMode) {
         if (operation == _TableOperation.subtraction) {
           return '? + $num = $selectedTable';
         }
         if (operation == _TableOperation.multiplication) {
-          return '$selectedTable × ? = ${selectedTable * num}';
+          // "? ÷ num = selectedTable" → ? = selectedTable * num = calculate(a,b) ✓
+          return '? ÷ $num = $selectedTable';
         }
         if (operation == _TableOperation.division) {
           return '? × $num = $selectedTable';
@@ -386,7 +388,7 @@ class _OperationTablesScreenState
     String badgeSymbol() {
       if (isInverseMode) {
         if (operation == _TableOperation.subtraction) return '+';
-        if (operation == _TableOperation.multiplication) return '×';
+        if (operation == _TableOperation.multiplication) return '÷';
         if (operation == _TableOperation.division) return '×';
       }
       return operation.symbol;

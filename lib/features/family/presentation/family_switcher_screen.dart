@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../colors.dart';
 import '../../../core/providers/family_provider.dart';
+import '../../../core/services/family_profile_service.dart';
 import '../../../models/child_profile.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/glass_panel.dart';
@@ -60,11 +61,16 @@ class _FamilySwitcherScreenState
                   style: TextButton.styleFrom(
                     foregroundColor: CosmicColors.tertiaryContainer,
                   ),
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const ParentReportScreen(),
-                    ),
-                  ),
+                  onPressed: () async {
+                    final ok = await ParentPinDialog.verify(context);
+                    if (!ok || !mounted) return;
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const ParentReportScreen(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -114,6 +120,24 @@ class _FamilySwitcherScreenState
                 onCancel: () => setState(() => _showAddForm = false),
               ),
             ],
+            // ---------------------------------------------------------------
+            // Zona e Prindërit
+            // ---------------------------------------------------------------
+            const SizedBox(height: 32),
+            const Divider(color: CosmicColors.outlineVariant),
+            const SizedBox(height: 8),
+            Text(
+              'Zona e Prindërit',
+              style: TextStyle(
+                color: CosmicColors.onSurfaceVariant,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.1,
+              ),
+            ),
+            const SizedBox(height: 10),
+            _ParentPinTile(onChanged: () => setState(() {})),
+            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -275,6 +299,57 @@ class _ChildCard extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// _ParentPinTile — vendos ose ndrysho PIN prindëror
+// ---------------------------------------------------------------------------
+class _ParentPinTile extends StatelessWidget {
+  const _ParentPinTile({required this.onChanged});
+
+  final VoidCallback onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasPin = FamilyProfileService.hasParentPin;
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(
+        hasPin ? Icons.lock : Icons.lock_open,
+        color: hasPin
+            ? CosmicColors.secondaryContainer
+            : CosmicColors.onSurfaceVariant,
+      ),
+      title: Text(
+        hasPin ? 'PIN i konfiguruar' : 'Vendos PIN Prindëror',
+        style: TextStyle(
+          color: CosmicColors.onSurface,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: Text(
+        hasPin
+            ? 'Tap për të ndryshuar PIN-in.'
+            : 'Mbron shtimin/fshirjen e profileve dhe raportin.',
+        style: TextStyle(color: CosmicColors.onSurfaceVariant, fontSize: 12),
+      ),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: CosmicColors.onSurfaceVariant,
+      ),
+      onTap: () async {
+        if (hasPin) {
+          // Kërko PIN aktual para ndryshimit
+          final ok = await ParentPinDialog.verify(context);
+          if (!ok) return;
+        }
+        if (!context.mounted) return;
+        // ignore: use_build_context_synchronously
+        final saved = await SetParentPinDialog.show(context);
+        if (saved) onChanged();
+      },
     );
   }
 }
