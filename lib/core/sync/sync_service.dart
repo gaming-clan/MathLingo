@@ -76,6 +76,66 @@ class SyncService {
     }
   }
 
+  /// Grumbullon statistikat ditore me Atomic Increment (Daily Aggregate Pattern).
+  ///
+  /// Thirrja është "fire-and-forget": djeshtësimi i rrjetit nuk bllokon lojën.
+  /// Përdor [FieldValue.increment] për pikët dhe numrin e sesioneve,
+  /// duke garantuar saktësi edhe me përdorim njëkohësisht nga pajëbi të ndryshme.
+  ///
+  /// Formula e saktësisë progresive:
+  /// `avgNew = ((avgOld * oldSessions) + newAccuracy) / (oldSessions + 1)`
+  /// Kjo llogaritet në server-side me transaction nëse nevojitet,
+  /// por për thjeshtësi uështruesi kalkulon në app pas leximit atomik.
+  Future<void> updateDailyStats({
+    required ChildProfile child,
+    required int sessionPoints,
+    required double sessionAccuracy,
+    String? moduleKey,
+  }) async {
+    if (!_canSync()) return;
+    final uid = _currentUid()!;
+    final today = _todayKey();
+    final docRef = _db.doc(
+      FirestoreSchema.dailyStatsDoc(uid, child.id, today),
+    );
+
+    try {
+      await _db.runTransaction((tx) async {
+        final snap = await tx.get(docRef);
+        final data = snap.exists ? snap.data()! : <String, dynamic>{};
+
+        final oldSessions = (data[FirestoreSchema.dailySessionsCount] as int?) ?? 0;
+        final oldAvg = (data[FirestoreSchema.dailyAvgAccuracy] as num?)?.toDouble() ?? 0.0;
+
+        // Saktësia progresive — nuk kërkon lexim shtesë
+        final newAvg = oldSessions == 0
+            ? sessionAccuracy
+            : ((oldAvg * oldSessions) + sessionAccuracy) / (oldSessions + 1);
+
+        // Ndërtojmë payload-in
+        final Map<String, dynamic> payload = {
+          FirestoreSchema.date: today,
+          FirestoreSchema.dailyTotalPoints: FieldValue.increment(sessionPoints),
+          FirestoreSchema.dailySessionsCount: FieldValue.increment(1),
+          FirestoreSchema.dailyAvgAccuracy: double.parse(newAvg.toStringAsFixed(4)),
+          FirestoreSchema.dailyLastUpdate: FieldValue.serverTimestamp(),
+        };
+
+        // Breakdown sipas modulit (opsionale)
+        if (moduleKey != null) {
+          payload['${FirestoreSchema.dailyModules}.$moduleKey'] =
+              FieldValue.increment(sessionPoints);
+        }
+
+        tx.set(docRef, payload, SetOptions(merge: true));
+      });
+      debugPrint('[Sync] DailyStats u përditësua: ${child.id} ($today) +$sessionPoints pts');
+    } catch (e) {
+      debugPrint('[Sync] Gabim updateDailyStats: $e');
+      // Fire-and-forget: gabimi nuk propagohet tek caller
+    }
+  }
+
   // ─── Lexim ───────────────────────────────────────────────────────────────
 
   /// Tërheq të dhënat nga cloud (last-write-wins).
@@ -90,6 +150,26 @@ class SyncService {
     } catch (e) {
       debugPrint('[Sync] Gabim pullChildInfo: $e');
       return null;
+    }
+  }
+
+  /// Tërheq agregatin ditor për 7 ditët e fundit.
+  ///
+  /// Query-i renditet sipas datës zbritëse dhe kufizon në 7 dokumente.
+  /// Kthehet lista boshe nëse nuk ka të dhëna ose ndodh gabim rrjeti.
+  Future<List<Map<String, dynamic>>> pullWeeklyStats(String childId) async {
+    if (!_canSync()) return [];
+    final uid = _currentUid()!;
+    try {
+      final snap = await _db
+          .collection(FirestoreSchema.dailyStatsCollection(uid, childId))
+          .orderBy(FirestoreSchema.date, descending: true)
+          .limit(7)
+          .get();
+      return snap.docs.map((d) => d.data()).toList();
+    } catch (e) {
+      debugPrint('[Sync] Gabim pullWeeklyStats: $e');
+      return [];
     }
   }
 
@@ -109,7 +189,13 @@ class SyncService {
 
       for (final childDoc in childrenSnap.docs) {
         final childId = childDoc.id;
-
+        // Fshi daily_stats të çdo fëmijëe
+        final dailyStatsSnap = await _db
+            .collection(FirestoreSchema.dailyStatsCollection(uid, childId))
+            .get();
+        for (final ds in dailyStatsSnap.docs) {
+          await ds.reference.delete();
+        }
         // Fshi progresin e çdo fëmijës
         final progressSnap = await _db
             .collection(
