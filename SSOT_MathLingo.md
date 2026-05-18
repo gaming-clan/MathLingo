@@ -552,8 +552,8 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 | `fvm flutter analyze` | 0 issues ✅ (18 Maj 2026) |
 | Android Release Signing | Konfiguruar — `mathlingo-release.jks` |
 | Firebase Registered | ✅ — 5 platforma në projekt `mathlingo-90084` |
-| Email/Password Auth Provider | Duhet aktivizuar manualisht në Firebase Console |
-| iOS `GoogleService-Info.plist` | Gitignored — duhet gjeneruar për iOS build |
+| Email/Password Auth Provider | ✅ Aktivizuar në Firebase Console |
+| iOS `GoogleService-Info.plist` | Jashtë scope v1.9.0 — Deferred |
 
 ### 8.3 Devijimet aktuale të njohura
 
@@ -591,8 +591,7 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 ### 9.2 Deferred — Jo e përfunduar
 
 - Integration tests (flows fundorë).
-- iOS `GoogleService-Info.plist` në repo.
-- Email/Password Auth aktivizim manual në Firebase Console.
+- iOS `GoogleService-Info.plist` në repo (jashtë scope v1.9.0 — Deferred).
 - OCR shkrim dore (kufizim ML Kit — kërkon Google Vision API cloud).
 - Multi-language lokalizim (shqip vetëm aktualisht).
 - Golden tests për ekranet kryesore.

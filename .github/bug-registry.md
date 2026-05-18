@@ -24,8 +24,8 @@
 | ID | Përshkrimi | Severiteti | Statusi | Sektori |
 | :--- | :--- | :--- | :--- | :--- |
 | B011 | OCR nuk njeh shkrimin dore (ML Kit `blocks=0`) — kufizim i recognizer-it, jo infrastrukturës | **Mesatar** | Monitor | `gamify_exercise.dart` |
-| B015 | Firebase Auth (`Email/Password`) duhet aktivizuar manualisht në Firebase Console para se `AuthService.signUp/signIn` të funksionojë në runtime | **Mesatar** | Monitor | Firebase Console |
-| B016 | `ios/Runner/GoogleService-Info.plist` është aktualisht gitignored dhe mungon nga repo — iOS build nuk do inicializojë Firebase | **Mesatar** | Monitor | iOS Build |
+| B015 | Firebase Auth (`Email/Password`) duhet aktivizuar manualisht në Firebase Console para se `AuthService.signUp/signIn` të funksionojë në runtime | **Mesatar** | Fixed | Firebase Console |
+| B016 | `ios/Runner/GoogleService-Info.plist` mungon nga repo — iOS build nuk inicializon Firebase | **Mesatar** | Deferred | iOS Build |
 
 ---
 **Legjenda:**
