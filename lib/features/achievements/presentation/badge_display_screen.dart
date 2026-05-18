@@ -78,14 +78,15 @@ class _BadgeGrid extends StatelessWidget {
     final all = AchievementService.all;
     final unlockedIds = unlocked.map((a) => a.id).toSet();
 
+    final isTablet = AdaptiveLayout.isTablet(context);
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: isTablet ? 4 : 3,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio: 0.85,
+        childAspectRatio: isTablet ? 1.0 : 0.9,
       ),
       itemCount: all.length,
       itemBuilder: (context, i) {
@@ -125,7 +126,7 @@ class _BadgeTile extends StatelessWidget {
                   ]),
             child: Text(
               isUnlocked ? achievement.emoji : '🔒',
-              style: const TextStyle(fontSize: 34),
+              style: const TextStyle(fontSize: 28),
             ),
           ),
           const SizedBox(height: 8),

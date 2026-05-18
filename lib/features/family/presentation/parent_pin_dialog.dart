@@ -83,6 +83,11 @@ class _ParentPinDialogState extends State<ParentPinDialog> {
             onSubmitted: (_) => _onConfirm(),
             decoration: InputDecoration(
               hintText: '• • • •',
+              hintStyle: const TextStyle(
+                color: Colors.white38,
+                fontSize: 24,
+                letterSpacing: 8,
+              ),
               errorText: _errorText,
               counterText: '',
               filled: true,
@@ -240,6 +245,11 @@ class _PinField extends StatelessWidget {
       onSubmitted: onSubmitted,
       decoration: InputDecoration(
         hintText: hint,
+        hintStyle: const TextStyle(
+          color: Colors.white38,
+          fontSize: 20,
+          letterSpacing: 6,
+        ),
         counterText: '',
         filled: true,
         fillColor: CosmicColors.surfaceLow,

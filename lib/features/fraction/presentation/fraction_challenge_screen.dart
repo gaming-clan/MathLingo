@@ -191,15 +191,6 @@ class _FractionVisual extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 12),
-        Text(
-          '${question.numerator}/${question.denominator}',
-          style: const TextStyle(
-            color: CosmicColors.onSurface,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
       ],
     );
   }
