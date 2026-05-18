@@ -120,3 +120,94 @@
 - [x] **B-01:** `MultiplicationGridPainter` — grilë N×M me animacion sekuencial (300ms mes kolonave).
 - [x] **B-02:** Buton "Shfaq Grilën" në `ChallengeScreen` për shumëzim.
 - [x] **B-03:** Widget tests për `FractionPainter` dhe `MultiplicationGridPainter`.
+
+---
+
+## Sprint 10A: Familja, Privatësia & Gamifikimi Bazë — DONE
+**Versioni:** v1.6.0 | **Branch:** `feature/sprint-10a-family-gamification`
+
+### Track A — Sistemi Familjar
+- [x] **A-01:** Model `ChildProfile` (`lib/models/`) — id, name, avatarEmoji, totalPoints, sessionsCompleted, operationScores; Hive-persisted me `toMap()`/`fromMap()`.
+- [x] **A-02:** Model `FamilyProfile` — lista `ChildProfile`, `activeChildId`, PIN-hash.
+- [x] **A-03:** `FamilyProfileService` — `createChild`, `switchChild`, `getActiveChild`, `verifyPin`, `setPin`; Hive box `'family_profile'`.
+- [x] **A-04:** `FamilyProvider` — Riverpod `StateNotifierProvider`; shpërndan profil aktiv dhe listë fëmijësh.
+- [x] **A-05:** `FamilySetupScreen` — krijimi i profilave fëmijësh me avatar emoji.
+- [x] **A-06:** `FamilySwitcherScreen` — ndërrimi i profilit aktiv fëmije.
+- [x] **A-07:** `ParentPinDialog` — dialog PIN-mbrojtje (verifikimi + krijimi) me dy variante.
+- [x] **A-08:** `ParentReportScreen` — raport progresi: pikë totale, sesione, saktësi për operacion.
+
+### Track B — Privatësia & Consent
+- [x] **B-01:** `ConsentFlowScreen` — flow i pranimit GDPR; parakusht i inicializimit Firebase.
+- [x] **B-02:** `PrivacyPolicyScreen` — politika e brendshme e privatësisë (GDPR-compliant).
+- [x] **B-03:** `DeleteAllDataScreen` — fshirje konfirmuese e të gjitha të dhënave lokale.
+- [x] **B-04:** `SettingsScreen` bazë me seksione: Profili, Privatësia.
+
+### Track C — Gamifikimi Bazë
+- [x] **C-01:** Model `Achievement` — id, title, description, icon, category, unlockedAt.
+- [x] **C-02:** `AchievementService` — `unlockAchievement`, `getAll`, `deleteAllData`; Hive persist; integrate me challenge results.
+- [x] **C-03:** `AchievementProvider` — Riverpod `StateNotifierProvider`.
+- [x] **C-04:** `BadgeDisplayScreen` — GridView responsive (3/4 kolona) me badge emoji dhe titull.
+- [x] **C-05:** `BadgeNotificationOverlay` — overlay njoftim kur shkyçet badge i ri.
+
+- [x] **Final:** `fvm flutter test` 134/134 ✅ · `fvm flutter analyze` 0 issues ✅
+
+---
+
+## Sprint 11: Gamifikimi i Avancuar — DONE
+**Versioni:** v1.7.0 | **Branch:** `feature/sprint-11-advanced-gamification`
+
+### Track A — Audio & Haptik
+- [x] **A-01:** `AudioService` — `playCorrect`, `playWrong`, `playLevelUp`, `playAchievement` me `audioplayers: 6.0.0`.
+- [x] **A-02:** `HapticService` — `lightImpact`, `mediumImpact`, `heavyImpact`, `success`, `error` me `HapticFeedback` native.
+- [x] **A-03:** Integrimi i Audio + Haptic me `ChallengeScreen` dhe events kryesore.
+
+### Track B — Eksport & Ndaj
+- [x] **B-01:** `DataExportService` — eksport CSV sesionesh dhe progresi.
+- [x] **B-02:** `share_plus: ^13.1.0` — ndarje skedarësh.
+- [x] **B-03:** `package_info_plus: ^10.1.0` — informacion versioni.
+
+### Track C — Leaderboard & Settings finalizim
+- [x] **C-01:** `LeaderboardScreen` — renditje anëtarësh familjes sipas pikëve totale.
+- [x] **C-02:** `SettingsScreen` zgjeruar me seksion Gamifikimi (audio on/off, haptic on/off).
+
+- [x] **Final:** `fvm flutter test` 134/134 ✅ · `fvm flutter analyze` 0 issues ✅
+
+---
+
+## Sprint 10B: Firebase Auth & Cloud Sync — DONE
+**Versioni:** v1.8.0 | **Branch:** `main` (merged direkt)
+
+### Track A — Firebase Setup
+- [x] **A-01:** `firebase_core: ^3.4.0`, `firebase_auth: ^5.2.0`, `cloud_firestore: ^5.3.0` në `pubspec.yaml`.
+- [x] **A-02:** `flutterfire configure --project=mathlingo-90084` — generoi `firebase_options.dart` + `google-services.json` + `firebase.json`.
+- [x] **A-03:** `android/app/build.gradle.kts` — Google Services plugin + release signing nga `key.properties`.
+- [x] **A-04:** `android/settings.gradle.kts` — `com.google.gms.google-services v4.4.2`.
+- [x] **A-05:** `FirebaseInitService` — inicializim lazy pas consent; `isInitialized` flag; `reset()` për teste.
+
+### Track B — Auth
+- [x] **B-01:** Model `ParentAccount` — `uid`, `email`, `createdAt`, `cloudSyncEnabled`, `lastSyncAt`; Hive box `'parent_account'`.
+- [x] **B-02:** `AuthService` — `signUp`, `signIn`, `signOut`, `deleteAccount`; `_mapFirebaseError`; validim email/password.
+- [x] **B-03:** Sealed `AuthState` (`Initial | Loading | Authenticated | Unauthenticated | Error`).
+- [x] **B-04:** `AuthNotifier` + `authProvider`, `isAuthenticatedProvider`, `currentParentProvider`.
+- [x] **B-05:** `ParentSignUpScreen` + `ParentSignInScreen` — `ConsumerStatefulWidget`, `ref.listen<AuthState>`, `GlassPanel`, `CosmicButton`.
+
+### Track C — Cloud Sync
+- [x] **C-01:** `FirestoreSchema` — konstantet e path-eve Firestore.
+- [x] **C-02:** `SyncService` — `syncChildInfo`, `syncChildProgress`, `pullChildInfo`, `deleteAllUserData` (GDPR Art. 17).
+- [x] **C-03:** `SettingsScreen` — `_CloudSyncSection` me shfaqje email + "Dil" + "Fshi Llogarinë".
+- [x] **C-04:** `DeleteAllDataScreen` — pas fshirjes lokale, thirr `deleteAllUserData(uid)` + `signOut()` nëse Firebase aktiv.
+
+### Track D — ARB Strings
+- [x] **D-01:** 30+ strings shqip të reja: `authSignUpTitle`, `authSignInTitle`, error keys, sync keys, delete/signout keys.
+
+- [x] **Final:** `fvm flutter test` 134/134 ✅ · `fvm flutter analyze` 0 issues ✅
+
+---
+
+## Stabilization v1.9.0: UI Polish Final — DONE
+
+- [x] **B012:** `parent_pin_dialog.dart` — `hintStyle: color: Colors.white38` për të dy fushat PIN.
+- [x] **B013:** `fraction_challenge_screen.dart` — hequr `Text('${q.numerator}/${q.denominator}')` nga UI.
+- [x] **B014:** `badge_display_screen.dart` — GridView responsive (`crossAxisCount: isTablet ? 4 : 3`); emoji `fontSize: 28`.
+
+- [x] **Final:** `fvm flutter test` 134/134 ✅ · `fvm flutter analyze` 0 issues ✅

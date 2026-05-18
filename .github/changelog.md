@@ -1,5 +1,88 @@
 # 📝 Changelog - MathLingo
 
+## [1.9.0] - 2026-05-18 — Stabilization Update
+### Fixed (UI Polish)
+- **B012 — PIN Dialog:** `hintStyle` i fushave të hyrjes së PIN-it vendosur me `color: Colors.white38` — hintText nuk dukej si tekst i plotë.
+- **B013 — Fractions Bug:** Hequr widget `Text('${question.numerator}/${question.denominator}')` nga `FractionChallengeScreen` — fëmija nuk sheh më numerikisht vlerën e thyesës para se ta zgjidhë.
+- **B014 — Achievements Grid:** `BadgeDisplayScreen` GridView bërë responsive (`crossAxisCount: isTablet ? 4 : 3`, `childAspectRatio: isTablet ? 1.0 : 0.9`); emoji `fontSize` ulur nga 34 në 28.
+
+### Validated
+- `fvm flutter test` — 134/134 ✅
+- `fvm flutter analyze` — No issues found ✅
+
+---
+
+## [1.8.0] - 2026-05-17 — Sprint 10B: Firebase Auth & Cloud Sync
+### Added
+- **Firebase integration:** `firebase_core: ^3.4.0`, `firebase_auth: ^5.2.0`, `cloud_firestore: ^5.3.0`.
+- **`FirebaseInitService`** (`lib/core/services/firebase_init_service.dart`) — inicializim lazy pas consent prindi; `isInitialized` flag global.
+- **`DefaultFirebaseOptions`** (`lib/firebase_options.dart`) — gjeneruar nga `flutterfire configure --project=mathlingo-90084`; regjistron Android, iOS, Web, macOS, Windows.
+- **`google-services.json`** (`android/app/`) — skedar real i gjeneruar nga Firebase CLI v15.18.0.
+- **`firebase.json`** — konfigurim CLI i projektit Firebase.
+- **`ParentAccount`** model (`lib/features/auth/models/`) — `uid`, `email`, `createdAt`, `cloudSyncEnabled`, `lastSyncAt`; ruhet në Hive box `'parent_account'`.
+- **`AuthService`** (`lib/features/auth/services/`) — `signUp`, `signIn`, `signOut`, `deleteAccount`, `getCurrentAccount`; `_mapFirebaseError` maps Firebase error codes → ARB keys.
+- **Sealed `AuthState`** (`lib/features/auth/providers/auth_provider.dart`) — `AuthStateInitial | Loading | Authenticated | Unauthenticated | Error`; `authProvider`, `isAuthenticatedProvider`, `currentParentProvider`.
+- **`ParentSignUpScreen`** + **`ParentSignInScreen`** (`lib/features/auth/presentation/`) — `ConsumerStatefulWidget`, `GlassPanel`, `CosmicButton`, `ref.listen<AuthState>`, `sendPasswordResetEmail` për "Forgot Password".
+- **`FirestoreSchema`** (`lib/core/sync/`) — konstantet e path-eve Firestore (`users/{uid}/children/{childId}/info/profile`, `progress/{date}`).
+- **`SyncService`** (`lib/core/sync/`) — `syncChildInfo`, `syncChildProgress`, `pullChildInfo`, `deleteAllUserData` (GDPR Article 17); `syncServiceProvider`.
+- **`SettingsScreen`** zgjeruar me `_CloudSyncSection` — shfaq email + "Dil" + "Fshi Llogarinë" nëse autentikuar; shfaq "Krijo Llogari Prindi" + "Hyni" ndryshe.
+- **`DeleteAllDataScreen`** zgjeruar — pas fshirjes lokale, nëse Firebase inicializuar dhe sesioni aktiv, thirr `deleteAllUserData(uid)` + `signOut()`.
+- **30+ ARB strings** shqip të reja: `authSignUpTitle`, `authSignInTitle`, `authEmailLabel`, `authPasswordLabel`, `authConfirmPasswordLabel`, `authSignUpButton`, `authSignInButton`, `authSigningUp`, `authSigningIn`, `authHaveAccount`, `authNoAccount`, `authForgotPassword`, `authPrivacyNote`, 8 `authError*` keys, `syncEnabled`, `syncDisabled`, `syncLastSync`, `authDeleteAccountTitle`, `authDeleteAccountConfirm`, `authDeleteAccountButton`, `authSignOutButton`.
+- **`android/app/build.gradle.kts`:** Google Services plugin + release signing nga `key.properties`.
+- **`android/settings.gradle.kts`:** `id("com.google.gms.google-services") version "4.4.2" apply false`.
+
+### Changed
+- `.gitignore`: `lib/firebase_options.dart` dhe `android/app/google-services.json` hequr nga lista e ignore (tashmë të commit-uara).
+
+### Validated
+- `fvm flutter test` — 134/134 ✅
+- `fvm flutter analyze` — No issues found ✅
+
+---
+
+## [1.7.0] - 2026-05-17 — Sprint 11: Gamifikimi i Avancuar
+### Added
+- **Sistemi i Arritjeve (Achievements):** `Achievement` model (`lib/models/achievement.dart`) — badge me id, title, description, icon, category, unlockedAt.
+- **`AchievementService`** (`lib/core/services/`) — static service për dhënie dhe ruajtje me Hive; `unlockAchievement`, `getAll`, `deleteAllData`; integrate me challenge results.
+- **`AchievementProvider`** (`lib/core/providers/`) — Riverpod `StateNotifierProvider`; shpërndan badges ndaj UI.
+- **`BadgeDisplayScreen`** (`lib/features/achievements/presentation/`) — GridView responsive me 3/4 kolona; koston e badge-ve me emoji dhe titull.
+- **`BadgeNotificationOverlay`** (`lib/features/achievements/presentation/`) — overlay njoftim kur shkyçet badge i ri.
+- **`LeaderboardScreen`** (`lib/features/leaderboard/presentation/`) — renditje e anëtarëve të familjes sipas pikëve totale.
+- **`AudioService`** (`lib/core/services/`) — `playCorrect`, `playWrong`, `playLevelUp`, `playAchievement` me `audioplayers: 6.0.0`; nullable — fjalë nëse audioplayers nuk inicializon.
+- **`HapticService`** (`lib/core/services/`) — `lightImpact`, `mediumImpact`, `heavyImpact`, `success`, `error` — feedback haptik me `HapticFeedback` native.
+- **`DataExportService`** (`lib/core/services/`) — eksport CSV i sesioneve dhe progresit; `share_plus: ^13.1.0`.
+- **`package_info_plus: ^10.1.0`** — informacion versioni i aplikacionit.
+- **`share_plus: ^13.1.0`** — ndarje skedaresh (raporte, CSV eksport).
+- **`audioplayers: 6.0.0`** — audio feedback lojërave.
+
+### Validated
+- `fvm flutter test` — 134/134 ✅
+- `fvm flutter analyze` — No issues found ✅
+
+---
+
+## [1.6.0] - 2026-05-17 — Sprint 10A: Familja, Privatësia & Gamifikimi Bazë
+### Added
+- **`ChildProfile`** model (`lib/models/child_profile.dart`) — id, name, avatarEmoji, totalPoints, sessionsCompleted, operationScores; Hive-persisted me `toMap()`/`fromMap()`.
+- **`FamilyProfile`** model (`lib/models/family_profile.dart`) — lista e `ChildProfile`, `activeChildId`, PIN-hash.
+- **`FamilyProfileService`** (`lib/core/services/`) — `createChild`, `switchChild`, `getActiveChild`, `verifyPin`, `setPin`; persist me Hive box `'family_profile'`.
+- **`FamilyProvider`** (`lib/core/providers/`) — Riverpod StateNotifier; shpërndan profil aktiv dhe listë fëmijësh.
+- **`FamilySetupScreen`** (`lib/features/family/presentation/`) — krijimi i profilave fëmijësh me avatar emoji.
+- **`FamilySwitcherScreen`** (`lib/features/family/presentation/`) — ndërrimi i profilit aktiv fëmije.
+- **`ParentPinDialog`** (`lib/features/family/presentation/`) — dialog PIN-mbrojtje për ndërrimin e profilit; dy variante (verifikimi + krijimi).
+- **`ParentReportScreen`** (`lib/features/family/presentation/`) — raport progresi për prindët (pikë totale, sesione, saktësi për operacion).
+- **`SettingsScreen`** (`lib/features/settings/presentation/`) — ekran i plotë i cilësimeve me seksione: Profili, Gamifikimi, Privatësia, Cloud Sync.
+- **`ConsentFlowScreen`** (`lib/features/settings/presentation/`) — flow i pranimit GDPR për inicializimin e Firebase.
+- **`PrivacyPolicyScreen`** (`lib/features/settings/presentation/`) — politika e privatësisë e brendshme (GDPR-compliant).
+- **`DeleteAllDataScreen`** (`lib/features/settings/presentation/`) — fshirja konfirmuese e të dhënave lokale me `AchievementService.deleteAllData`.
+- **`UserProgress`** model (`lib/models/user_progress.dart`) — pikë, sesione, saktësi, operacioni i preferuar.
+
+### Validated
+- `fvm flutter test` — 134/134 ✅
+- `fvm flutter analyze` — No issues found ✅
+
+---
+
 ## [1.5.1] - 2026-05-16
 ### Added
 - `FractionQuestion` model (Domain Layer) — numerator, denominator, answer, options, visualType (pie|bar).

@@ -15,12 +15,17 @@
 | B008 | Dashboard body nuk renderohej për shkak të sizing-ut të BottomNavigation | **Kritik** | Fixed | Dashboard UI |
 | B009 | `_ActionTile` quick-actions shkaktonte `RenderFlex overflowed by 6.1px` në viewport të ngushtë | **Mesatar** | Fixed | `dashboard_screen.dart` |
 | B010 | `replaceAll` me capture groups Dart nuk interpolonte `$1` — konvertimi `a2→a^2` ishte i gabuar | **Lartë** | Fixed | `gamify_exercise.dart` |
+| B012 | `hintText` i fushave PIN kishte opacitet shumë të lartë — dukej si tekst i plotë, jo si ndihmë | **Mesatar** | Fixed | `parent_pin_dialog.dart` |
+| B013 | `FractionChallengeScreen` shfaqte vlerën numerike `numerator/denominator` poshtë vizualizimit — zbulonte përgjigjen para se fëmija ta zgjidhte | **Kritik** | Fixed | `fraction_challenge_screen.dart` |
+| B014 | `BadgeDisplayScreen` GridView kishte `childAspectRatio: 0.85` dhe emoji `fontSize: 34` — kartat ishin tepër të mëdha dhe shthurosur në mobile | **Mesatar** | Fixed | `badge_display_screen.dart` |
 
 ## Open / Monitor
 
 | ID | Përshkrimi | Severiteti | Statusi | Sektori |
 | :--- | :--- | :--- | :--- | :--- |
 | B011 | OCR nuk njeh shkrimin dore (ML Kit `blocks=0`) — kufizim i recognizer-it, jo infrastrukturës | **Mesatar** | Monitor | `gamify_exercise.dart` |
+| B015 | Firebase Auth (`Email/Password`) duhet aktivizuar manualisht në Firebase Console para se `AuthService.signUp/signIn` të funksionojë në runtime | **Mesatar** | Monitor | Firebase Console |
+| B016 | `ios/Runner/GoogleService-Info.plist` është aktualisht gitignored dhe mungon nga repo — iOS build nuk do inicializojë Firebase | **Mesatar** | Monitor | iOS Build |
 
 ---
 **Legjenda:**

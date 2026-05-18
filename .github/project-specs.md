@@ -15,6 +15,13 @@
 - `flutter_localizations` (SDK) + `intl: any` — lokalizim shqip (ARB files)
 - `flutter_riverpod: ^2.6.1` — State Management (Sprint 4+)
 - `hive: ^2.2.3` + `hive_flutter: ^1.1.0` — persistencë lokale (Sprint 3+)
+- `path_provider: ^2.1.5` — rrugë direktorish
+- `share_plus: ^13.1.0` — ndarje skedarësh (raporte, CSV eksport)
+- `package_info_plus: ^10.1.0` — informacion versioni i aplikacionit
+- `audioplayers: 6.0.0` — audio feedback (correct/wrong/level-up/achievement)
+- `firebase_core: ^3.4.0` — Firebase inicializim (Sprint 10B)
+- `firebase_auth: ^5.2.0` — Authentication Email/Password (Sprint 10B)
+- `cloud_firestore: ^5.3.0` — Cloud Sync opt-in (Sprint 10B)
 - `flutter_launcher_icons: ^0.13.1` (dev)
 
 ## 3. Platformat & Mbështetja
