@@ -866,6 +866,198 @@ abstract class AppLocalizations {
     Object variable,
     Object factorization,
   );
+
+  /// No description provided for @authSignUpTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Krijo Llogari Prindi'**
+  String get authSignUpTitle;
+
+  /// No description provided for @authSignInTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Hyrja e Prindit'**
+  String get authSignInTitle;
+
+  /// No description provided for @authEmailLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Email-i i prindit'**
+  String get authEmailLabel;
+
+  /// No description provided for @authPasswordLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fjalëkalimi'**
+  String get authPasswordLabel;
+
+  /// No description provided for @authConfirmPasswordLabel.
+  ///
+  /// In sq, this message translates to:
+  /// **'Konfirmo fjalëkalimin'**
+  String get authConfirmPasswordLabel;
+
+  /// No description provided for @authSignUpButton.
+  ///
+  /// In sq, this message translates to:
+  /// **'Regjistrohu'**
+  String get authSignUpButton;
+
+  /// No description provided for @authSignInButton.
+  ///
+  /// In sq, this message translates to:
+  /// **'Hyni'**
+  String get authSignInButton;
+
+  /// No description provided for @authSigningUp.
+  ///
+  /// In sq, this message translates to:
+  /// **'Duke u regjistruar...'**
+  String get authSigningUp;
+
+  /// No description provided for @authSigningIn.
+  ///
+  /// In sq, this message translates to:
+  /// **'Duke hyrë...'**
+  String get authSigningIn;
+
+  /// No description provided for @authHaveAccount.
+  ///
+  /// In sq, this message translates to:
+  /// **'Keni llogari? Hyni këtu'**
+  String get authHaveAccount;
+
+  /// No description provided for @authNoAccount.
+  ///
+  /// In sq, this message translates to:
+  /// **'Keni nevojë për llogari? Regjistrohuni'**
+  String get authNoAccount;
+
+  /// No description provided for @authForgotPassword.
+  ///
+  /// In sq, this message translates to:
+  /// **'Harruat fjalëkalimin?'**
+  String get authForgotPassword;
+
+  /// No description provided for @authPrivacyNote.
+  ///
+  /// In sq, this message translates to:
+  /// **'Të dhënat ruhen me enkriptim. Nuk ndahen me palë të treta.'**
+  String get authPrivacyNote;
+
+  /// No description provided for @authErrorEmailInUse.
+  ///
+  /// In sq, this message translates to:
+  /// **'Ky email është i regjistruar tashmë.'**
+  String get authErrorEmailInUse;
+
+  /// No description provided for @authErrorInvalidEmail.
+  ///
+  /// In sq, this message translates to:
+  /// **'Formati i email-it nuk është i saktë.'**
+  String get authErrorInvalidEmail;
+
+  /// No description provided for @authErrorWeakPassword.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fjalëkalimi duhet të ketë ≥8 karaktere dhe 1 numër.'**
+  String get authErrorWeakPassword;
+
+  /// No description provided for @authErrorPasswordMismatch.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fjalëkalimet nuk përputhen.'**
+  String get authErrorPasswordMismatch;
+
+  /// No description provided for @authErrorUserNotFound.
+  ///
+  /// In sq, this message translates to:
+  /// **'Nuk u gjet llogari me këtë email.'**
+  String get authErrorUserNotFound;
+
+  /// No description provided for @authErrorWrongPassword.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fjalëkalimi nuk është i saktë.'**
+  String get authErrorWrongPassword;
+
+  /// No description provided for @authErrorTooManyRequests.
+  ///
+  /// In sq, this message translates to:
+  /// **'Shumë tentativa. Provo pas disa minutash.'**
+  String get authErrorTooManyRequests;
+
+  /// No description provided for @authErrorNetwork.
+  ///
+  /// In sq, this message translates to:
+  /// **'Problem me lidhjen. Kontrollo internetin.'**
+  String get authErrorNetwork;
+
+  /// No description provided for @authErrorFirebaseNotReady.
+  ///
+  /// In sq, this message translates to:
+  /// **'Shërbimi nuk është gati. Provo sërish.'**
+  String get authErrorFirebaseNotReady;
+
+  /// No description provided for @authErrorUserDisabled.
+  ///
+  /// In sq, this message translates to:
+  /// **'Kjo llogari është çaktivizuar.'**
+  String get authErrorUserDisabled;
+
+  /// No description provided for @authErrorUnknown.
+  ///
+  /// In sq, this message translates to:
+  /// **'Ndodhi një gabim. Provo sërish.'**
+  String get authErrorUnknown;
+
+  /// No description provided for @authErrorEmptyFields.
+  ///
+  /// In sq, this message translates to:
+  /// **'Plotësoni të gjitha fushat.'**
+  String get authErrorEmptyFields;
+
+  /// No description provided for @syncEnabled.
+  ///
+  /// In sq, this message translates to:
+  /// **'Sinkronizimi Cloud është aktiv'**
+  String get syncEnabled;
+
+  /// No description provided for @syncDisabled.
+  ///
+  /// In sq, this message translates to:
+  /// **'Sinkronizimi Cloud nuk është aktiv'**
+  String get syncDisabled;
+
+  /// No description provided for @syncLastSync.
+  ///
+  /// In sq, this message translates to:
+  /// **'Sinkronizim i fundit: {date}'**
+  String syncLastSync(Object date);
+
+  /// No description provided for @authDeleteAccountTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fshi Llogarinë Cloud'**
+  String get authDeleteAccountTitle;
+
+  /// No description provided for @authDeleteAccountConfirm.
+  ///
+  /// In sq, this message translates to:
+  /// **'Kjo do të fshijë llogarinë tuaj dhe të gjitha të dhënat nga cloud. Veprimi nuk mund të zhbëhet.'**
+  String get authDeleteAccountConfirm;
+
+  /// No description provided for @authDeleteAccountButton.
+  ///
+  /// In sq, this message translates to:
+  /// **'Fshi Llogarinë'**
+  String get authDeleteAccountButton;
+
+  /// No description provided for @authSignOutButton.
+  ///
+  /// In sq, this message translates to:
+  /// **'Dil nga Llogaria'**
+  String get authSignOutButton;
 }
 
 class _AppLocalizationsDelegate

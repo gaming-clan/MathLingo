@@ -5,10 +5,13 @@ import '../../../colors.dart';
 import '../../../core/providers/family_provider.dart';
 import '../../../core/services/achievement_service.dart';
 import '../../../core/services/family_profile_service.dart';
+import '../../../core/services/firebase_init_service.dart';
+import '../../../core/sync/sync_service.dart';
 import '../../../responsive.dart';
 import '../../../shared/utils/user_progress_storage.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
 import '../../../shared/widgets/glass_panel.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../../family/presentation/parent_pin_dialog.dart';
 import '../../family/presentation/family_setup_screen.dart';
 
@@ -72,6 +75,17 @@ class _DeleteAllDataScreenState extends ConsumerState<DeleteAllDataScreen> {
     // Fshi progresin per cdo femije
     await UserProgressStorage.deleteAllData(childIds: childIds);
     await AchievementService.deleteAllData(childIds: childIds);
+
+    // Fshi të dhënat cloud nëse prindi është i kyçur (GDPR Neni 17)
+    if (FirebaseInitService.isInitialized) {
+      final authState = ref.read(authProvider);
+      if (authState is AuthStateAuthenticated) {
+        await ref
+            .read(syncServiceProvider)
+            .deleteAllUserData(authState.account.uid);
+        await ref.read(authProvider.notifier).signOut();
+      }
+    }
 
     // Fshi të dhënat familjare (profil + PIN)
     await FamilyProfileService.deleteAllData();

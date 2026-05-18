@@ -24,6 +24,11 @@ output-metadata.json
 # Android signing credentials (never commit)
 android/key.properties
 
+# Firebase config (sensitive — gjenerohen nga FlutterFire CLI)
+lib/firebase_options.dart
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
 # IntelliJ
 *.iml
 .idea/

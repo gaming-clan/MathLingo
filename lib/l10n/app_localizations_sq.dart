@@ -471,4 +471,107 @@ class AppLocalizationsSq extends AppLocalizations {
   ) {
     return '✨ SHPREHJE KUADRATIKE ✨\n\nShprehja: $exercise\n\n📘 Kjo është një ekuacion kuadratik me ndryshoren $variable.\n🧩 Një mënyrë e zakonshme zgjidhjeje është faktorizimi:\n$factorization\n\n💡 Pasi faktorizon, vendos secilën kllapë baraz me zero për të gjetur zgjidhjet.';
   }
+
+  @override
+  String get authSignUpTitle => 'Krijo Llogari Prindi';
+
+  @override
+  String get authSignInTitle => 'Hyrja e Prindit';
+
+  @override
+  String get authEmailLabel => 'Email-i i prindit';
+
+  @override
+  String get authPasswordLabel => 'Fjalëkalimi';
+
+  @override
+  String get authConfirmPasswordLabel => 'Konfirmo fjalëkalimin';
+
+  @override
+  String get authSignUpButton => 'Regjistrohu';
+
+  @override
+  String get authSignInButton => 'Hyni';
+
+  @override
+  String get authSigningUp => 'Duke u regjistruar...';
+
+  @override
+  String get authSigningIn => 'Duke hyrë...';
+
+  @override
+  String get authHaveAccount => 'Keni llogari? Hyni këtu';
+
+  @override
+  String get authNoAccount => 'Keni nevojë për llogari? Regjistrohuni';
+
+  @override
+  String get authForgotPassword => 'Harruat fjalëkalimin?';
+
+  @override
+  String get authPrivacyNote =>
+      'Të dhënat ruhen me enkriptim. Nuk ndahen me palë të treta.';
+
+  @override
+  String get authErrorEmailInUse => 'Ky email është i regjistruar tashmë.';
+
+  @override
+  String get authErrorInvalidEmail => 'Formati i email-it nuk është i saktë.';
+
+  @override
+  String get authErrorWeakPassword =>
+      'Fjalëkalimi duhet të ketë ≥8 karaktere dhe 1 numër.';
+
+  @override
+  String get authErrorPasswordMismatch => 'Fjalëkalimet nuk përputhen.';
+
+  @override
+  String get authErrorUserNotFound => 'Nuk u gjet llogari me këtë email.';
+
+  @override
+  String get authErrorWrongPassword => 'Fjalëkalimi nuk është i saktë.';
+
+  @override
+  String get authErrorTooManyRequests =>
+      'Shumë tentativa. Provo pas disa minutash.';
+
+  @override
+  String get authErrorNetwork => 'Problem me lidhjen. Kontrollo internetin.';
+
+  @override
+  String get authErrorFirebaseNotReady =>
+      'Shërbimi nuk është gati. Provo sërish.';
+
+  @override
+  String get authErrorUserDisabled => 'Kjo llogari është çaktivizuar.';
+
+  @override
+  String get authErrorUnknown => 'Ndodhi një gabim. Provo sërish.';
+
+  @override
+  String get authErrorEmptyFields => 'Plotësoni të gjitha fushat.';
+
+  @override
+  String get syncEnabled => 'Sinkronizimi Cloud është aktiv';
+
+  @override
+  String get syncDisabled => 'Sinkronizimi Cloud nuk është aktiv';
+
+  @override
+  String syncLastSync(Object date) {
+    return 'Sinkronizim i fundit: $date';
+  }
+
+  @override
+  String get authDeleteAccountTitle => 'Fshi Llogarinë Cloud';
+
+  @override
+  String get authDeleteAccountConfirm =>
+      'Kjo do të fshijë llogarinë tuaj dhe të gjitha të dhënat nga cloud. Veprimi nuk mund të zhbëhet.';
+
+  @override
+  String get authDeleteAccountButton => 'Fshi Llogarinë';
+
+  @override
+  String get authSignOutButton => 'Dil nga Llogaria';
 }
