@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../colors.dart';
+import '../../../core/services/audio_service.dart';
 import '../../../core/services/data_export_service.dart';
 import '../../../core/services/family_profile_service.dart';
+import '../../../features/achievements/presentation/badge_display_screen.dart';
 import '../../../features/family/presentation/parent_pin_dialog.dart';
+import '../../../features/leaderboard/presentation/leaderboard_screen.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
 import '../../../shared/widgets/glass_panel.dart';
@@ -14,8 +17,10 @@ import 'privacy_policy_screen.dart';
 /// P-05 — Ekrani i Cilësimeve. E aksesueshme nga CosmicTopBar.
 ///
 /// Seksionet:
-///   1. Privatësia & të Dhënat (P-01, P-02, P-03)
-///   2. Rreth Aplikacionit (versioni, kontakti)
+///   1. Gamifikimi (arritjet, klasifikimi)
+///   2. Privatësia & të Dhënat (P-01, P-02, P-03)
+///   3. Preferencat (audio)
+///   4. Rreth Aplikacionit (versioni, kontakti)
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -26,6 +31,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   String _version = '';
   bool _isExporting = false;
+  bool _audioEnabled = AudioService.isEnabled;
 
   @override
   void initState() {
@@ -76,6 +82,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: CosmicColors.primaryContainer,
                   ),
+            ),
+            const SizedBox(height: 24),
+
+            // ── Seksioni: Gamifikimi ─────────────────────────────────────────
+            _SectionHeader(label: 'Gamifikimi'),
+            GlassPanel(
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  _SettingsTile(
+                    icon: Icons.military_tech_outlined,
+                    title: 'Arritjet',
+                    subtitle: 'Shiko badge-t e fituara',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const BadgeDisplayScreen(),
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    height: 1,
+                    indent: 56,
+                    color: CosmicColors.outlineVariant,
+                  ),
+                  _SettingsTile(
+                    icon: Icons.leaderboard_outlined,
+                    title: 'Klasifikimi Familjar',
+                    subtitle: 'Kush ka më shumë pikë?',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const LeaderboardScreen(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // ── Seksioni: Preferencat ────────────────────────────────────────
+            _SectionHeader(label: 'Preferencat'),
+            GlassPanel(
+              padding: EdgeInsets.zero,
+              child: SwitchListTile(
+                secondary: const Icon(
+                  Icons.volume_up_outlined,
+                  color: CosmicColors.onSurface,
+                  size: 22,
+                ),
+                title: const Text(
+                  'Tingujt',
+                  style: TextStyle(
+                    color: CosmicColors.onSurface,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+                subtitle: const Text(
+                  'Feedback audio pas çdo përgjigje',
+                  style: TextStyle(
+                    color: CosmicColors.onSurfaceVariant,
+                    fontSize: 12,
+                  ),
+                ),
+                value: _audioEnabled,
+                activeColor: CosmicColors.secondaryContainer,
+                onChanged: (v) {
+                  setState(() => _audioEnabled = v);
+                  AudioService.setEnabled(v);
+                },
+              ),
             ),
             const SizedBox(height: 24),
 

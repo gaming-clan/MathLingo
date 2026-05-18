@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../colors.dart';
 import '../../../core/providers/family_provider.dart';
+import '../../../core/services/achievement_service.dart';
 import '../../../core/services/family_profile_service.dart';
 import '../../../responsive.dart';
 import '../../../shared/utils/user_progress_storage.dart';
@@ -70,6 +71,7 @@ class _DeleteAllDataScreenState extends ConsumerState<DeleteAllDataScreen> {
 
     // Fshi progresin per cdo femije
     await UserProgressStorage.deleteAllData(childIds: childIds);
+    await AchievementService.deleteAllData(childIds: childIds);
 
     // Fshi të dhënat familjare (profil + PIN)
     await FamilyProfileService.deleteAllData();
