@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../colors.dart';
 import '../../../core/services/audio_service.dart';
 import '../../../core/services/data_export_service.dart';
 import '../../../core/services/family_profile_service.dart';
+import '../../../core/services/firebase_init_service.dart';
 import '../../../features/achievements/presentation/badge_display_screen.dart';
+import '../../../features/auth/presentation/parent_signin_screen.dart';
+import '../../../features/auth/presentation/parent_signup_screen.dart';
+import '../../../features/auth/providers/auth_provider.dart';
 import '../../../features/family/presentation/parent_pin_dialog.dart';
 import '../../../features/leaderboard/presentation/leaderboard_screen.dart';
 import '../../../responsive.dart';
@@ -21,14 +26,14 @@ import 'privacy_policy_screen.dart';
 ///   2. Privatësia & të Dhënat (P-01, P-02, P-03)
 ///   3. Preferencat (audio)
 ///   4. Rreth Aplikacionit (versioni, kontakti)
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   String _version = '';
   bool _isExporting = false;
   bool _audioEnabled = AudioService.isEnabled;
@@ -50,6 +55,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _isExporting = true);
     await DataExportService.export(context);
     if (mounted) setState(() => _isExporting = false);
+  }
+
+  Future<void> _onInitFirebase(BuildContext ctx, Widget destination) async {
+    final ok = await FirebaseInitService.initialize();
+    if (!ok) {
+      if (!ctx.mounted) return;
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Firebase nuk është konfiguruar. Kontakto zhvilluesin.'),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.fromLTRB(16, 0, 16, 80),
+        ),
+      );
+      return;
+    }
+    if (!ctx.mounted) return;
+    // ignore: use_build_context_synchronously
+    Navigator.of(ctx).push(
+      MaterialPageRoute<void>(builder: (_) => destination),
+    );
   }
 
   Future<void> _onDeletePressed() async {
@@ -83,6 +109,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: CosmicColors.primaryContainer,
                   ),
             ),
+            const SizedBox(height: 24),
+
+            // ── Seksioni: Sinkronizimi Cloud ──────────────────────────────────
+            _CloudSyncSection(onInitFirebase: _onInitFirebase),
             const SizedBox(height: 24),
 
             // ── Seksioni: Gamifikimi ─────────────────────────────────────────
@@ -319,6 +349,125 @@ class _SettingsTile extends StatelessWidget {
                   color: CosmicColors.onSurfaceVariant,
                 )
               : null),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Seksioni i sinkronizimit cloud
+// ---------------------------------------------------------------------------
+
+class _CloudSyncSection extends ConsumerWidget {
+  const _CloudSyncSection({required this.onInitFirebase});
+
+  final Future<void> Function(BuildContext ctx, Widget destination)
+      onInitFirebase;
+
+  Future<void> _onSignOut(WidgetRef ref) async {
+    await ref.read(authProvider.notifier).signOut();
+  }
+
+  Future<void> _onDeleteCloudAccount(
+      BuildContext ctx, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: ctx,
+      builder: (_) => AlertDialog(
+        backgroundColor: CosmicColors.surface,
+        title: const Text(
+          'Fshi Llogarinë Cloud',
+          style: TextStyle(color: CosmicColors.onSurface),
+        ),
+        content: const Text(
+          'Kjo do të fshijë llogarinë tuaj dhe të gjitha të dhënat nga cloud. Veprimi nuk mund të zhbëhet.',
+          style: TextStyle(color: CosmicColors.onSurfaceVariant),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Anulo'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: TextButton.styleFrom(
+                foregroundColor: CosmicColors.error),
+            child: const Text('Fshi'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !ctx.mounted) return;
+    await ref.read(authProvider.notifier).deleteAccount();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionHeader(label: 'Sinkronizimi Cloud'),
+        GlassPanel(
+          padding: EdgeInsets.zero,
+          child: switch (authState) {
+            AuthStateAuthenticated(:final account) => Column(
+                children: [
+                  _SettingsTile(
+                    icon: Icons.cloud_done_outlined,
+                    title: 'Llogaria Aktive',
+                    subtitle: account.email,
+                    showChevron: false,
+                  ),
+                  const Divider(
+                      height: 1,
+                      indent: 56,
+                      color: CosmicColors.outlineVariant),
+                  _SettingsTile(
+                    icon: Icons.logout_outlined,
+                    title: 'Dil nga Llogaria',
+                    subtitle: 'Të dhënat lokale mbeten',
+                    onTap: () => _onSignOut(ref),
+                  ),
+                  const Divider(
+                      height: 1,
+                      indent: 56,
+                      color: CosmicColors.outlineVariant),
+                  _SettingsTile(
+                    icon: Icons.cloud_off_outlined,
+                    title: 'Fshi Llogarinë Cloud',
+                    subtitle: 'Fshin llogarinë dhe të dhënat cloud',
+                    iconColor: CosmicColors.error,
+                    titleColor: CosmicColors.error,
+                    onTap: () =>
+                        _onDeleteCloudAccount(context, ref),
+                  ),
+                ],
+              ),
+            _ => Column(
+                children: [
+                  _SettingsTile(
+                    icon: Icons.person_add_outlined,
+                    title: 'Krijo Llogari Prindi',
+                    subtitle: 'Rezervo progresin në cloud',
+                    onTap: () => onInitFirebase(
+                        context, const ParentSignUpScreen()),
+                  ),
+                  const Divider(
+                      height: 1,
+                      indent: 56,
+                      color: CosmicColors.outlineVariant),
+                  _SettingsTile(
+                    icon: Icons.login_outlined,
+                    title: 'Hyni në Llogari',
+                    subtitle: 'Sinkronizo midis pajisjeve',
+                    onTap: () => onInitFirebase(
+                        context, const ParentSignInScreen()),
+                  ),
+                ],
+              ),
+          },
+        ),
+      ],
     );
   }
 }

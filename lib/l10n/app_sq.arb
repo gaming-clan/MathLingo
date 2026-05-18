@@ -378,5 +378,105 @@
       "variable": {},
       "factorization": {}
     }
-  }
+  },
+
+  "authSignUpTitle": "Krijo Llogari Prindi",
+  "@authSignUpTitle": {},
+
+  "authSignInTitle": "Hyrja e Prindit",
+  "@authSignInTitle": {},
+
+  "authEmailLabel": "Email-i i prindit",
+  "@authEmailLabel": {},
+
+  "authPasswordLabel": "Fjalëkalimi",
+  "@authPasswordLabel": {},
+
+  "authConfirmPasswordLabel": "Konfirmo fjalëkalimin",
+  "@authConfirmPasswordLabel": {},
+
+  "authSignUpButton": "Regjistrohu",
+  "@authSignUpButton": {},
+
+  "authSignInButton": "Hyni",
+  "@authSignInButton": {},
+
+  "authSigningUp": "Duke u regjistruar...",
+  "@authSigningUp": {},
+
+  "authSigningIn": "Duke hyrë...",
+  "@authSigningIn": {},
+
+  "authHaveAccount": "Keni llogari? Hyni këtu",
+  "@authHaveAccount": {},
+
+  "authNoAccount": "Keni nevojë për llogari? Regjistrohuni",
+  "@authNoAccount": {},
+
+  "authForgotPassword": "Harruat fjalëkalimin?",
+  "@authForgotPassword": {},
+
+  "authPrivacyNote": "Të dhënat ruhen me enkriptim. Nuk ndahen me palë të treta.",
+  "@authPrivacyNote": {},
+
+  "authErrorEmailInUse": "Ky email është i regjistruar tashmë.",
+  "@authErrorEmailInUse": {},
+
+  "authErrorInvalidEmail": "Formati i email-it nuk është i saktë.",
+  "@authErrorInvalidEmail": {},
+
+  "authErrorWeakPassword": "Fjalëkalimi duhet të ketë ≥8 karaktere dhe 1 numër.",
+  "@authErrorWeakPassword": {},
+
+  "authErrorPasswordMismatch": "Fjalëkalimet nuk përputhen.",
+  "@authErrorPasswordMismatch": {},
+
+  "authErrorUserNotFound": "Nuk u gjet llogari me këtë email.",
+  "@authErrorUserNotFound": {},
+
+  "authErrorWrongPassword": "Fjalëkalimi nuk është i saktë.",
+  "@authErrorWrongPassword": {},
+
+  "authErrorTooManyRequests": "Shumë tentativa. Provo pas disa minutash.",
+  "@authErrorTooManyRequests": {},
+
+  "authErrorNetwork": "Problem me lidhjen. Kontrollo internetin.",
+  "@authErrorNetwork": {},
+
+  "authErrorFirebaseNotReady": "Shërbimi nuk është gati. Provo sërish.",
+  "@authErrorFirebaseNotReady": {},
+
+  "authErrorUserDisabled": "Kjo llogari është çaktivizuar.",
+  "@authErrorUserDisabled": {},
+
+  "authErrorUnknown": "Ndodhi një gabim. Provo sërish.",
+  "@authErrorUnknown": {},
+
+  "authErrorEmptyFields": "Plotësoni të gjitha fushat.",
+  "@authErrorEmptyFields": {},
+
+  "syncEnabled": "Sinkronizimi Cloud është aktiv",
+  "@syncEnabled": {},
+
+  "syncDisabled": "Sinkronizimi Cloud nuk është aktiv",
+  "@syncDisabled": {},
+
+  "syncLastSync": "Sinkronizim i fundit: {date}",
+  "@syncLastSync": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+
+  "authDeleteAccountTitle": "Fshi Llogarinë Cloud",
+  "@authDeleteAccountTitle": {},
+
+  "authDeleteAccountConfirm": "Kjo do të fshijë llogarinë tuaj dhe të gjitha të dhënat nga cloud. Veprimi nuk mund të zhbëhet.",
+  "@authDeleteAccountConfirm": {},
+
+  "authDeleteAccountButton": "Fshi Llogarinë",
+  "@authDeleteAccountButton": {},
+
+  "authSignOutButton": "Dil nga Llogaria",
+  "@authSignOutButton": {}
 }

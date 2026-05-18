@@ -50,6 +50,11 @@ dependencies:
   package_info_plus: ^10.1.0
   audioplayers: 6.0.0
 
+  # === Firebase — Sprint 10B ===
+  firebase_core: ^3.4.0
+  firebase_auth: ^5.2.0
+  cloud_firestore: ^5.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
