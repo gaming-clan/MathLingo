@@ -122,6 +122,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                     icon: Icons.arrow_forward,
                     onPressed: () async {
                       final navigator = Navigator.of(context);
+                      // Captura context para çdo await (use_build_context_synchronously)
+                      final overlayContext = context;
                       await ref
                           .read(activeProgressNotifierProvider)
                           ?.addSession(
@@ -155,10 +157,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                           HapticService.levelUp();
                           await AudioService.playBadge();
                           if (!mounted) return;
-                          await BadgeNotificationOverlay.show(
-                            context,
-                            newBadges,
-                          );
+                          // ignore: use_build_context_synchronously
+                          await BadgeNotificationOverlay.show(overlayContext, newBadges);
                         }
                       }
 

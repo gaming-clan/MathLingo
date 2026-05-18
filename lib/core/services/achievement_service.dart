@@ -6,7 +6,7 @@ import '../../models/child_profile.dart';
 /// Shërbimi i arritjeve (badge-ve) — G-01 / G-02.
 ///
 /// Ruan listën e badge-ve të deblokuara per-child në Hive.
-/// Nuk ka codegen — map-et ruhen si List<String> (IDs).
+/// Nuk ka codegen — map-et ruhen si `List<String>` (IDs).
 abstract final class AchievementService {
   static const String _boxName = 'achievements';
 

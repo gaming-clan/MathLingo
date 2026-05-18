@@ -147,7 +147,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 value: _audioEnabled,
-                activeColor: CosmicColors.secondaryContainer,
+                activeThumbColor: CosmicColors.secondaryContainer,
                 onChanged: (v) {
                   setState(() => _audioEnabled = v);
                   AudioService.setEnabled(v);
