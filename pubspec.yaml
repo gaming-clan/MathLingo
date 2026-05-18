@@ -55,6 +55,9 @@ dependencies:
   firebase_auth: ^5.2.0
   cloud_firestore: ^5.3.0
 
+  # === Charts — Sprint 12 ===
+  fl_chart: ^0.70.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -478,5 +478,20 @@
   "@authDeleteAccountButton": {},
 
   "authSignOutButton": "Dil nga Llogaria",
-  "@authSignOutButton": {}
+  "@authSignOutButton": {},
+
+  "parentReportTitle": "Raporti Javor",
+  "@parentReportTitle": {},
+
+  "weeklyTrend": "Tendenca e Javës",
+  "@weeklyTrend": {},
+
+  "dailyPoints": "Pikët Ditorë",
+  "@dailyPoints": {},
+
+  "accuracyTrend": "Tendenca e Saktësisë",
+  "@accuracyTrend": {},
+
+  "noDataYet": "Luaj sfidën e parë për të parë progresin këtu!",
+  "@noDataYet": {}
 }
