@@ -68,8 +68,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: const CosmicTopBar(showBackButton: true),
       body: ResponsivePage(
         maxWidth: 640,
-        child: ListView(
-          padding: const EdgeInsets.only(bottom: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Cilësimet',

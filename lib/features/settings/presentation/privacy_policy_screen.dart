@@ -17,8 +17,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
       appBar: const CosmicTopBar(showBackButton: true),
       body: ResponsivePage(
         maxWidth: 680,
-        child: ListView(
-          padding: const EdgeInsets.only(bottom: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             _PolicySection(
               title: 'Politika e Privatësisë',
