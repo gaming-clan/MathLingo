@@ -24,9 +24,9 @@ output-metadata.json
 # Android signing credentials (never commit)
 android/key.properties
 
-# Firebase config (sensitive — gjenerohen nga FlutterFire CLI)
-lib/firebase_options.dart
-android/app/google-services.json
+# Firebase config — të sigurta për commit (sigurisë i vendoset via Firebase Rules)
+# lib/firebase_options.dart  ← committed
+# android/app/google-services.json  ← committed
 ios/Runner/GoogleService-Info.plist
 
 # IntelliJ
@@ -40,8 +40,8 @@ render.experimental.xml
 *.jks
 *.keystore
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
+# Google Services — i sigurt për commit (nuk ka sekrete, siguria është via Firebase Rules)
+# google-services.json  ← committed
 
 # Android Profiling
 *.hprof

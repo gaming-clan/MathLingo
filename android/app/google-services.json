@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "978533022478",
+    "project_id": "mathlingo-90084",
+    "storage_bucket": "mathlingo-90084.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978533022478:android:bc5fc6aa979153a87ff55f",
+        "android_client_info": {
+          "package_name": "com.mathlingo.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUDk5xtsD5FG6fKxKSVNbmgOBhLhSPL_0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
