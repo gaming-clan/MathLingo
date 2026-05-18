@@ -211,3 +211,87 @@
 - [x] **B014:** `badge_display_screen.dart` — GridView responsive (`crossAxisCount: isTablet ? 4 : 3`); emoji `fontSize: 28`.
 
 - [x] **Final:** `fvm flutter test` 134/134 ✅ · `fvm flutter analyze` 0 issues ✅
+
+---
+
+## 🚀 ROADMAP GO-TO-MARKET (v2.0.0)
+
+> Bazuar në gjendjen aktuale v1.9.0 Release Candidate.
+> Firebase Auth aktiv ✅ · 134 teste ✅ · 0 issues analyze ✅
+
+---
+
+## Sprint 12: Raportet e Prindërve (Parental Reports) — PLANNED
+**Versioni target:** v1.10.0
+
+### Qëllimi
+Vizualizimi i të dhënave të progresit nga Firestore për prindërit — historiku sesionesh, tendencat dhe krahasimi mes fëmijëve.
+
+### Track A — Vizualizimi i të Dhënave Firestore
+- [ ] **A-01:** `SyncService.pullChildProgress(uid, childId)` — lexim historiku sesionesh nga Firestore (7 ditë fundit).
+- [ ] **A-02:** `ParentReportScreen` zgjeruar me grafik tendence pikësh (7 ditë) — `CustomPainter` sparkline.
+- [ ] **A-03:** Krahasim mes profileve fëmijësh — tabelë me pikë totale, saktësi mesatare, operacioni i preferuar.
+- [ ] **A-04:** Seksion "Aktiviteti i Fundit" — lista e 5 sesioneve të fundit me datë, operacion, pikë.
+
+### Track B — Sinkronizimi Automatik i Progresit
+- [ ] **B-01:** Thirr `SyncService.syncChildProgress()` automatikisht pas çdo sesioni të përfunduar (nëse Firebase aktiv + autentikuar).
+- [ ] **B-02:** Indicator "U sinkronizua" / "Duke sinkronizuar..." në `SettingsScreen` — shfaq `lastSyncAt` nga `ParentAccount`.
+- [ ] **B-03:** Menaxhim graceful i gabimeve rrjeti — no-op nëse offline; retry automatik kur rikthehet lidhja.
+
+### Track C — Firestore Security Rules
+- [ ] **C-01:** Rregulla Firestore: `users/{uid}/**` aksesueshe vetëm nga `request.auth.uid == uid`.
+- [ ] **C-02:** Validim me `firestore.rules` lokal + testim me Firebase Emulator.
+
+### Validation
+- [ ] `fvm flutter test` ≥134 ✅
+- [ ] `fvm flutter analyze` 0 issues ✅
+
+---
+
+## Sprint 13: Store Submission (Përgatitja e Lansimit) — PLANNED
+**Versioni target:** v1.11.0
+
+### Qëllimi
+Finalizimi i të gjitha aseteve dhe konfiguracioneve të nevojshme për publikim në Google Play Store.
+
+### Track A — Asetet e Play Store
+- [ ] **A-01:** Screenshots Android (telefon + tablet) — minimum 4 screenshot; tekst i qartë shqip.
+- [ ] **A-02:** Feature Graphic (1024×500 px) — branding Cosmic Dark + "MathLingo" + tagline shqip.
+- [ ] **A-03:** App Icon 512×512 px pa shtresë transparente — upload në Play Console.
+- [ ] **A-04:** Përshkrimi i shkurtër (≤80 karaktere) dhe i gjatë (≤4000 karaktere) shqip në Play Console.
+
+### Track B — Konfigurimi Teknik Final
+- [ ] **B-01:** `pubspec.yaml`: `version: 2.0.0+1`.
+- [ ] **B-02:** `fvm flutter build appbundle --release` — verifikim AAB me `key.properties` + `mathlingo-release.jks`.
+- [ ] **B-03:** Content Rating Questionnaire — kategori: Edukative / Fëmijë 6-12 vjeç.
+- [ ] **B-04:** Data Safety Form — deklarim `firebase_auth`, `cloud_firestore`, `image_picker`; opt-in, të dhëna familjare.
+- [ ] **B-05:** Target Audience — "Children and Families" me verifikim prindi (PIN) të dokumentuar.
+
+### Track C — QA Final
+- [ ] **C-01:** Smoke test mbi pajisje fizike Android — onboarding → sfidë → arritje → cloud sync.
+- [ ] **C-02:** Flows Firebase Auth: regjistrim, hyrje, dalje, fshirje llogarie.
+- [ ] **C-03:** Verifikim `PrivacyPolicyScreen` dhe `ConsentFlowScreen` — tekste shqip korrekte.
+- [ ] **C-04:** `fvm flutter test` — zero regresione.
+
+### Validation
+- [ ] `fvm flutter build appbundle --release` → `build/app/outputs/bundle/release/app-release.aab` ✓
+- [ ] Play Console → Internal Testing track me AAB të ngarkuar ✓
+
+---
+
+## 🏆 v2.0.0 — Lansimi Zyrtar (Go-to-Market)
+**Target:** Google Play Store — Shqipëri
+
+### Kriteret e Lansimit (Definition of Done)
+- [ ] Sprint 12 dhe Sprint 13 — 100% të detyrave ✅
+- [ ] AAB Release i ndërtuar me signing real ✅
+- [ ] Play Console → Production track i aprovuar nga Google ✅
+- [ ] Firebase project `mathlingo-90084` — Firestore Security Rules deployed ✅
+- [ ] URL Play Store publik i disponueshëm ✅
+
+### Pas Lansimit (v2.x Backlog)
+- iOS submission (App Store Connect + `GoogleService-Info.plist`).
+- Lokalizim anglisht (locale e dytë për zgjerim tregu).
+- Integration tests end-to-end.
+- OCR shkrim dore me Google Vision API cloud.
+- Analytics dhe telemetri sesionesh.
