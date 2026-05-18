@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/app_routes.dart';
 import 'colors.dart';
+import 'core/services/achievement_service.dart';
+import 'core/services/audio_service.dart';
 import 'core/services/family_profile_service.dart';
 import 'core/services/session_tracker.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
@@ -15,6 +17,8 @@ Future<void> main() async {
   await UserProgressStorage.initialize();
   await SessionTracker.init();
   await FamilyProfileService.init();
+  await AchievementService.init();
+  await AudioService.init();
   runApp(const ProviderScope(child: MathLingoApp()));
 }
 

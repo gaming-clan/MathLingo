@@ -3,13 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/app_routes.dart';
 import '../../../colors.dart';
+import '../../../core/providers/family_provider.dart';
 import '../../../core/providers/progress_provider.dart';
+import '../../../core/services/achievement_service.dart';
+import '../../../core/services/audio_service.dart';
+import '../../../core/services/haptic_service.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
 import '../../../shared/widgets/mascot_frame.dart';
 import '../../../shared/widgets/score_card.dart';
+import '../../achievements/presentation/badge_notification_overlay.dart';
 
 class ResultsScreen extends ConsumerStatefulWidget {
   const ResultsScreen({
@@ -124,9 +129,40 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                             accuracy: widget.accuracy,
                             moduleKey: widget.moduleKey,
                           );
-                      if (!mounted) {
-                        return;
+                      if (!mounted) return;
+
+                      // Audio + haptic feedback
+                      if (widget.accuracy == 100) {
+                        HapticService.levelUp();
+                        await AudioService.playLevelUp();
+                      } else {
+                        HapticService.correct();
+                        await AudioService.playCorrect();
                       }
+
+                      // Verifikimi i arritjeve
+                      final activeChild =
+                          ref.read(familyProvider).activeChild;
+                      if (activeChild != null) {
+                        final newBadges =
+                            await AchievementService.checkNewAchievements(
+                          childId: activeChild.id,
+                          child: activeChild,
+                          lastAccuracy: widget.accuracy,
+                        );
+                        if (!mounted) return;
+                        if (newBadges.isNotEmpty) {
+                          HapticService.levelUp();
+                          await AudioService.playBadge();
+                          if (!mounted) return;
+                          await BadgeNotificationOverlay.show(
+                            context,
+                            newBadges,
+                          );
+                        }
+                      }
+
+                      if (!mounted) return;
                       navigator.pushNamedAndRemoveUntil(
                         AppRoutes.dashboard,
                         (_) => false,

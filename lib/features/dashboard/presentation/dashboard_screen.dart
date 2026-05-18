@@ -20,6 +20,8 @@ import '../../geometry/presentation/geometry_challenge_screen.dart';
 import '../../fraction/presentation/fraction_challenge_screen.dart';
 import '../../missing_x/presentation/missing_x_challenge_screen.dart';
 import '../../family/presentation/family_switcher_screen.dart';
+import '../../achievements/presentation/badge_display_screen.dart';
+import '../../leaderboard/presentation/leaderboard_screen.dart';
 import '../../settings/presentation/settings_screen.dart';
 import 'lessons_page.dart';
 import 'progress_page.dart';
@@ -39,6 +41,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       MaterialPageRoute<void>(
         builder: (_) => const FamilySwitcherScreen(),
       ),
+    );
+  }
+
+  void _onBadgesPressed() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const BadgeDisplayScreen()),
+    );
+  }
+
+  void _onLeaderboardPressed() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const LeaderboardScreen()),
     );
   }
 
@@ -63,6 +77,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           onStartGamifyExercise: _startGamifyExercise,
           onStartMissingXChallenge: _startMissingXChallenge,
           onStartFractionChallenge: _startFractionChallenge,
+          onBadgesPressed: _onBadgesPressed,
+          onLeaderboardPressed: _onLeaderboardPressed,
         );
       case 1:
         return LessonsPage(onStartGeometryChallenge: _startGeometryChallenge);
@@ -77,6 +93,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           onStartGamifyExercise: _startGamifyExercise,
           onStartMissingXChallenge: _startMissingXChallenge,
           onStartFractionChallenge: _startFractionChallenge,
+          onBadgesPressed: _onBadgesPressed,
+          onLeaderboardPressed: _onLeaderboardPressed,
         );
     }
   }
@@ -138,6 +156,8 @@ class _DashboardPage extends StatelessWidget {
     required this.onStartGamifyExercise,
     required this.onStartMissingXChallenge,
     required this.onStartFractionChallenge,
+    required this.onBadgesPressed,
+    required this.onLeaderboardPressed,
   });
 
   final ValueChanged<Operation> onStartChallenge;
@@ -145,6 +165,8 @@ class _DashboardPage extends StatelessWidget {
   final VoidCallback onStartGamifyExercise;
   final VoidCallback onStartMissingXChallenge;
   final VoidCallback onStartFractionChallenge;
+  final VoidCallback onBadgesPressed;
+  final VoidCallback onLeaderboardPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -171,6 +193,26 @@ class _DashboardPage extends StatelessWidget {
           Text(
             l10n.dashboardWelcomeSubtitle,
             style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _GamificationShortcutCard(
+                  icon: Icons.military_tech,
+                  label: 'Arritjet',
+                  onTap: onBadgesPressed,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _GamificationShortcutCard(
+                  icon: Icons.leaderboard,
+                  label: 'Klasifikimi',
+                  onTap: onLeaderboardPressed,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 28),
           _QuickActionsCard(
@@ -220,6 +262,26 @@ class _DashboardPage extends StatelessWidget {
                   l10n.dashboardWelcomeSubtitle,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _GamificationShortcutCard(
+                        icon: Icons.military_tech,
+                        label: 'Arritjet',
+                        onTap: onBadgesPressed,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _GamificationShortcutCard(
+                        icon: Icons.leaderboard,
+                        label: 'Klasifikimi',
+                        onTap: onLeaderboardPressed,
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 24),
                 _DailyChallengeCard(onStart: onStartGeometryChallenge),
                 const SizedBox(height: 20),
@@ -257,6 +319,44 @@ class _DashboardPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _GamificationShortcutCard extends StatelessWidget {
+  const _GamificationShortcutCard({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassPanel(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: CosmicColors.primaryContainer, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                color: CosmicColors.onSurface,
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
