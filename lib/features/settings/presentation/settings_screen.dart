@@ -1,0 +1,247 @@
+import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+import '../../../colors.dart';
+import '../../../core/services/data_export_service.dart';
+import '../../../core/services/family_profile_service.dart';
+import '../../../features/family/presentation/parent_pin_dialog.dart';
+import '../../../responsive.dart';
+import '../../../shared/widgets/cosmic_top_bar.dart';
+import '../../../shared/widgets/glass_panel.dart';
+import 'delete_all_data_screen.dart';
+import 'privacy_policy_screen.dart';
+
+/// P-05 — Ekrani i Cilësimeve. E aksesueshme nga CosmicTopBar.
+///
+/// Seksionet:
+///   1. Privatësia & të Dhënat (P-01, P-02, P-03)
+///   2. Rreth Aplikacionit (versioni, kontakti)
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  String _version = '';
+  bool _isExporting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    if (mounted) {
+      setState(() => _version = '${info.version}+${info.buildNumber}');
+    }
+  }
+
+  Future<void> _onExportPressed() async {
+    setState(() => _isExporting = true);
+    await DataExportService.export(context);
+    if (mounted) setState(() => _isExporting = false);
+  }
+
+  Future<void> _onDeletePressed() async {
+    // Kërko PIN para hapjes së ekranit të fshirjes
+    if (FamilyProfileService.hasParentPin) {
+      final ok = await ParentPinDialog.verify(context);
+      if (!ok || !mounted) return;
+    }
+    if (!mounted) return;
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const DeleteAllDataScreen(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: CosmicColors.background,
+      appBar: const CosmicTopBar(showBackButton: true),
+      body: ResponsivePage(
+        maxWidth: 640,
+        child: ListView(
+          padding: const EdgeInsets.only(bottom: 40),
+          children: [
+            Text(
+              'Cilësimet',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    color: CosmicColors.primaryContainer,
+                  ),
+            ),
+            const SizedBox(height: 24),
+
+            // ── Seksioni: Privatësia & të Dhënat ────────────────────────────
+            _SectionHeader(label: 'Privatësia & të Dhënat'),
+            GlassPanel(
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  _SettingsTile(
+                    icon: Icons.privacy_tip_outlined,
+                    title: 'Politika e Privatësisë',
+                    subtitle: 'Lexo si i trajtojmë të dhënat tuaja',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const PrivacyPolicyScreen(),
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    height: 1,
+                    indent: 56,
+                    color: CosmicColors.outlineVariant,
+                  ),
+                  _SettingsTile(
+                    icon: Icons.download_outlined,
+                    title: 'Shkarko të Dhënat',
+                    subtitle: 'Eksporto progresin si skedar JSON (GDPR)',
+                    trailing: _isExporting
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : null,
+                    onTap: _isExporting ? null : _onExportPressed,
+                  ),
+                  const Divider(
+                    height: 1,
+                    indent: 56,
+                    color: CosmicColors.outlineVariant,
+                  ),
+                  _SettingsTile(
+                    icon: Icons.delete_forever_outlined,
+                    title: 'Fshi të Gjitha të Dhënat',
+                    subtitle: 'Fshin çdo profil, progres dhe PIN',
+                    iconColor: CosmicColors.error,
+                    titleColor: CosmicColors.error,
+                    onTap: _onDeletePressed,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // ── Seksioni: Rreth Aplikacionit ─────────────────────────────────
+            _SectionHeader(label: 'Rreth Aplikacionit'),
+            GlassPanel(
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  _SettingsTile(
+                    icon: Icons.info_outline,
+                    title: 'Versioni',
+                    subtitle: _version.isEmpty ? '...' : _version,
+                    showChevron: false,
+                  ),
+                  const Divider(
+                    height: 1,
+                    indent: 56,
+                    color: CosmicColors.outlineVariant,
+                  ),
+                  _SettingsTile(
+                    icon: Icons.mail_outline,
+                    title: 'Kontakt',
+                    subtitle: 'support@mathlingo.app',
+                    showChevron: false,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Widgets ndihmëse
+// ---------------------------------------------------------------------------
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        label.toUpperCase(),
+        style: const TextStyle(
+          color: CosmicColors.onSurfaceVariant,
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsTile extends StatelessWidget {
+  const _SettingsTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    this.onTap,
+    this.iconColor,
+    this.titleColor,
+    this.trailing,
+    this.showChevron = true,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback? onTap;
+  final Color? iconColor;
+  final Color? titleColor;
+  final Widget? trailing;
+  final bool showChevron;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: onTap,
+      leading: Icon(
+        icon,
+        color: iconColor ?? CosmicColors.onSurface,
+        size: 22,
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: titleColor ?? CosmicColors.onSurface,
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: const TextStyle(
+          color: CosmicColors.onSurfaceVariant,
+          fontSize: 12,
+        ),
+      ),
+      trailing: trailing ??
+          (showChevron
+              ? const Icon(
+                  Icons.chevron_right,
+                  color: CosmicColors.onSurfaceVariant,
+                )
+              : null),
+    );
+  }
+}

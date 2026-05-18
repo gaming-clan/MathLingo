@@ -20,6 +20,7 @@ import '../../geometry/presentation/geometry_challenge_screen.dart';
 import '../../fraction/presentation/fraction_challenge_screen.dart';
 import '../../missing_x/presentation/missing_x_challenge_screen.dart';
 import '../../family/presentation/family_switcher_screen.dart';
+import '../../settings/presentation/settings_screen.dart';
 import 'lessons_page.dart';
 import 'progress_page.dart';
 
@@ -41,12 +42,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  void _onNotificationsPressed() {
-    final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n.dashboardNotificationsComingSoon),
-        behavior: SnackBarBehavior.floating,
+  void _onSettingsPressed() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const SettingsScreen(),
       ),
     );
   }
@@ -125,7 +124,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       onSelected: _onTabSelected,
       appBar: CosmicTopBar(
         onProfilePressed: _onProfilePressed,
-        onNotificationsPressed: _onNotificationsPressed,
+        onSettingsPressed: _onSettingsPressed,
       ),
       body: _buildCurrentPage(),
     );
