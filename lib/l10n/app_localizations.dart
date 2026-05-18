@@ -1058,6 +1058,36 @@ abstract class AppLocalizations {
   /// In sq, this message translates to:
   /// **'Dil nga Llogaria'**
   String get authSignOutButton;
+
+  /// No description provided for @parentReportTitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Raporti Javor'**
+  String get parentReportTitle;
+
+  /// No description provided for @weeklyTrend.
+  ///
+  /// In sq, this message translates to:
+  /// **'Tendenca e Javës'**
+  String get weeklyTrend;
+
+  /// No description provided for @dailyPoints.
+  ///
+  /// In sq, this message translates to:
+  /// **'Pikët Ditorë'**
+  String get dailyPoints;
+
+  /// No description provided for @accuracyTrend.
+  ///
+  /// In sq, this message translates to:
+  /// **'Tendenca e Saktësisë'**
+  String get accuracyTrend;
+
+  /// No description provided for @noDataYet.
+  ///
+  /// In sq, this message translates to:
+  /// **'Luaj sfidën e parë për të parë progresin këtu!'**
+  String get noDataYet;
 }
 
 class _AppLocalizationsDelegate

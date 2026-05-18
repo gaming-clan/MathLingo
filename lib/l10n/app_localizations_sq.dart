@@ -574,4 +574,19 @@ class AppLocalizationsSq extends AppLocalizations {
 
   @override
   String get authSignOutButton => 'Dil nga Llogaria';
+
+  @override
+  String get parentReportTitle => 'Raporti Javor';
+
+  @override
+  String get weeklyTrend => 'Tendenca e Javës';
+
+  @override
+  String get dailyPoints => 'Pikët Ditorë';
+
+  @override
+  String get accuracyTrend => 'Tendenca e Saktësisë';
+
+  @override
+  String get noDataYet => 'Luaj sfidën e parë për të parë progresin këtu!';
 }
