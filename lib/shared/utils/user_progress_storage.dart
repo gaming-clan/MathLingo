@@ -154,6 +154,23 @@ class UserProgressStorage {
     );
   }
 
+  /// Fshi të gjitha të dhënat e progresit për GDPR (P-02).
+  ///
+  /// [childIds] — lista e ID-ve të fëmijëve; global box fshihet gjithmonë.
+  static Future<void> deleteAllData({List<String> childIds = const []}) async {
+    // Box global
+    if (Hive.isBoxOpen(_defaultBoxName)) {
+      await Hive.box<dynamic>(_defaultBoxName).clear();
+    }
+    // Boxet per child
+    for (final id in childIds) {
+      final name = _boxName(id);
+      if (Hive.isBoxOpen(name)) {
+        await Hive.box<dynamic>(name).clear();
+      }
+    }
+  }
+
   @visibleForTesting
   static Future<void> clearForTests({String childId = 'global'}) async {
     final box = await _box(childId);

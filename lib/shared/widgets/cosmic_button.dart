@@ -11,23 +11,25 @@ class CosmicButton extends StatelessWidget {
   });
 
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(999),
-          gradient: const LinearGradient(
-            colors: [
-              CosmicColors.primaryContainer,
-              CosmicColors.tertiaryContainer,
-            ],
-          ),
-          boxShadow: [
+    return Opacity(
+      opacity: onPressed != null ? 1.0 : 0.45,
+      child: SizedBox(
+        width: double.infinity,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(999),
+            gradient: const LinearGradient(
+              colors: [
+                CosmicColors.primaryContainer,
+                CosmicColors.tertiaryContainer,
+              ],
+            ),
+            boxShadow: [
             BoxShadow(
               color: CosmicColors.primaryContainer.withValues(alpha: 0.38),
               blurRadius: 24,
@@ -66,6 +68,7 @@ class CosmicButton extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }

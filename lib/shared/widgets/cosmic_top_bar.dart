@@ -10,12 +10,13 @@ class CosmicTopBar extends ConsumerWidget implements PreferredSizeWidget {
     super.key,
     this.showBackButton = false,
     this.onProfilePressed,
-    this.onNotificationsPressed,
+    this.onSettingsPressed,
   });
 
   final bool showBackButton;
   final VoidCallback? onProfilePressed;
-  final VoidCallback? onNotificationsPressed;
+  /// Butoni djathtas — hap Cilësimet. Nëse null, nuk shfaqet.
+  final VoidCallback? onSettingsPressed;
 
   @override
   Size get preferredSize => const Size.fromHeight(76);
@@ -53,10 +54,11 @@ class CosmicTopBar extends ConsumerWidget implements PreferredSizeWidget {
             ),
           ),
           const Spacer(),
-          _RoundIconButton(
-            icon: Icons.notifications,
-            onPressed: onNotificationsPressed,
-          ),
+          if (onSettingsPressed != null)
+            _RoundIconButton(
+              icon: Icons.settings_rounded,
+              onPressed: onSettingsPressed,
+            ),
         ],
       ),
     );

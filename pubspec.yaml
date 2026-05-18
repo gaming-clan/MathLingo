@@ -45,6 +45,9 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   flutter_riverpod: ^2.6.1
+  path_provider: ^2.1.5
+  share_plus: ^13.1.0
+  package_info_plus: ^10.1.0
 
 dev_dependencies:
   flutter_test:
