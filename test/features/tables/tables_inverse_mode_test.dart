@@ -11,64 +11,64 @@ import 'package:flutter_test/flutter_test.dart';
 // Domain helpers — pasqyrojnë logjikën e simple_tables.dart
 // ---------------------------------------------------------------------------
 
-enum _Op { addition, subtraction, multiplication, division }
+enum Op { addition, subtraction, multiplication, division }
 
 String equationText({
-  required _Op operation,
+  required Op operation,
   required bool isInverseMode,
   required int selectedTable,
   required int num,
   required int result,
 }) {
   if (isInverseMode) {
-    if (operation == _Op.addition) {
+    if (operation == Op.addition) {
       return '? + $num = $selectedTable';
     }
-    if (operation == _Op.subtraction) {
+    if (operation == Op.subtraction) {
       return '$selectedTable − $num = ?';
     }
-    if (operation == _Op.multiplication) {
+    if (operation == Op.multiplication) {
       return '? × $num = $result';
     }
-    if (operation == _Op.division) {
+    if (operation == Op.division) {
       return '$result ÷ ? = $selectedTable';
     }
   }
   const symbols = {
-    _Op.addition: '+',
-    _Op.subtraction: '−',
-    _Op.multiplication: '×',
-    _Op.division: '÷',
+    Op.addition: '+',
+    Op.subtraction: '−',
+    Op.multiplication: '×',
+    Op.division: '÷',
   };
   return '$selectedTable ${symbols[operation]} $num';
 }
 
-String badgeSymbol({required _Op operation, required bool isInverseMode}) {
+String badgeSymbol({required Op operation, required bool isInverseMode}) {
   if (isInverseMode) {
-    if (operation == _Op.addition) return '+';
-    if (operation == _Op.subtraction) return '−';
-    if (operation == _Op.multiplication) return '×';
-    if (operation == _Op.division) return '÷';
+    if (operation == Op.addition) return '+';
+    if (operation == Op.subtraction) return '−';
+    if (operation == Op.multiplication) return '×';
+    if (operation == Op.division) return '÷';
   }
   const symbols = {
-    _Op.addition: '+',
-    _Op.subtraction: '−',
-    _Op.multiplication: '×',
-    _Op.division: '÷',
+    Op.addition: '+',
+    Op.subtraction: '−',
+    Op.multiplication: '×',
+    Op.division: '÷',
   };
   return symbols[operation]!;
 }
 
 int circleValue({
-  required _Op operation,
+  required Op operation,
   required bool isInverseMode,
   required int selectedTable,
   required int num,
   required int result,
 }) {
   if (isInverseMode) {
-    if (operation == _Op.multiplication) return selectedTable;
-    if (operation == _Op.division) return num;
+    if (operation == Op.multiplication) return selectedTable;
+    if (operation == Op.division) return num;
     return result; // mbledhje & zbritje: result është përgjigja
   }
   return result;
@@ -105,7 +105,7 @@ void main() {
     test('equationText: ? × n = result (jo ÷)', () {
       // entry: operand=2, result=8
       final txt = equationText(
-        operation: _Op.multiplication,
+        operation: Op.multiplication,
         isInverseMode: true,
         selectedTable: t,
         num: 2,
@@ -118,7 +118,7 @@ void main() {
 
     test('circle tregon selectedTable (4), jo result', () {
       final cv = circleValue(
-        operation: _Op.multiplication,
+        operation: Op.multiplication,
         isInverseMode: true,
         selectedTable: t,
         num: 3,
@@ -128,7 +128,7 @@ void main() {
     });
 
     test('badgeSymbol: ×, jo ÷', () {
-      expect(badgeSymbol(operation: _Op.multiplication, isInverseMode: true),
+      expect(badgeSymbol(operation: Op.multiplication, isInverseMode: true),
           '×');
     });
   });
@@ -140,7 +140,7 @@ void main() {
     test('equationText: dividend ÷ ? = 4 (jo ?×n=4)', () {
       // entry: operand=3, result=12  (4×3=12)
       final txt = equationText(
-        operation: _Op.division,
+        operation: Op.division,
         isInverseMode: true,
         selectedTable: t,
         num: 3,
@@ -151,7 +151,7 @@ void main() {
 
     test('circle tregon divisor (num), jo selectedTable', () {
       final cv = circleValue(
-        operation: _Op.division,
+        operation: Op.division,
         isInverseMode: true,
         selectedTable: t,
         num: 3,
@@ -162,7 +162,7 @@ void main() {
 
     test('badgeSymbol: ÷, jo ×', () {
       expect(
-          badgeSymbol(operation: _Op.division, isInverseMode: true), '÷');
+          badgeSymbol(operation: Op.division, isInverseMode: true), '÷');
     });
 
     test('buildDivisionInverseEntries gjeneron 10 hyrje', () {
@@ -189,7 +189,7 @@ void main() {
 
     test('equationText: ? + n = 4', () {
       final txt = equationText(
-        operation: _Op.addition,
+        operation: Op.addition,
         isInverseMode: true,
         selectedTable: t,
         num: 1,
@@ -223,7 +223,7 @@ void main() {
 
     test('badgeSymbol: +', () {
       expect(
-          badgeSymbol(operation: _Op.addition, isInverseMode: true), '+');
+          badgeSymbol(operation: Op.addition, isInverseMode: true), '+');
     });
   });
 
@@ -231,7 +231,7 @@ void main() {
   group('Klasik — regresion', () {
     test('shumëzim klasik: 4 × 3 = 12', () {
       final txt = equationText(
-        operation: _Op.multiplication,
+        operation: Op.multiplication,
         isInverseMode: false,
         selectedTable: 4,
         num: 3,
@@ -242,7 +242,7 @@ void main() {
 
     test('zbritje klasike: 8 − 3', () {
       final txt = equationText(
-        operation: _Op.subtraction,
+        operation: Op.subtraction,
         isInverseMode: false,
         selectedTable: 8,
         num: 3,
@@ -253,13 +253,13 @@ void main() {
 
     test('badge klasik shumëzim: ×', () {
       expect(
-          badgeSymbol(operation: _Op.multiplication, isInverseMode: false),
+          badgeSymbol(operation: Op.multiplication, isInverseMode: false),
           '×');
     });
 
     test('badge klasik pjesëtim: ÷', () {
       expect(
-          badgeSymbol(operation: _Op.division, isInverseMode: false), '÷');
+          badgeSymbol(operation: Op.division, isInverseMode: false), '÷');
     });
   });
 
@@ -269,7 +269,7 @@ void main() {
 
     test('equationText: 4 − 2 = ?', () {
       final txt = equationText(
-        operation: _Op.subtraction,
+        operation: Op.subtraction,
         isInverseMode: true,
         selectedTable: t,
         num: 2,
@@ -299,7 +299,7 @@ void main() {
 
     test('badgeSymbol: − (jo +)', () {
       expect(
-          badgeSymbol(operation: _Op.subtraction, isInverseMode: true), '−');
+          badgeSymbol(operation: Op.subtraction, isInverseMode: true), '−');
     });
   });
 }

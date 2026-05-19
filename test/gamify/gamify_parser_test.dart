@@ -42,6 +42,32 @@ void main() {
       expect(parsed.operator, GamifyOperator.division);
     });
 
+    test('parse pjestimin me ~/', () {
+      final parsed = GamifyParser.parse('20 ~/ 5');
+      expect(parsed, isNotNull);
+      expect(parsed!.left, 20);
+      expect(parsed.right, 5);
+      expect(parsed.operator, GamifyOperator.division);
+    });
+
+    test('hedh UnsupportedError kur pjestimi ka emërues 0', () {
+      expect(
+        () => GamifyParser.parse('20 / 0'),
+        throwsA(
+          isA<UnsupportedError>().having(
+            (e) => e.message,
+            'message',
+            'Division by zero',
+          ),
+        ),
+      );
+    });
+
+    test('kthehet null kur kllapat jane te pa-balancuara', () {
+      final parsed = GamifyParser.parse('(12 + 5');
+      expect(parsed, isNull);
+    });
+
     test('kthehet null kur formati eshte i pavlefshem', () {
       final parsed = GamifyParser.parse('abc + 5');
       expect(parsed, isNull);

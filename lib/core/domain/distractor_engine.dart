@@ -25,25 +25,60 @@ class DistractorEngine {
     required int num2,
     required Random random,
   }) {
-    final candidates = _candidates(operation, correctAnswer, num1, num2);
-    candidates
+    final options = <int>{correctAnswer};
+
+    // 1) Gabim strukturor klasik: shumëzim ngatërrohet me mbledhje.
+    if (operation == Operation.multiplication) {
+      options.add(num1 + num2);
+    }
+
+    // 2) Off-by-ten error.
+    final plusTen = correctAnswer + 10;
+    final minusTen = correctAnswer - 10;
+    if (plusTen > 0) {
+      options.add(plusTen);
+    }
+    if (minusTen > 0) {
+      options.add(minusTen);
+    }
+
+    // 3) Inversion/digit swap për përgjigje me 2+ shifra.
+    final swapped = _digitSwap(correctAnswer);
+    if (swapped != null && swapped > 0) {
+      options.add(swapped);
+    }
+
+    // Mbështetje shtesë për operacione të tjera.
+    options.addAll(_operationSpecificCandidates(operation, correctAnswer, num1, num2));
+
+    options
       ..remove(correctAnswer)
       ..removeWhere((v) => v <= 0);
 
-    // Mbush deri në 3 me offsets të vogla nëse kandidatët nuk mjaftojnë
-    const fillOffsets = [2, 3, 5, 7, 11, 4, 13, 17];
-    var fi = 0;
-    while (candidates.length < 3) {
-      final v = correctAnswer + fillOffsets[fi % fillOffsets.length];
-      if (v > 0 && v != correctAnswer) candidates.add(v);
-      fi++;
+    final distractors = options.toList()..shuffle(random);
+    final picked = <int>[correctAnswer, ...distractors.take(3)];
+
+    // Fallback i kontrolluar derisa të kemi saktësisht 4 unike.
+    var offset = 2;
+    while (picked.toSet().length < 4) {
+      final up = correctAnswer + offset;
+      if (up > 0 && !picked.contains(up)) {
+        picked.add(up);
+      }
+      if (picked.toSet().length >= 4) break;
+
+      final down = correctAnswer - offset;
+      if (down > 0 && !picked.contains(down)) {
+        picked.add(down);
+      }
+      offset++;
     }
 
-    final shuffled = candidates.toList()..shuffle(random);
-    return ([correctAnswer, ...shuffled.take(3)])..shuffle(random);
+    final unique = picked.toSet().toList()..shuffle(random);
+    return unique.take(4).toList();
   }
 
-  static Set<int> _candidates(
+  static Set<int> _operationSpecificCandidates(
     Operation operation,
     int correctAnswer,
     int num1,
@@ -52,50 +87,49 @@ class DistractorEngine {
     switch (operation) {
       case Operation.addition:
         return {
-          // Offset ±1 (gabim i vogël llogaritjeje)
-          correctAnswer - 1,
-          correctAnswer + 1,
-          // Harrim i kalimit: vetëm shifra e njësheve
+          // Harrim i kalimit: vetëm shifra e njësheve.
           if (correctAnswer > 9) correctAnswer % 10,
-          // Kali i pasaktë: ±10
-          correctAnswer + 10,
-          if (correctAnswer > 10) correctAnswer - 10,
+          num1,
+          num2,
         };
 
       case Operation.subtraction:
         return {
-          // Offset ±1
-          correctAnswer - 1,
-          correctAnswer + 1,
-          // Mbledh në vend të zbres (konfuzion me operacionin)
+          // Mbledh në vend të zbres.
           num1 + num2,
-          // Fëmija lë num1 pa ndryshuar
           num1,
         };
 
       case Operation.multiplication:
         return {
-          // Tabela ngjitur: (n-1)×m dhe (n+1)×m
+          // Tabela ngjitur.
           if (num1 > 1) (num1 - 1) * num2,
           (num1 + 1) * num2,
-          // n×(m-1) dhe n×(m+1)
           if (num2 > 1) num1 * (num2 - 1),
           num1 * (num2 + 1),
-          // Mbledh në vend të shumëzojë (konfuzion fillestar)
-          num1 + num2,
         };
 
       case Operation.division:
         return {
-          // Offset ±1
-          if (correctAnswer > 1) correctAnswer - 1,
-          correctAnswer + 1,
-          // Shumëzon në vend të pjesëton (operacion inversal)
+          // Shumëzon në vend të pjesëton.
           num1 * num2,
-          // Rezultat nga ndarës ngjitur (nëse janë të plota)
           if (num2 > 1 && num1 % (num2 - 1) == 0) num1 ~/ (num2 - 1),
           if (num1 % (num2 + 1) == 0) num1 ~/ (num2 + 1),
         };
     }
+  }
+
+  static int? _digitSwap(int value) {
+    if (value.abs() < 10) {
+      return null;
+    }
+
+    final digits = value.toString().split('');
+    final reversed = digits.reversed.join();
+    final parsed = int.tryParse(reversed);
+    if (parsed == null || parsed == value) {
+      return null;
+    }
+    return parsed;
   }
 }

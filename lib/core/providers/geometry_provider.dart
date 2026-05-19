@@ -27,7 +27,7 @@ class GeometryState {
   final int answered;
   final int correct;
   final int sessionLength;
-  final int? selectedAnswer;
+  final double? selectedAnswer;
   final bool? isAnswerCorrect;
   final bool isAdvancing;
   final bool hadWrongAttemptOnCurrent;
@@ -43,7 +43,7 @@ class GeometryState {
     int? answered,
     int? correct,
     int? sessionLength,
-    int? selectedAnswer,
+    double? selectedAnswer,
     bool? clearSelectedAnswer,
     bool? isAnswerCorrect,
     bool? clearIsAnswerCorrect,
@@ -127,7 +127,7 @@ class GeometryNotifier extends StateNotifier<GeometryState> {
     return q;
   }
 
-  void checkAnswer(int answer) {
+  void checkAnswer(double answer) {
     if (state.isAdvancing) return;
 
     final isCorrect = answer == state.question.answer;

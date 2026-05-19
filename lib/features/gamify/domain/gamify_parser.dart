@@ -16,19 +16,35 @@ class GamifyParser {
   const GamifyParser._();
 
   static String normalize(String input) {
-    return input
+    final cleaned = input
         .toLowerCase()
         .replaceAll('zgjidh', '')
         .replaceAll('llogarit', '')
         .replaceAll('sa është', '')
         .replaceAll('janë', '')
+        // a2 -> a^2 (only where trailing digit follows a letter/closing paren)
+        .replaceAllMapped(
+          RegExp(r'([a-z\)])(\d+)'),
+          (m) => '${m.group(1)}^${m.group(2)}',
+        )
+        .replaceAllMapped(
+          RegExp(r'\s+'),
+          (m) => ' ',
+        )
         .trim();
+
+    return _hasBalancedBrackets(cleaned) ? cleaned : '';
   }
 
   static ParsedGamifyExpression? parse(String input) {
     final text = normalize(input);
+    if (text.isEmpty) {
+      return null;
+    }
+
     return _tryParse(text, '+', GamifyOperator.addition) ??
         _tryParse(text, '-', GamifyOperator.subtraction) ??
+        _tryParse(text, '~/', GamifyOperator.division) ??
         _tryParse(text, '*', GamifyOperator.multiplication) ??
         _tryParse(text, '×', GamifyOperator.multiplication) ??
         _tryParse(text, 'x', GamifyOperator.multiplication) ??
@@ -56,6 +72,25 @@ class GamifyParser {
       return null;
     }
 
+    if (op == GamifyOperator.division && right == 0) {
+      throw UnsupportedError('Division by zero');
+    }
+
     return ParsedGamifyExpression(left: left, right: right, operator: op);
+  }
+
+  static bool _hasBalancedBrackets(String text) {
+    var depth = 0;
+    for (final rune in text.runes) {
+      if (rune == '('.codeUnitAt(0)) {
+        depth++;
+      } else if (rune == ')'.codeUnitAt(0)) {
+        depth--;
+        if (depth < 0) {
+          return false;
+        }
+      }
+    }
+    return depth == 0;
   }
 }
