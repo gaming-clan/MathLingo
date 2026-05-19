@@ -268,8 +268,8 @@
 
 ---
 
-## Sprint 13: Store Submission (Përgatitja e Lansimit) — PLANNED
-**Versioni target:** v1.11.0
+## Sprint 13: Store Submission (Përgatitja e Lansimit) — IN PROGRESS
+**Versioni target:** v2.0.0 | **Branch:** `feature/sprint-13-store-submission`
 
 ### Qëllimi
 Finalizimi i të gjitha aseteve dhe konfiguracioneve të nevojshme për publikim në Google Play Store.
@@ -281,8 +281,8 @@ Finalizimi i të gjitha aseteve dhe konfiguracioneve të nevojshme për publikim
 - [ ] **A-04:** Përshkrimi i shkurtër (≤80 karaktere) dhe i gjatë (≤4000 karaktere) shqip në Play Console.
 
 ### Track B — Konfigurimi Teknik Final
-- [ ] **B-01:** `pubspec.yaml`: `version: 2.0.0+1`.
-- [ ] **B-02:** `fvm flutter build appbundle --release` — verifikim AAB me `key.properties` + `mathlingo-release.jks`.
+- [x] **B-01:** `pubspec.yaml`: `version: 2.0.0+1` ✅
+- [x] **B-02:** `fvm flutter build appbundle --release` — AAB `build/app/outputs/bundle/release/app-release.aab` (61.9MB) ✅
 - [ ] **B-03:** Content Rating Questionnaire — kategori: Edukative / Fëmijë 6-12 vjeç.
 - [ ] **B-04:** Data Safety Form — deklarim `firebase_auth`, `cloud_firestore`, `image_picker`; opt-in, të dhëna familjare.
 - [ ] **B-05:** Target Audience — "Children and Families" me verifikim prindi (PIN) të dokumentuar.
