@@ -162,6 +162,13 @@ abstract final class AuthService {
   static bool get isSignedIn =>
       FirebaseInitService.isInitialized && _auth.currentUser != null;
 
+  /// B-02: Përditëso `lastSyncAt` në Hive pas sinkronizimit të suksesshëm.
+  static Future<void> updateLastSyncAt(DateTime when) async {
+    final account = await _loadAccountLocally();
+    if (account == null) return;
+    await _saveAccountLocally(account.copyWith(lastSyncAt: when));
+  }
+
   // ─── Helpers private ─────────────────────────────────────────────────────
 
   static Future<void> _saveAccountLocally(ParentAccount account) async {

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../features/auth/providers/auth_provider.dart';
+import '../../features/auth/services/auth_service.dart';
 import '../../models/child_profile.dart';
 import '../services/firebase_init_service.dart';
 import 'firestore_schema.dart';
@@ -130,6 +131,10 @@ class SyncService {
         tx.set(docRef, payload, SetOptions(merge: true));
       });
       debugPrint('[Sync] DailyStats u përditësua: ${child.id} ($today) +$sessionPoints pts');
+      // B-02: Shëno kohën e sinkronizimit të fundit.
+      final now = DateTime.now();
+      await AuthService.updateLastSyncAt(now);
+      _ref.read(authProvider.notifier).refreshAccount();
     } catch (e) {
       debugPrint('[Sync] Gabim updateDailyStats: $e');
       // Fire-and-forget: gabimi nuk propagohet tek caller

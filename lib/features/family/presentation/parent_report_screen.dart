@@ -118,6 +118,10 @@ class _ParentReportScreenState extends ConsumerState<ParentReportScreen> {
                     _WeeklySection(state: weeklyState, l10n: l10n),
                     const SizedBox(height: 28),
 
+                    // ── A-04: Aktiviteti i Fundit ─────────────────────────
+                    _RecentActivitySection(state: weeklyState, l10n: l10n),
+                    const SizedBox(height: 28),
+
                     // ── Statistika per-child ─────────────────────────────
                     ...family.children.map(
                       (child) => Padding(
@@ -152,6 +156,135 @@ class _WeeklySection extends StatelessWidget {
           ? _NoDataCard(l10n: l10n)
           : _ChartsSection(stats: stats, l10n: l10n),
     };
+  }
+}
+
+// ─── A-04: Recent Activity Section ───────────────────────────────────────────
+
+class _RecentActivitySection extends StatelessWidget {
+  const _RecentActivitySection({required this.state, required this.l10n});
+
+  final WeeklyStatsState state;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    if (state is! WeeklyStatsLoaded) return const SizedBox.shrink();
+    final stats = (state as WeeklyStatsLoaded).stats;
+    if (stats.isEmpty) return const SizedBox.shrink();
+
+    // Merr max 5 ditët e fundit (stats janë tashmë të renditura kronologjikisht)
+    final recent = stats.length > 5 ? stats.sublist(stats.length - 5) : stats;
+    final reversed = recent.reversed.toList();
+
+    return GlassPanel(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.history_rounded,
+                size: 16,
+                color: CosmicColors.primaryContainer,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Aktiviteti i Fundit',
+                style: const TextStyle(
+                  color: CosmicColors.onSurface,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ...reversed.map((day) => _ActivityRow(stats: day)),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActivityRow extends StatelessWidget {
+  const _ActivityRow({required this.stats});
+
+  final DailyStats stats;
+
+  static const _alDays = ['Hën', 'Mar', 'Mër', 'Enj', 'Pre', 'Sht', 'Die'];
+
+  String get _label {
+    try {
+      final dt = DateTime.parse(stats.date);
+      return '${_alDays[dt.weekday - 1]} ${dt.day}/${dt.month}';
+    } catch (_) {
+      return stats.date;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final accuracyPct = (stats.avgAccuracy * 100).round();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              _label,
+              style: const TextStyle(
+                color: CosmicColors.onSurfaceVariant,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Row(
+              children: [
+                const Icon(Icons.bolt_rounded,
+                    size: 13, color: CosmicColors.primaryContainer),
+                const SizedBox(width: 3),
+                Text(
+                  '${stats.totalPoints} pikë',
+                  style: const TextStyle(
+                    color: CosmicColors.onSurface,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              const Icon(Icons.check_circle_outline_rounded,
+                  size: 13, color: CosmicColors.secondaryContainer),
+              const SizedBox(width: 3),
+              Text(
+                '$accuracyPct%',
+                style: const TextStyle(
+                  color: CosmicColors.secondaryContainer,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 12),
+          Text(
+            '${stats.sessionsCount} ses.',
+            style: const TextStyle(
+              color: CosmicColors.onSurfaceVariant,
+              fontSize: 11,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
