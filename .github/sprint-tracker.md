@@ -221,35 +221,55 @@
 
 ---
 
-## Sprint 12: Raportet e Prindërve (Parental Reports) — PLANNED
-**Versioni target:** v1.10.0
-
-### Qëllimi
-Vizualizimi i të dhënave të progresit nga Firestore për prindërit — historiku sesionesh, tendencat dhe krahasimi mes fëmijëve.
+## Sprint 12: Raportet e Prindërve (Parental Reports) — DONE
+**Versioni:** v1.10.0 | **Branch:** `feature/sprint-12-parental-reports`
 
 ### Track A — Vizualizimi i të Dhënave Firestore
-- [ ] **A-01:** `SyncService.pullChildProgress(uid, childId)` — lexim historiku sesionesh nga Firestore (7 ditë fundit).
-- [ ] **A-02:** `ParentReportScreen` zgjeruar me grafik tendence pikësh (7 ditë) — `CustomPainter` sparkline.
-- [ ] **A-03:** Krahasim mes profileve fëmijësh — tabelë me pikë totale, saktësi mesatare, operacioni i preferuar.
-- [ ] **A-04:** Seksion "Aktiviteti i Fundit" — lista e 5 sesioneve të fundit me datë, operacion, pikë.
+- [x] **A-01:** `SyncService.pullWeeklyStats(uid, childId)` — lexim historiku 7 ditë nga Firestore (commit e5514a5).
+- [x] **A-02:** `ParentReportScreen` me grafik pikësh (BarChart) dhe saktësie (LineChart) — `fl_chart` (commit 77fcf6a).
+- [x] **A-03:** Krahasim mes profileve fëmijësh — `_ChildReportCard` me pikë totale, saktësi, sesione.
+- [x] **A-04:** Seksion "Aktiviteti i Fundit" — `_RecentActivitySection` me 5 ditët e fundit: datë, pikë, saktësi, sesione.
 
 ### Track B — Sinkronizimi Automatik i Progresit
-- [ ] **B-01:** Thirr `SyncService.syncChildProgress()` automatikisht pas çdo sesioni të përfunduar (nëse Firebase aktiv + autentikuar).
-- [ ] **B-02:** Indicator "U sinkronizua" / "Duke sinkronizuar..." në `SettingsScreen` — shfaq `lastSyncAt` nga `ParentAccount`.
-- [ ] **B-03:** Menaxhim graceful i gabimeve rrjeti — no-op nëse offline; retry automatik kur rikthehet lidhja.
+- [x] **B-01:** Thirr `SyncService.updateDailyStats()` automatikisht pas çdo sesioni të përfunduar në `ChallengeScreen` (fire-and-forget, nëse Firebase aktiv + autentikuar).
+- [x] **B-02:** Indicator "Sinkronizuar Para X min" në `SettingsScreen._CloudSyncSection` — shfaq `lastSyncAt` nga `ParentAccount`; `AuthService.updateLastSyncAt()` + `AuthNotifier.refreshAccount()`.
+- [x] **B-03:** Menaxhim graceful i gabimeve rrjeti — `_canSync()` guard + try/catch fire-and-forget; gabimi nuk ndikon në lojë.
 
 ### Track C — Firestore Security Rules
-- [ ] **C-01:** Rregulla Firestore: `users/{uid}/**` aksesueshe vetëm nga `request.auth.uid == uid`.
-- [ ] **C-02:** Validim me `firestore.rules` lokal + testim me Firebase Emulator.
+- [x] **C-01:** Rregulla Firestore: `users/{uid}/**` aksesueshe vetëm nga `request.auth.uid == uid` (commit 77fcf6a).
+- [ ] **C-02:** Validim me Firebase Emulator. *(Manual QA — shtyer)*
 
 ### Validation
-- [ ] `fvm flutter test` ≥134 ✅
-- [ ] `fvm flutter analyze` 0 issues ✅
+- [x] `fvm flutter test` 134/134 ✅
+- [x] `fvm flutter analyze` 0 issues ✅
 
 ---
 
-## Sprint 13: Store Submission (Përgatitja e Lansimit) — PLANNED
-**Versioni target:** v1.11.0
+## Sprint 11.5: Bug-Fix & Polish — DONE
+**Versioni:** v1.10.1 | **Branch:** `fix/sprint-11-5-bugfix-polish`
+
+### Bug Fixes
+- [x] **B-01:** `simple_tables.dart` — Korrigjim `equationText` dhe `badgeSymbol` për shumëzim invers (`?×n=result`) dhe pjesëtim invers (`result÷?=tableNum`). Rrethi tregon vlerën e saktë (selectedTable për shumëzim, num/divisor për pjesëtim).
+- [x] **B-02:** `simple_tables.dart` — Mbledhja kalon `isInverseMode: isInverseMode` (ishte hardcoded `false`). `_buildVisibleEntries` gjeneron hyrje inverse për mbledhje (`?+n=tableNum → result=tableNum-n`).
+- [x] **B-03:** `badge_notification_overlay.dart` — `FilledButton` (sfond rozë i çelët, kontrast i ulët) zëvendësohet me `CosmicButton` (gradient magenta→violet, tekst i bardhë).
+- [x] **B-04:** `simple_tables.dart` — Shtim padding `EdgeInsets.fromLTRB(8,10,8,0)` brenda kartave tabelave.
+- [x] **B-05:** ~~Emoji i mungueshëm tek `addition_starter`~~ — Ishte tashmë `emoji: '➕'` → pa ndryshim.
+- [x] **B-06:** ~~Leaderboard tregon vetëm profilin aktiv~~ — Ishte tashmë duke treguar të gjithë fëmijët → pa ndryshim.
+- [x] **B-07:** `simple_tables.dart` — `fontSize: 16`, `maxLines: 2`, `overflow: TextOverflow.ellipsis` për formulën e kartës.
+- [x] **B-08:** `simple_tables.dart` — `shadow: Shadow(black54, blur:4)` mbi tekstin e formulës për kontrast mbi fondacione me ngjyra.
+- [x] **`_buildVisibleEntries` rindërtim inverse:** Pjesëtimi invers → 10 hyrje (`tableNum×mult`), mbledhja invers → `tableNum` hyrje (`tableNum-n`).
+
+### Unit Tests
+- [x] **T-01…T-19:** `test/features/tables/tables_inverse_mode_test.dart` — 19 teste (rifaqosur nga 12 → 19): shumëzim invers ekuacion+rreth, pjesëtim invers ekuacion+rreth+entries, mbledhje invers ekuacion+entries+badge, regresion klasik.
+
+### Validation
+- [x] `fvm flutter test` 141/141 ✅
+- [x] `fvm flutter analyze` 0 errors/warnings ✅
+
+---
+
+## Sprint 13: Store Submission (Përgatitja e Lansimit) — IN PROGRESS
+**Versioni target:** v2.0.0 | **Branch:** `feature/sprint-13-store-submission`
 
 ### Qëllimi
 Finalizimi i të gjitha aseteve dhe konfiguracioneve të nevojshme për publikim në Google Play Store.
@@ -261,8 +281,8 @@ Finalizimi i të gjitha aseteve dhe konfiguracioneve të nevojshme për publikim
 - [ ] **A-04:** Përshkrimi i shkurtër (≤80 karaktere) dhe i gjatë (≤4000 karaktere) shqip në Play Console.
 
 ### Track B — Konfigurimi Teknik Final
-- [ ] **B-01:** `pubspec.yaml`: `version: 2.0.0+1`.
-- [ ] **B-02:** `fvm flutter build appbundle --release` — verifikim AAB me `key.properties` + `mathlingo-release.jks`.
+- [x] **B-01:** `pubspec.yaml`: `version: 2.0.0+1` ✅
+- [x] **B-02:** `fvm flutter build appbundle --release` — AAB `build/app/outputs/bundle/release/app-release.aab` (61.9MB) ✅
 - [ ] **B-03:** Content Rating Questionnaire — kategori: Edukative / Fëmijë 6-12 vjeç.
 - [ ] **B-04:** Data Safety Form — deklarim `firebase_auth`, `cloud_firestore`, `image_picker`; opt-in, të dhëna familjare.
 - [ ] **B-05:** Target Audience — "Children and Families" me verifikim prindi (PIN) të dokumentuar.
@@ -276,6 +296,37 @@ Finalizimi i të gjitha aseteve dhe konfiguracioneve të nevojshme për publikim
 ### Validation
 - [ ] `fvm flutter build appbundle --release` → `build/app/outputs/bundle/release/app-release.aab` ✓
 - [ ] Play Console → Internal Testing track me AAB të ngarkuar ✓
+
+---
+
+## Sprint 14: Ridizenjimi i Kartave të Tabelave — DONE
+**Versioni:** v2.0.1 | **Branch:** `feature/sprint-14-table-redesign`
+
+### Qëllimi
+Ridizenjim i plotë i UI kartave të tabelave bazuar në mockup HTML: tema me ngjyra për çdo operacion, mekanizëm zbulimi me trokitje, selektor numrash kompakt, zbritje invers e saktë.
+
+### Track A — Ridizenjimi i Kartave (`simple_tables.dart`)
+- [x] **A-01:** `_TableOperationTheme` extension — `cardBackground`, `cardBorderColor`, `cardTextColor` per operacion (gjelbër/kuq/portokallë/kaltër).
+- [x] **A-02:** `_TableCard` StatefulWidget — `_revealed` state, `AnimatedContainer`, `AnimatedSwitcher`, zbulim me trokitje.
+- [x] **A-03:** Trokitje e parë zbulon përgjigjen + SnackBar me ekuacionin e plotë; trokitje e dytë fsheh.
+- [x] **A-04:** Selektor numrash `Wrap` 36×36 `AnimatedContainer` (zëvendëson `ListView` me `ElevatedButton`).
+- [x] **A-05:** `GridView` `childAspectRatio: 1.0` (karta katrore), `spacing: 10`.
+- [x] **A-06:** Hequr parametri `Color color` nga `_buildOperationTable` — ngjyrat vijnë nga extension.
+
+### Track B — Logjika Zbritje Invers (B-012/B-013 Fix)
+- [x] **B-01:** `_buildVisibleEntries` — rast i ri zbritje invers: `n=1..table-1` (shmanget `result=0`).
+- [x] **B-02:** `revealValue()` dhe `snackText()` — zëvendësojnë `badgeSymbol()` me logjikë të saktë per operacion.
+- [x] **B-03:** `equationText` zbritje invers → `'$selectedTable − $num = ?'` (jo `'? + $num = $selectedTable'`).
+
+### Track C — Unit Tests
+- [x] **C-01:** `tables_inverse_mode_test.dart` — fix helper `equationText` (zbritje invers = `4 − 2 = ?`).
+- [x] **C-02:** `tables_inverse_mode_test.dart` — fix helper `badgeSymbol` (zbritje invers = `−`).
+- [x] **C-03:** `tables_inverse_mode_test.dart` — shtohet `buildSubtractionInverseEntries` helper.
+- [x] **C-04:** Grup i ri testesh `B-03 · Zbritje Invers (tabela 4)` — 5 teste të reja.
+
+### Validation
+- [x] `fvm flutter test` 146/146 ✅ (+5 teste të reja)
+- [x] `fvm flutter analyze` 0 warnings/errors ✅ (3 `info` pre-existing në test file)
 
 ---
 

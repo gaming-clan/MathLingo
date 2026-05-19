@@ -18,6 +18,14 @@
 | B012 | `hintText` i fushave PIN kishte opacitet shumë të lartë — dukej si tekst i plotë, jo si ndihmë | **Mesatar** | Fixed | `parent_pin_dialog.dart` |
 | B013 | `FractionChallengeScreen` shfaqte vlerën numerike `numerator/denominator` poshtë vizualizimit — zbulonte përgjigjen para se fëmija ta zgjidhte | **Kritik** | Fixed | `fraction_challenge_screen.dart` |
 | B014 | `BadgeDisplayScreen` GridView kishte `childAspectRatio: 0.85` dhe emoji `fontSize: 34` — kartat ishin tepër të mëdha dhe shthurosur në mobile | **Mesatar** | Fixed | `badge_display_screen.dart` |
+| B-01 (S11.5) | Shumëzim Invers: `equationText` shfaqte `?÷n=tableNum` (gabim), `badgeSymbol` ishte `÷`, rrethi tregonte product jo `selectedTable` | **Kritik** | Fixed | `simple_tables.dart` |
+| B-02 (S11.5) | Pjesëtim Invers: `equationText` shfaqte `?×n=tableNum` (gabim), entries gjenerohin si shumëfisha ekzaktë jo si 10 hyrje, rrethi tregonte `result` jo divisorin | **Kritik** | Fixed | `simple_tables.dart` |
+| B-03 (S11.5) | Mbledhja tab kalonte `isInverseMode: false` hardcoded — toggle nuk kishte efekt tek mbledhja | **Kritik** | Fixed | `simple_tables.dart` |
+| B-04 (S11.5) | `BadgeNotificationOverlay` — `FilledButton` me sfond `#F3D6FF` kontrast ~1.36:1 (nën WCAG AA 4.5:1) | **Mesatar** | Fixed | `badge_notification_overlay.dart` |
+| B-05 (S11.5) | Kartat e tabelave — `padding: 0` brenda Container; teksti ngjitej me bordurin e kartës | **Mesatar** | Fixed | `simple_tables.dart` |
+| B-01 (S14) | SnackBar tableve tregonte `l10n.tablesEquationSnackBar(...)` me parametra gabim — formula e shfaqur ishte e pasaktë për të gjitha modalitetet invers | **Mesatar** | Fixed | `simple_tables.dart` |
+| B-02 (S14) | Zbritje Invers `equationText` tregonte `'? + $num = $selectedTable'` (identik me mbledhjen invers); korrigjuar në `'$selectedTable − $num = ?'` | **Kritik** | Fixed | `simple_tables.dart` |
+| B-03 (S14) | Zbritje Invers nuk kishte rast special në `_buildVisibleEntries` — kthehej te logjika e mbledhjes; tani `n=1..table-1` (shmanget `4−4=0`) | **Kritik** | Fixed | `simple_tables.dart` |
 
 ## Open / Monitor
 
