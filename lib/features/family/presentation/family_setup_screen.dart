@@ -38,7 +38,10 @@ class _FamilySetupScreenState extends ConsumerState<FamilySetupScreen> {
       return;
     }
     if (name.length > 20) {
-      setState(() => _error = 'Pseudonimi nuk mund të jetë më shumë se 20 karaktere.');
+      setState(
+        () =>
+        _error = 'Pseudonimi nuk mund të ketë më shumë se 20 karaktere.',
+      );
       return;
     }
     setState(() {
@@ -73,14 +76,14 @@ class _FamilySetupScreenState extends ConsumerState<FamilySetupScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Mirë se vini në MathLingo!',
+              'Mirë se vjen në MathLingo!',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: CosmicColors.primaryContainer,
                   ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Si e quajmë fëmijën? (pseudonim, jo emër real)',
+              'Si ta quajmë astronautin e vogël? (pseudonim, jo emër real)',
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
@@ -94,7 +97,7 @@ class _FamilySetupScreenState extends ConsumerState<FamilySetupScreen> {
                 children: [
                   // Avatar selector
                   Text(
-                    'Zgjidhni avatarin:',
+                    'Zgjidh avatarin:',
                     style: const TextStyle(
                       color: CosmicColors.onSurfaceVariant,
                       fontSize: 14,
@@ -116,7 +119,7 @@ class _FamilySetupScreenState extends ConsumerState<FamilySetupScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'p.sh. Fluturo, Ylli, Luanit…',
+                      hintText: 'p.sh. Ylli, Orbiti, Flutura',
                       hintStyle: TextStyle(
                         color: CosmicColors.onSurfaceVariant.withValues(
                           alpha: 0.5,
@@ -150,14 +153,14 @@ class _FamilySetupScreenState extends ConsumerState<FamilySetupScreen> {
             _saving
                 ? const Center(child: CircularProgressIndicator())
                 : CosmicButton(
-                    label: 'Fillo Aventurën',
+                    label: 'Nise aventurën',
                     icon: Icons.rocket_launch,
                     onPressed: _submit,
                   ),
             const SizedBox(height: 12),
             Center(
               child: Text(
-                'Nuk ruhet asnjë emër real. Plotësisht offline.',
+                'Nuk ruhet asnjë emër real. Çdo gjë mbetet lokale në pajisje.',
                 style: TextStyle(
                   color: CosmicColors.onSurfaceVariant.withValues(alpha: 0.6),
                   fontSize: 12,

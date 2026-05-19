@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../colors.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
@@ -50,9 +51,10 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
 
   void _showError(String messageKey) {
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(_localizeError(messageKey)),
+        content: Text(_localizeError(l10n, messageKey)),
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 80),
         backgroundColor: CosmicColors.error,
@@ -60,22 +62,21 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
     );
   }
 
-  String _localizeError(String key) => switch (key) {
-        'authErrorEmptyFields' => 'Plotësoni të gjitha fushat.',
-        'authErrorPasswordMismatch' => 'Fjalëkalimet nuk përputhen.',
-        'authErrorEmailInUse' => 'Ky email është i regjistruar tashmë.',
-        'authErrorInvalidEmail' => 'Formati i email-it nuk është i saktë.',
-        'authErrorWeakPassword' =>
-          'Fjalëkalimi duhet të ketë ≥8 karaktere dhe 1 numër.',
-        'authErrorTooManyRequests' =>
-          'Shumë tentativa. Provo pas disa minutash.',
-        'authErrorNetwork' => 'Problem me lidhjen. Kontrollo internetin.',
-        'authErrorFirebaseNotReady' => 'Shërbimi nuk është gati. Provo sërish.',
-        _ => 'Ndodhi një gabim. Provo sërish.',
+  String _localizeError(AppLocalizations l10n, String key) => switch (key) {
+        'authErrorEmptyFields' => l10n.authErrorEmptyFields,
+        'authErrorPasswordMismatch' => l10n.authErrorPasswordMismatch,
+        'authErrorEmailInUse' => l10n.authErrorEmailInUse,
+        'authErrorInvalidEmail' => l10n.authErrorInvalidEmail,
+        'authErrorWeakPassword' => l10n.authErrorWeakPassword,
+        'authErrorTooManyRequests' => l10n.authErrorTooManyRequests,
+        'authErrorNetwork' => l10n.authErrorNetwork,
+        'authErrorFirebaseNotReady' => l10n.authErrorFirebaseNotReady,
+        _ => l10n.authErrorUnknown,
       };
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final authState = ref.watch(authProvider);
     final isLoading = authState is AuthStateLoading;
 
@@ -100,14 +101,14 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Krijo Llogari Prindi',
+                l10n.authSignUpTitle,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: CosmicColors.primaryContainer,
                     ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Rezervo progresin e fëmijëve në cloud.',
+              Text(
+                l10n.authSignUpSubtitle,
                 style: TextStyle(
                   color: CosmicColors.onSurfaceVariant,
                   fontSize: 14,
@@ -126,13 +127,13 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
                       autocorrect: false,
                       style: const TextStyle(color: CosmicColors.onSurface),
                       decoration: _inputDecoration(
-                        label: 'Email-i i prindit',
-                        hint: 'prindi@shembull.com',
+                        label: l10n.authEmailLabel,
+                        hint: l10n.authEmailHint,
                         icon: Icons.email_outlined,
                       ),
                       validator: (v) {
                         if (v == null || v.trim().isEmpty) {
-                          return 'Fushat nuk mund të jenë bosh.';
+                          return l10n.authErrorEmptyFields;
                         }
                         return null;
                       },
@@ -145,8 +146,8 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
                       textInputAction: TextInputAction.next,
                       style: const TextStyle(color: CosmicColors.onSurface),
                       decoration: _inputDecoration(
-                        label: 'Fjalëkalimi',
-                        hint: 'Min. 8 karaktere, 1 numër',
+                        label: l10n.authPasswordLabel,
+                        hint: l10n.authPasswordHint,
                         icon: Icons.lock_outline,
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -162,11 +163,11 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
                       ),
                       validator: (v) {
                         if (v == null || v.isEmpty) {
-                          return 'Fushat nuk mund të jenë bosh.';
+                          return l10n.authErrorEmptyFields;
                         }
                         if (v.length < 8 ||
                             !v.contains(RegExp(r'\d'))) {
-                          return 'Min. 8 karaktere dhe 1 numër.';
+                          return l10n.authWeakPasswordHint;
                         }
                         return null;
                       },
@@ -180,8 +181,8 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
                       onFieldSubmitted: (_) => _onSignUp(),
                       style: const TextStyle(color: CosmicColors.onSurface),
                       decoration: _inputDecoration(
-                        label: 'Konfirmo fjalëkalimin',
-                        hint: 'Shkruaje sërish fjalëkalimin',
+                        label: l10n.authConfirmPasswordLabel,
+                        hint: l10n.authConfirmPasswordHint,
                         icon: Icons.lock_outline,
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -197,7 +198,7 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
                       ),
                       validator: (v) {
                         if (v == null || v.isEmpty) {
-                          return 'Fushat nuk mund të jenë bosh.';
+                          return l10n.authErrorEmptyFields;
                         }
                         return null;
                       },
@@ -207,10 +208,10 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
               ),
               const SizedBox(height: 12),
               // Shënim privatësia
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4),
                 child: Text(
-                  'Të dhënat ruhen me enkriptim. Nuk ndahen me palë të treta.',
+                  l10n.authPrivacyNote,
                   style: TextStyle(
                     color: CosmicColors.onSurfaceVariant,
                     fontSize: 11,
@@ -220,7 +221,7 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
               ),
               const SizedBox(height: 24),
               CosmicButton(
-                label: isLoading ? 'Duke u regjistruar...' : 'Regjistrohu',
+                label: isLoading ? l10n.authSigningUp : l10n.authSignUpButton,
                 icon: isLoading ? null : Icons.person_add_outlined,
                 onPressed: isLoading ? null : _onSignUp,
               ),
@@ -234,8 +235,8 @@ class _ParentSignUpScreenState extends ConsumerState<ParentSignUpScreen> {
                             builder: (_) => const ParentSignInScreen(),
                           ),
                         ),
-                child: const Text(
-                  'Keni llogari? Hyni këtu',
+                child: Text(
+                  l10n.authHaveAccount,
                   style: TextStyle(color: CosmicColors.primaryContainer),
                 ),
               ),

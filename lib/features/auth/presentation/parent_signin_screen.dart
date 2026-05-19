@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../colors.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
@@ -42,17 +43,18 @@ class _ParentSignInScreenState extends ConsumerState<ParentSignInScreen> {
   }
 
   Future<void> _onForgotPassword() async {
+    final l10n = AppLocalizations.of(context);
     final email = _emailCtrl.text.trim();
     if (email.isEmpty) {
-      _showSnack('Shkruaj email-in fillimisht.', isError: true);
+      _showSnack(l10n.authResetEmailEnterFirst, isError: true);
       return;
     }
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       if (!mounted) return;
-      _showSnack('Email-i i rivendosjes u dërgua.', isError: false);
+      _showSnack(l10n.authResetEmailSent, isError: false);
     } catch (_) {
-      _showSnack('Ndodhi një gabim. Kontrollo email-in.', isError: true);
+      _showSnack(l10n.authResetEmailError, isError: true);
     }
   }
 
@@ -69,19 +71,20 @@ class _ParentSignInScreenState extends ConsumerState<ParentSignInScreen> {
     );
   }
 
-  String _localizeError(String key) => switch (key) {
-        'authErrorUserNotFound' => 'Nuk u gjet llogari me këtë email.',
-        'authErrorWrongPassword' => 'Fjalëkalimi nuk është i saktë.',
-        'authErrorTooManyRequests' =>
-          'Shumë tentativa. Provo pas disa minutash.',
-        'authErrorNetwork' => 'Problem me lidhjen. Kontrollo internetin.',
-        'authErrorFirebaseNotReady' => 'Shërbimi nuk është gati. Provo sërish.',
-        'authErrorUserDisabled' => 'Kjo llogari është çaktivizuar.',
-        _ => 'Ndodhi një gabim. Provo sërish.',
+  String _localizeError(AppLocalizations l10n, String key) => switch (key) {
+        'authErrorUserNotFound' => l10n.authErrorUserNotFound,
+        'authErrorWrongPassword' => l10n.authErrorWrongPassword,
+        'authErrorTooManyRequests' => l10n.authErrorTooManyRequests,
+        'authErrorNetwork' => l10n.authErrorNetwork,
+        'authErrorFirebaseNotReady' => l10n.authErrorFirebaseNotReady,
+        'authErrorUserDisabled' => l10n.authErrorUserDisabled,
+        'authErrorEmptyFields' => l10n.authErrorEmptyFields,
+        _ => l10n.authErrorUnknown,
       };
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final authState = ref.watch(authProvider);
     final isLoading = authState is AuthStateLoading;
 
@@ -89,7 +92,7 @@ class _ParentSignInScreenState extends ConsumerState<ParentSignInScreen> {
       if (next is AuthStateAuthenticated && mounted) {
         Navigator.of(context).pop();
       } else if (next is AuthStateError && mounted) {
-        _showSnack(_localizeError(next.messageKey), isError: true);
+        _showSnack(_localizeError(l10n, next.messageKey), isError: true);
         ref.read(authProvider.notifier).clearError();
       }
     });
@@ -105,14 +108,14 @@ class _ParentSignInScreenState extends ConsumerState<ParentSignInScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Hyrja e Prindit',
+                l10n.authSignInTitle,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: CosmicColors.primaryContainer,
                     ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Hyni për të sinkronizuar progresin në pajisje të shumta.',
+              Text(
+                l10n.authSignInSubtitle,
                 style: TextStyle(
                   color: CosmicColors.onSurfaceVariant,
                   fontSize: 14,
@@ -131,12 +134,12 @@ class _ParentSignInScreenState extends ConsumerState<ParentSignInScreen> {
                       autocorrect: false,
                       style: const TextStyle(color: CosmicColors.onSurface),
                       decoration: _inputDecoration(
-                        label: 'Email-i',
-                        hint: 'prindi@shembull.com',
+                        label: l10n.authEmailLabel,
+                        hint: l10n.authEmailHint,
                         icon: Icons.email_outlined,
                       ),
                       validator: (v) => (v == null || v.trim().isEmpty)
-                          ? 'Fushat nuk mund të jenë bosh.'
+                          ? l10n.authErrorEmptyFields
                           : null,
                     ),
                     const SizedBox(height: 16),
@@ -148,7 +151,7 @@ class _ParentSignInScreenState extends ConsumerState<ParentSignInScreen> {
                       onFieldSubmitted: (_) => _onSignIn(),
                       style: const TextStyle(color: CosmicColors.onSurface),
                       decoration: _inputDecoration(
-                        label: 'Fjalëkalimi',
+                        label: l10n.authPasswordLabel,
                         hint: '••••••••',
                         icon: Icons.lock_outline,
                         suffixIcon: IconButton(
@@ -164,7 +167,7 @@ class _ParentSignInScreenState extends ConsumerState<ParentSignInScreen> {
                         ),
                       ),
                       validator: (v) => (v == null || v.isEmpty)
-                          ? 'Fushat nuk mund të jenë bosh.'
+                          ? l10n.authErrorEmptyFields
                           : null,
                     ),
                   ],
@@ -175,8 +178,8 @@ class _ParentSignInScreenState extends ConsumerState<ParentSignInScreen> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: isLoading ? null : _onForgotPassword,
-                  child: const Text(
-                    'Harruat fjalëkalimin?',
+                  child: Text(
+                    l10n.authForgotPassword,
                     style: TextStyle(
                         color: CosmicColors.onSurfaceVariant, fontSize: 13),
                   ),
@@ -184,7 +187,7 @@ class _ParentSignInScreenState extends ConsumerState<ParentSignInScreen> {
               ),
               const SizedBox(height: 16),
               CosmicButton(
-                label: isLoading ? 'Duke hyrë...' : 'Hyni',
+                label: isLoading ? l10n.authSigningIn : l10n.authSignInButton,
                 icon: isLoading ? null : Icons.login_outlined,
                 onPressed: isLoading ? null : _onSignIn,
               ),
@@ -197,8 +200,8 @@ class _ParentSignInScreenState extends ConsumerState<ParentSignInScreen> {
                             builder: (_) => const ParentSignUpScreen(),
                           ),
                         ),
-                child: const Text(
-                  'Keni nevojë për llogari? Regjistrohuni',
+                child: Text(
+                  l10n.authNoAccount,
                   style: TextStyle(color: CosmicColors.primaryContainer),
                 ),
               ),

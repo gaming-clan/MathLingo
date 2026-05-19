@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In sq, this message translates to:
-  /// **'MathLingo - Aventura e Matematikës'**
+  /// **'MathLingo - Udhëtimi i matematikës'**
   String get appTitle;
 
   /// No description provided for @commonPointsLabel.
@@ -121,7 +121,7 @@ abstract class AppLocalizations {
   /// No description provided for @tabDailyChallenge.
   ///
   /// In sq, this message translates to:
-  /// **'Sfida e Ditës'**
+  /// **'Sfida e ditës'**
   String get tabDailyChallenge;
 
   /// No description provided for @tabLessons.
@@ -145,13 +145,13 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardWelcomeTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Mirësevini!'**
+  /// **'Mirë se vjen!'**
   String get dashboardWelcomeTitle;
 
   /// No description provided for @dashboardWelcomeSubtitle.
   ///
   /// In sq, this message translates to:
-  /// **'Zgjedh një mënyrë për të mësuar matematikën - më lehtë ose më sfiduese.'**
+  /// **'Mirë se vjen në stacionin kozmik. Zgjidh rrugëtimin tënd në matematikë: i lehtë ose sfidues.'**
   String get dashboardWelcomeSubtitle;
 
   /// No description provided for @dashboardDailyChallengeTitle.
@@ -175,43 +175,43 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardGamifyChip.
   ///
   /// In sq, this message translates to:
-  /// **'Argëto Ushtrimet'**
+  /// **'Argëto ushtrimet'**
   String get dashboardGamifyChip;
 
   /// No description provided for @dashboardGamifyTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Fotografo ose Shkruaj Ushtrimin'**
+  /// **'Fotografo ose shkruaj ushtrimin'**
   String get dashboardGamifyTitle;
 
   /// No description provided for @dashboardGamifyDescription.
   ///
   /// In sq, this message translates to:
-  /// **'Fotografo ekuacionin që nuk e kupton, shkruaje direkt, dhe merrni zgjidhje argëtuese që të bëjnë matematikën më të lehtë për të kuptuar!'**
+  /// **'Fotografo ekuacionin që të duket i vështirë, ose shkruaje drejtpërdrejt, dhe Stitch do të të udhëheqë hap pas hapi drejt zgjidhjes.'**
   String get dashboardGamifyDescription;
 
   /// No description provided for @dashboardStartAdventure.
   ///
   /// In sq, this message translates to:
-  /// **'Filloi Aventurën'**
+  /// **'Nis aventurën'**
   String get dashboardStartAdventure;
 
   /// No description provided for @dashboardProgressModuleTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Progresi i Modulit'**
+  /// **'Progresi i moduleve'**
   String get dashboardProgressModuleTitle;
 
   /// No description provided for @dashboardProgressAbstractAlgebra.
   ///
   /// In sq, this message translates to:
-  /// **'Algjebra Abstrakte'**
+  /// **'Algjebra abstrakte'**
   String get dashboardProgressAbstractAlgebra;
 
   /// No description provided for @dashboardProgressMathematicalAnalysis.
   ///
   /// In sq, this message translates to:
-  /// **'Analiza Matematike'**
+  /// **'Analiza matematike'**
   String get dashboardProgressMathematicalAnalysis;
 
   /// No description provided for @dashboardProgressPointsLabel.
@@ -229,7 +229,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardQuickActionsTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Veprime të Shpejta'**
+  /// **'Veprime të shpejta'**
   String get dashboardQuickActionsTitle;
 
   /// No description provided for @dashboardProfileComingSoon.
@@ -247,25 +247,25 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardOperationAddition.
   ///
   /// In sq, this message translates to:
-  /// **'Mbledhje'**
+  /// **'Mbledhja'**
   String get dashboardOperationAddition;
 
   /// No description provided for @dashboardOperationSubtraction.
   ///
   /// In sq, this message translates to:
-  /// **'Zbritje'**
+  /// **'Zbritja'**
   String get dashboardOperationSubtraction;
 
   /// No description provided for @dashboardOperationMultiplication.
   ///
   /// In sq, this message translates to:
-  /// **'Shumëzim'**
+  /// **'Shumëzimi'**
   String get dashboardOperationMultiplication;
 
   /// No description provided for @dashboardOperationDivision.
   ///
   /// In sq, this message translates to:
-  /// **'Pjesëtim'**
+  /// **'Pjesëtimi'**
   String get dashboardOperationDivision;
 
   /// No description provided for @challengeKicker.
@@ -481,7 +481,7 @@ abstract class AppLocalizations {
   /// No description provided for @lessonsToolsTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Mjetet e Llogaritjes'**
+  /// **'Mjetet e llogaritjes'**
   String get lessonsToolsTitle;
 
   /// No description provided for @progressPageTitle.
@@ -511,7 +511,7 @@ abstract class AppLocalizations {
   /// No description provided for @tablesTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Tabelat Matematikore'**
+  /// **'Tabelat e matematikës'**
   String get tablesTitle;
 
   /// No description provided for @tablesSubtitle.
@@ -570,13 +570,13 @@ abstract class AppLocalizations {
   /// No description provided for @gamifyScreenTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Argëto Ushtrimet'**
+  /// **'Argëto ushtrimet'**
   String get gamifyScreenTitle;
 
   /// No description provided for @gamifyInputTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Fotografo ose Shkruaj Ushtrimin'**
+  /// **'Fotografo ose shkruaj ushtrimin'**
   String get gamifyInputTitle;
 
   /// No description provided for @gamifyInputSubtitle.
@@ -600,13 +600,13 @@ abstract class AppLocalizations {
   /// No description provided for @gamifySolutionTitle.
   ///
   /// In sq, this message translates to:
-  /// **'✨ Zgjidhja Argëtuese ✨'**
+  /// **'Zgjidhja kozmike'**
   String get gamifySolutionTitle;
 
   /// No description provided for @gamifyRecognizedTextLabel.
   ///
   /// In sq, this message translates to:
-  /// **'Teksti i Njohur:'**
+  /// **'Teksti i njohur:'**
   String get gamifyRecognizedTextLabel;
 
   /// No description provided for @gamifyCameraButton.
@@ -624,7 +624,7 @@ abstract class AppLocalizations {
   /// No description provided for @gamifyWriteExerciseLabel.
   ///
   /// In sq, this message translates to:
-  /// **'Shkruaj Ushtrimin'**
+  /// **'Shkruaj ushtrimin'**
   String get gamifyWriteExerciseLabel;
 
   /// No description provided for @gamifyExerciseHint.
@@ -660,19 +660,19 @@ abstract class AppLocalizations {
   /// No description provided for @gamifyOcrProcessingError.
   ///
   /// In sq, this message translates to:
-  /// **'Gabim gjatë leximit të tekstit: {error}'**
+  /// **'Ndodhi një parregullsi gjatë leximit të tekstit: {error}'**
   String gamifyOcrProcessingError(Object error);
 
   /// No description provided for @gamifyEmptyEquationError.
   ///
   /// In sq, this message translates to:
-  /// **'Ju lutemi shkruani ose fotografoni një ekuacion.'**
+  /// **'Të lutem, shkruaj ose fotografo një ekuacion.'**
   String get gamifyEmptyEquationError;
 
   /// No description provided for @gamifyImagePickError.
   ///
   /// In sq, this message translates to:
-  /// **'Gabim në zgjedhjen e imazhit: {error}'**
+  /// **'Ndodhi një parregullsi gjatë zgjedhjes së imazhit: {error}'**
   String gamifyImagePickError(Object error);
 
   /// No description provided for @gamifySubtractionNeedsPositiveResult.
@@ -690,43 +690,43 @@ abstract class AppLocalizations {
   /// No description provided for @gamifyDivisionNeedsWholeResult.
   ///
   /// In sq, this message translates to:
-  /// **'Ky pjesëtim nuk jep rezultat të plotë ({num1} ÷ {num2}). Zgjidh një ushtrim që ndahet pa mbetje.'**
+  /// **'Ky pjesëtim nuk jep numër të plotë ({num1} ÷ {num2}). Zgjidh një ushtrim që pjesëtohet pa mbetje.'**
   String gamifyDivisionNeedsWholeResult(int num1, int num2);
 
   /// No description provided for @gamifyAdditionSolution.
   ///
   /// In sq, this message translates to:
-  /// **'🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} + {num2} = ?\n\n📚 HAPI I PARË: Imagjinoni {num1} ballona që ngrihen në qiell!\n🎈 HAPI I DYTË: Shtojmë edhe {num2} ballona - tani kemi {answer} në total!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Çdo shifër në {answer} përfaqëson një yll në qiellin e natës! 🌟'**
+  /// **'Misioni kozmik i zgjidhjes\n\nEkuacioni: {num1} + {num2} = ?\n\nHapi 1: Imagjino {num1} yje në orbitë.\nHapi 2: Shto edhe {num2} yje.\nPërgjigjja: {answer}.\n\nStitch të kujton: te mbledhja i bashkojmë të gjitha pjesët në një tërësi.'**
   String gamifyAdditionSolution(int num1, int num2, int answer);
 
   /// No description provided for @gamifySubtractionSolution.
   ///
   /// In sq, this message translates to:
-  /// **'🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} - {num2} = ?\n\n🍎 HAPI I PARË: Kemi {num1} mollë të shijshme në një kosh!\n😋 HAPI I DYTË: Hamë {num2} mollë - mbeten {answer} mollë të shijshme!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: {answer} janë mollët që mbeten për piknikun tënd! 🍎'**
+  /// **'Misioni kozmik i zgjidhjes\n\nEkuacioni: {num1} - {num2} = ?\n\nHapi 1: Nisemi me {num1} njësi.\nHapi 2: Heqim {num2} njësi.\nPërgjigjja: {answer}.\n\nStitch të kujton: te zbritja gjejmë sa mbetet pas heqjes.'**
   String gamifySubtractionSolution(int num1, int num2, int answer);
 
   /// No description provided for @gamifyMultiplicationSolution.
   ///
   /// In sq, this message translates to:
-  /// **'🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} × {num2} = ?\n\n🏗️ HAPI I PARË: Ndërtojmë një fort me {num1} kube në çdo rresht!\n🏰 HAPI I DYTË: Forti ka {num2} rreshta - në total {answer} kube!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Shumëzimi është si të ndërtosh me blloqe - sa më shumë rreshta, aq më i madh forti! 📦'**
+  /// **'Misioni kozmik i zgjidhjes\n\nEkuacioni: {num1} × {num2} = ?\n\nHapi 1: Krijo {num2} grupe të barabarta.\nHapi 2: Në çdo grup vendos {num1} njësi.\nPërgjigjja: {answer}.\n\nStitch të kujton: shumëzimi është mbledhje e përsëritur.'**
   String gamifyMultiplicationSolution(int num1, int num2, int answer);
 
   /// No description provided for @gamifyDivisionSolution.
   ///
   /// In sq, this message translates to:
-  /// **'🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} ÷ {num2} = ?\n\n🍕 HAPI I PARË: Kemi {num1} pjesë pice për t’i ndarë!\n👨‍👩‍👧‍👦 HAPI I DYTË: I ndajmë mes {num2} shokëve - secili merr {answer} pjesë!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Pjesëtimi është si të ndash një surprizë - çdo mik merr pjesën e vet! 🎉'**
+  /// **'Misioni kozmik i zgjidhjes\n\nEkuacioni: {num1} ÷ {num2} = ?\n\nHapi 1: Merr {num1} njësi për t\'i ndarë.\nHapi 2: Ndaji në {num2} grupe të barabarta.\nPërgjigjja: {answer}.\n\nStitch të kujton: pjesëtimi tregon sa merr çdo grup.'**
   String gamifyDivisionSolution(int num1, int num2, int answer);
 
   /// No description provided for @gamifyGenericSolution.
   ///
   /// In sq, this message translates to:
-  /// **'🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni juaj: \"{exercise}\"\n\n📚 Duket si një sfidë interesante!\n🧮 Këtu janë disa këshilla për ta zgjidhur:\n\n1. 🔍 Shikoni me kujdes numrat në ekuacion\n2. 🧠 Mendoni se çfarë operacioni të përdorni (+, -, ×, ÷)\n3. ✍️ Shkruani hap pas hapi\n4. ✅ Kontrolloni përgjigjen tuaj\n\n💡 Kujtohuni: Matematika është një lojë argëtuese! 🎮\n\nPër shembull:\n- 5 + 3 = 8 (Mbledhje)\n- 10 - 4 = 6 (Zbritje)\n- 7 × 2 = 14 (Shumëzim)\n- 12 ÷ 3 = 4 (Pjesëtim)'**
+  /// **'Misioni kozmik i zgjidhjes\n\nShprehja jote: \"{exercise}\"\n\nKjo sfidë kërkon pak më shumë vëzhgim.\n1. Vëzhgo numrat dhe shenjat matematikore.\n2. Përcakto veprimin: mbledhja, zbritja, shumëzimi ose pjesëtimi.\n3. Zgjidhe hap pas hapi.\n4. Kontrollo rezultatin në fund.\n\nStitch të kujton: çdo ushtrim ndahet në hapa të vegjël dhe të qartë.'**
   String gamifyGenericSolution(Object exercise);
 
   /// No description provided for @gamifyInvalidSolution.
   ///
   /// In sq, this message translates to:
-  /// **'🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni: \"{exercise}\"\n\nHmm, duhet të jetë më i qartë! 🤔\n📝 Përpiquni ta rishkruani ekuacionin me numra dhe operacione të qarta.\n\nShembuj të mirë:\n✅ \"5 + 3\"\n✅ \"10 - 7\"\n✅ \"6 * 4\"\n✅ \"20 / 5\"\n\nPërpiquni përsëri! 💪'**
+  /// **'Misioni kozmik i zgjidhjes\n\nShprehja: \"{exercise}\"\n\nKjo shprehje nuk u lexua qartë. Provoje përsëri me numra dhe veprime të plota.\n\nShembuj të vlefshëm:\n- \"5 + 3\"\n- \"10 - 7\"\n- \"6 * 4\"\n- \"20 / 5\"\n\nStitch pret komandën tënde të radhës.'**
   String gamifyInvalidSolution(Object exercise);
 
   /// No description provided for @fractionKicker.
@@ -822,7 +822,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardFractionsTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Mëso Fraksionet'**
+  /// **'Mëso fraksionet'**
   String get dashboardFractionsTitle;
 
   /// No description provided for @dashboardFractionsDescription.
@@ -870,14 +870,26 @@ abstract class AppLocalizations {
   /// No description provided for @authSignUpTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Krijo Llogari Prindi'**
+  /// **'Krijo llogari prindi'**
   String get authSignUpTitle;
 
   /// No description provided for @authSignInTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Hyrja e Prindit'**
+  /// **'Hyrja e prindit'**
   String get authSignInTitle;
+
+  /// No description provided for @authSignInSubtitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Hyr për të sinkronizuar progresin në pajisje të shumta.'**
+  String get authSignInSubtitle;
+
+  /// No description provided for @authSignUpSubtitle.
+  ///
+  /// In sq, this message translates to:
+  /// **'Rezervo progresin e fëmijëve në cloud.'**
+  String get authSignUpSubtitle;
 
   /// No description provided for @authEmailLabel.
   ///
@@ -885,17 +897,41 @@ abstract class AppLocalizations {
   /// **'Email-i i prindit'**
   String get authEmailLabel;
 
+  /// No description provided for @authEmailHint.
+  ///
+  /// In sq, this message translates to:
+  /// **'prindi@shembull.com'**
+  String get authEmailHint;
+
   /// No description provided for @authPasswordLabel.
   ///
   /// In sq, this message translates to:
   /// **'Fjalëkalimi'**
   String get authPasswordLabel;
 
+  /// No description provided for @authPasswordHint.
+  ///
+  /// In sq, this message translates to:
+  /// **'Min. 8 karaktere, 1 numër'**
+  String get authPasswordHint;
+
+  /// No description provided for @authWeakPasswordHint.
+  ///
+  /// In sq, this message translates to:
+  /// **'Min. 8 karaktere dhe 1 numër.'**
+  String get authWeakPasswordHint;
+
   /// No description provided for @authConfirmPasswordLabel.
   ///
   /// In sq, this message translates to:
   /// **'Konfirmo fjalëkalimin'**
   String get authConfirmPasswordLabel;
+
+  /// No description provided for @authConfirmPasswordHint.
+  ///
+  /// In sq, this message translates to:
+  /// **'Shkruaje sërish fjalëkalimin'**
+  String get authConfirmPasswordHint;
 
   /// No description provided for @authSignUpButton.
   ///
@@ -906,7 +942,7 @@ abstract class AppLocalizations {
   /// No description provided for @authSignInButton.
   ///
   /// In sq, this message translates to:
-  /// **'Hyni'**
+  /// **'Hyr'**
   String get authSignInButton;
 
   /// No description provided for @authSigningUp.
@@ -924,13 +960,13 @@ abstract class AppLocalizations {
   /// No description provided for @authHaveAccount.
   ///
   /// In sq, this message translates to:
-  /// **'Keni llogari? Hyni këtu'**
+  /// **'Ke llogari? Hyr këtu'**
   String get authHaveAccount;
 
   /// No description provided for @authNoAccount.
   ///
   /// In sq, this message translates to:
-  /// **'Keni nevojë për llogari? Regjistrohuni'**
+  /// **'Nuk ke llogari? Regjistrohu'**
   String get authNoAccount;
 
   /// No description provided for @authForgotPassword.
@@ -938,6 +974,24 @@ abstract class AppLocalizations {
   /// In sq, this message translates to:
   /// **'Harruat fjalëkalimin?'**
   String get authForgotPassword;
+
+  /// No description provided for @authResetEmailEnterFirst.
+  ///
+  /// In sq, this message translates to:
+  /// **'Shkruaj fillimisht email-in.'**
+  String get authResetEmailEnterFirst;
+
+  /// No description provided for @authResetEmailSent.
+  ///
+  /// In sq, this message translates to:
+  /// **'Email-i i rivendosjes u dërgua.'**
+  String get authResetEmailSent;
+
+  /// No description provided for @authResetEmailError.
+  ///
+  /// In sq, this message translates to:
+  /// **'Ndodhi një gabim. Kontrollo email-in.'**
+  String get authResetEmailError;
 
   /// No description provided for @authPrivacyNote.
   ///
@@ -1020,13 +1074,13 @@ abstract class AppLocalizations {
   /// No description provided for @syncEnabled.
   ///
   /// In sq, this message translates to:
-  /// **'Sinkronizimi Cloud është aktiv'**
+  /// **'Sinkronizimi në cloud është aktiv'**
   String get syncEnabled;
 
   /// No description provided for @syncDisabled.
   ///
   /// In sq, this message translates to:
-  /// **'Sinkronizimi Cloud nuk është aktiv'**
+  /// **'Sinkronizimi në cloud nuk është aktiv'**
   String get syncDisabled;
 
   /// No description provided for @syncLastSync.
@@ -1038,7 +1092,7 @@ abstract class AppLocalizations {
   /// No description provided for @authDeleteAccountTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Fshi Llogarinë Cloud'**
+  /// **'Fshi llogarinë në cloud'**
   String get authDeleteAccountTitle;
 
   /// No description provided for @authDeleteAccountConfirm.
@@ -1050,43 +1104,43 @@ abstract class AppLocalizations {
   /// No description provided for @authDeleteAccountButton.
   ///
   /// In sq, this message translates to:
-  /// **'Fshi Llogarinë'**
+  /// **'Fshi llogarinë'**
   String get authDeleteAccountButton;
 
   /// No description provided for @authSignOutButton.
   ///
   /// In sq, this message translates to:
-  /// **'Dil nga Llogaria'**
+  /// **'Dil nga llogaria'**
   String get authSignOutButton;
 
   /// No description provided for @parentReportTitle.
   ///
   /// In sq, this message translates to:
-  /// **'Raporti Javor'**
+  /// **'Raporti javor'**
   String get parentReportTitle;
 
   /// No description provided for @weeklyTrend.
   ///
   /// In sq, this message translates to:
-  /// **'Tendenca e Javës'**
+  /// **'Tendenca e javës'**
   String get weeklyTrend;
 
   /// No description provided for @dailyPoints.
   ///
   /// In sq, this message translates to:
-  /// **'Pikët Ditorë'**
+  /// **'Pikët ditore'**
   String get dailyPoints;
 
   /// No description provided for @accuracyTrend.
   ///
   /// In sq, this message translates to:
-  /// **'Tendenca e Saktësisë'**
+  /// **'Tendenca e saktësisë'**
   String get accuracyTrend;
 
   /// No description provided for @noDataYet.
   ///
   /// In sq, this message translates to:
-  /// **'Luaj sfidën e parë për të parë progresin këtu!'**
+  /// **'Nis sfidën e parë për të parë progresin këtu.'**
   String get noDataYet;
 }
 

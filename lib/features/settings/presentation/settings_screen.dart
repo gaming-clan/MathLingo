@@ -64,7 +64,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ScaffoldMessenger.of(ctx).showSnackBar(
         const SnackBar(
           content:
-              Text('Firebase nuk është konfiguruar. Kontakto zhvilluesin.'),
+              Text('Shërbimi cloud nuk është konfiguruar. Kontakto ekipin mbështetës.'),
           behavior: SnackBarBehavior.floating,
           margin: EdgeInsets.fromLTRB(16, 0, 16, 80),
         ),
@@ -124,7 +124,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   _SettingsTile(
                     icon: Icons.military_tech_outlined,
                     title: 'Arritjet',
-                    subtitle: 'Shiko badge-t e fituara',
+                    subtitle: 'Shiko insignet kozmike të fituara',
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => const BadgeDisplayScreen(),
@@ -138,8 +138,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   _SettingsTile(
                     icon: Icons.leaderboard_outlined,
-                    title: 'Klasifikimi Familjar',
-                    subtitle: 'Kush ka më shumë pikë?',
+                    title: 'Klasifikimi familjar',
+                    subtitle: 'Kush ka mbledhur më shumë pikë?',
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => const LeaderboardScreen(),
@@ -194,7 +194,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 children: [
                   _SettingsTile(
                     icon: Icons.privacy_tip_outlined,
-                    title: 'Politika e Privatësisë',
+                    title: 'Politika e privatësisë',
                     subtitle: 'Lexo si i trajtojmë të dhënat tuaja',
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
@@ -209,8 +209,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   _SettingsTile(
                     icon: Icons.download_outlined,
-                    title: 'Shkarko të Dhënat',
-                    subtitle: 'Eksporto progresin si skedar JSON (GDPR)',
+                    title: 'Shkarko të dhënat',
+                    subtitle: 'Eksporto progresin si skedar JSON',
                     trailing: _isExporting
                         ? const SizedBox(
                             width: 20,
@@ -227,7 +227,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   _SettingsTile(
                     icon: Icons.delete_forever_outlined,
-                    title: 'Fshi të Gjitha të Dhënat',
+                    title: 'Fshi të gjitha të dhënat',
                     subtitle: 'Fshin çdo profil, progres dhe PIN',
                     iconColor: CosmicColors.error,
                     titleColor: CosmicColors.error,
@@ -449,7 +449,7 @@ class _CloudSyncSection extends ConsumerWidget {
                       color: CosmicColors.outlineVariant),
                   _SettingsTile(
                     icon: Icons.logout_outlined,
-                    title: 'Dil nga Llogaria',
+                    title: 'Dil nga llogaria',
                     subtitle: 'Të dhënat lokale mbeten',
                     onTap: () => _onSignOut(ref),
                   ),
@@ -459,7 +459,7 @@ class _CloudSyncSection extends ConsumerWidget {
                       color: CosmicColors.outlineVariant),
                   _SettingsTile(
                     icon: Icons.cloud_off_outlined,
-                    title: 'Fshi Llogarinë Cloud',
+                    title: 'Fshi llogarinë në cloud',
                     subtitle: 'Fshin llogarinë dhe të dhënat cloud',
                     iconColor: CosmicColors.error,
                     titleColor: CosmicColors.error,
@@ -472,7 +472,7 @@ class _CloudSyncSection extends ConsumerWidget {
                 children: [
                   _SettingsTile(
                     icon: Icons.person_add_outlined,
-                    title: 'Krijo Llogari Prindi',
+                    title: 'Krijo llogari prindi',
                     subtitle: 'Rezervo progresin në cloud',
                     onTap: () => onInitFirebase(
                         context, const ParentSignUpScreen()),
@@ -483,7 +483,7 @@ class _CloudSyncSection extends ConsumerWidget {
                       color: CosmicColors.outlineVariant),
                   _SettingsTile(
                     icon: Icons.login_outlined,
-                    title: 'Hyni në Llogari',
+                    title: 'Hyr në llogari',
                     subtitle: 'Sinkronizo midis pajisjeve',
                     onTap: () => onInitFirebase(
                         context, const ParentSignInScreen()),

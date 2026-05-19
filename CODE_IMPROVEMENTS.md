@@ -4,7 +4,15 @@
 
 ### ✅ Completed Fixes
 
-1. **Removed Undefined Font Family**
+1. **Auth Localization Final Pass (Shqip Standard)**
+  - **Files:** `lib/features/auth/presentation/parent_signin_screen.dart`, `lib/features/auth/presentation/parent_signup_screen.dart`, `lib/l10n/app_sq.arb`, `test/widget_test.dart`
+  - **Issue:** Auth screens still had inline strings and duplicated error text logic, with mixed style and non-centralized copy.
+  - **Fix:** Migrated user-facing Auth copy to `AppLocalizations`, added missing ARB keys (subtitle/hint/reset-email states), and aligned widget tests with updated Albanian copy.
+  - **Impact:** Consistent Albanian UX copy across Auth, easier maintenance via centralized localization, and stable automated tests.
+  - **Validation:** `fvm flutter gen-l10n`, `fvm flutter analyze`, `fvm flutter test` (150/150 passed).
+  - **Status:** ✅ Complete
+
+2. **Removed Undefined Font Family**
    - **File:** `lib/main.dart` (line 33)
    - **Issue:** App referenced 'Lexend' font that wasn't defined in pubspec.yaml
    - **Fix:** Removed `fontFamily: 'Lexend'` to use system default
