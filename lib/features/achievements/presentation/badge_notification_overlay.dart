@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../colors.dart';
 import '../../../models/achievement.dart';
+import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/glass_panel.dart';
 
 /// G-03 — Overlay i shfaqur pas sesionit kur deblokhen arritje të reja.
@@ -155,15 +156,9 @@ class _BadgeNotificationOverlayState
               const SizedBox(height: 20),
 
               // Butoni
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: _next,
-                  child: Text(
-                    isLast ? 'Vazhdoj! 🎉' : 'Tjetri →',
-                    style: const TextStyle(fontWeight: FontWeight.w800),
-                  ),
-                ),
+              CosmicButton(
+                label: isLast ? 'Vazhdoj! 🎉' : 'Tjetri →',
+                onPressed: _next,
               ),
             ],
           ),
