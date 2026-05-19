@@ -399,6 +399,18 @@ class _CloudSyncSection extends ConsumerWidget {
     await ref.read(authProvider.notifier).deleteAccount();
   }
 
+  /// Formatimi shqip i kohës së sinkronizimit.
+  static String _formatSyncTime(DateTime dt) {
+    final now = DateTime.now();
+    final diff = now.difference(dt);
+    if (diff.inMinutes < 1) return 'Tani';
+    if (diff.inMinutes < 60) return 'Para ${diff.inMinutes} min';
+    if (diff.inHours < 24) return 'Para ${diff.inHours} orë';
+    final h = dt.hour.toString().padLeft(2, '0');
+    final m = dt.minute.toString().padLeft(2, '0');
+    return '${dt.day}/${dt.month} $h:$m';
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
@@ -418,6 +430,19 @@ class _CloudSyncSection extends ConsumerWidget {
                     subtitle: account.email,
                     showChevron: false,
                   ),
+                  // B-02: Tregon kohën e sinkronizimit të fundit.
+                  if (account.lastSyncAt != null) ...[
+                    const Divider(
+                        height: 1,
+                        indent: 56,
+                        color: CosmicColors.outlineVariant),
+                    _SettingsTile(
+                      icon: Icons.sync_outlined,
+                      title: 'Sinkronizuar',
+                      subtitle: _formatSyncTime(account.lastSyncAt!),
+                      showChevron: false,
+                    ),
+                  ],
                   const Divider(
                       height: 1,
                       indent: 56,

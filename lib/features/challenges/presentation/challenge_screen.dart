@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../colors.dart';
 import '../../../core/domain/difficulty_engine.dart';
 import '../../../core/providers/challenge_provider.dart';
+import '../../../core/providers/family_provider.dart';
 import '../../../core/services/session_tracker.dart';
+import '../../../core/sync/sync_service.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../models/operation.dart';
 import '../../../responsive.dart';
@@ -96,6 +98,16 @@ class _ChallengeScreenState extends ConsumerState<ChallengeScreen> {
                 operationKey,
                 next.difficultyLevel,
               );
+              // B-01: Auto-sync statistikat ditore pas çdo sesioni (fire-and-forget).
+              final activeChild = ref.read(familyProvider).activeChild;
+              if (activeChild != null) {
+                ref.read(syncServiceProvider).updateDailyStats(
+                  child: activeChild,
+                  sessionPoints: next.score,
+                  sessionAccuracy: next.accuracy / 100.0,
+                  moduleKey: operationKey,
+                );
+              }
             }
             navigator.pushReplacement(
               MaterialPageRoute<void>(

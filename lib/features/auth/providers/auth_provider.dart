@@ -95,6 +95,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = const AuthStateUnauthenticated();
     }
   }
+
+  /// B-02: Rilexo llogarinë nga Hive (pas updateLastSyncAt) për të reflektuar
+  /// lastSyncAt të ri në UI pa ndryshuar gjendjen e autentifikimit.
+  Future<void> refreshAccount() async {
+    final account = await AuthService.getCurrentAccount();
+    if (account != null && state is AuthStateAuthenticated) {
+      state = AuthStateAuthenticated(account);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
