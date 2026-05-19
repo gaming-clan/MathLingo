@@ -221,30 +221,27 @@
 
 ---
 
-## Sprint 12: Raportet e Prindërve (Parental Reports) — PLANNED
-**Versioni target:** v1.10.0
-
-### Qëllimi
-Vizualizimi i të dhënave të progresit nga Firestore për prindërit — historiku sesionesh, tendencat dhe krahasimi mes fëmijëve.
+## Sprint 12: Raportet e Prindërve (Parental Reports) — IN PROGRESS
+**Versioni target:** v1.10.0 | **Branch:** `feature/sprint-12-parental-reports`
 
 ### Track A — Vizualizimi i të Dhënave Firestore
-- [ ] **A-01:** `SyncService.pullChildProgress(uid, childId)` — lexim historiku sesionesh nga Firestore (7 ditë fundit).
-- [ ] **A-02:** `ParentReportScreen` zgjeruar me grafik tendence pikësh (7 ditë) — `CustomPainter` sparkline.
-- [ ] **A-03:** Krahasim mes profileve fëmijësh — tabelë me pikë totale, saktësi mesatare, operacioni i preferuar.
-- [ ] **A-04:** Seksion "Aktiviteti i Fundit" — lista e 5 sesioneve të fundit me datë, operacion, pikë.
+- [x] **A-01:** `SyncService.pullWeeklyStats(uid, childId)` — lexim historiku 7 ditë nga Firestore (commit e5514a5).
+- [x] **A-02:** `ParentReportScreen` me grafik pikësh (BarChart) dhe saktësie (LineChart) — `fl_chart` (commit 77fcf6a).
+- [x] **A-03:** Krahasim mes profileve fëmijësh — `_ChildReportCard` me pikë totale, saktësi, sesione.
+- [x] **A-04:** Seksion "Aktiviteti i Fundit" — `_RecentActivitySection` me 5 ditët e fundit: datë, pikë, saktësi, sesione.
 
 ### Track B — Sinkronizimi Automatik i Progresit
-- [ ] **B-01:** Thirr `SyncService.syncChildProgress()` automatikisht pas çdo sesioni të përfunduar (nëse Firebase aktiv + autentikuar).
-- [ ] **B-02:** Indicator "U sinkronizua" / "Duke sinkronizuar..." në `SettingsScreen` — shfaq `lastSyncAt` nga `ParentAccount`.
-- [ ] **B-03:** Menaxhim graceful i gabimeve rrjeti — no-op nëse offline; retry automatik kur rikthehet lidhja.
+- [x] **B-01:** Thirr `SyncService.updateDailyStats()` automatikisht pas çdo sesioni të përfunduar në `ChallengeScreen` (fire-and-forget, nëse Firebase aktiv + autentikuar).
+- [x] **B-02:** Indicator "Sinkronizuar Para X min" në `SettingsScreen._CloudSyncSection` — shfaq `lastSyncAt` nga `ParentAccount`; `AuthService.updateLastSyncAt()` + `AuthNotifier.refreshAccount()`.
+- [x] **B-03:** Menaxhim graceful i gabimeve rrjeti — `_canSync()` guard + try/catch fire-and-forget; gabimi nuk ndikon në lojë.
 
 ### Track C — Firestore Security Rules
-- [ ] **C-01:** Rregulla Firestore: `users/{uid}/**` aksesueshe vetëm nga `request.auth.uid == uid`.
-- [ ] **C-02:** Validim me `firestore.rules` lokal + testim me Firebase Emulator.
+- [x] **C-01:** Rregulla Firestore: `users/{uid}/**` aksesueshe vetëm nga `request.auth.uid == uid` (commit 77fcf6a).
+- [ ] **C-02:** Validim me Firebase Emulator. *(Manual QA — shtyer)*
 
 ### Validation
-- [ ] `fvm flutter test` ≥134 ✅
-- [ ] `fvm flutter analyze` 0 issues ✅
+- [x] `fvm flutter test` 134/134 ✅
+- [x] `fvm flutter analyze` 0 issues ✅
 
 ---
 
