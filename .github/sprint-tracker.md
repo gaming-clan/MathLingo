@@ -221,8 +221,8 @@
 
 ---
 
-## Sprint 12: Raportet e Prindërve (Parental Reports) — IN PROGRESS
-**Versioni target:** v1.10.0 | **Branch:** `feature/sprint-12-parental-reports`
+## Sprint 12: Raportet e Prindërve (Parental Reports) — DONE
+**Versioni:** v1.10.0 | **Branch:** `feature/sprint-12-parental-reports`
 
 ### Track A — Vizualizimi i të Dhënave Firestore
 - [x] **A-01:** `SyncService.pullWeeklyStats(uid, childId)` — lexim historiku 7 ditë nga Firestore (commit e5514a5).

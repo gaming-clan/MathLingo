@@ -1,5 +1,48 @@
 # 📝 Changelog - MathLingo
 
+## [1.10.1] - 2026-05-19 — Sprint 11.5: Bug-Fix & Polish
+### Fixed
+- **B-01 — Shumëzim Invers:** `equationText` tregonte gabimisht `?÷n=tableNum`; korrigjuar në `?×n=result`. `badgeSymbol` ishte `÷`; korrigjuar në `×`. Rrethi tregonte `result`; korrigjuar në `selectedTable`.
+- **B-01 — Pjesëtim Invers:** `equationText` tregonte `?×n=tableNum`; korrigjuar në `result÷?=tableNum`. Rrethi tregonte `result`; korrigjuar në `num` (divisori). `_buildVisibleEntries` gjeneronte vetëm shumëfishat e saktë të `selectedTable`; korrigjuar — tani gjeneron 10 hyrje `(tableNum×1)..(tableNum×10)`.
+- **B-02 — Mbledhje Invers:** `_buildTabViews` kalonte `isInverseMode: false` hardcoded për tab-in e mbledhjes; korrigjuar në `isInverseMode: isInverseMode`. `_buildVisibleEntries` gjeneron hyrje inverse `?+n=tableNum → result=tableNum-n`.
+- **B-03 — Badge Reveal Button:** `FilledButton` me sfond `#F3D6FF` (kontrast ~1.36:1 — nën WCAG AA) zëvendësohet me `CosmicButton` (gradient magenta→violet, tekst i bardhë, kontrast ~7:1).
+- **B-04 — Card Padding:** Shtohet `Padding(EdgeInsets.fromLTRB(8,10,8,0))` rreth tekstit të formulës — teksti nuk ngjitet më me bordurin e kartës.
+- **B-07 — Card Font:** `fontSize: 20` → `fontSize: 16` me `maxLines: 2` dhe `overflow: TextOverflow.ellipsis` — shprehje të gjata nuk priten.
+- **B-08 — Card Contrast:** Shtohet `Shadow(Colors.black54, blurRadius:4, offset:Offset(0,1))` — tekst i lexueshëm mbi fondacione me ngjyra (portokalli, e kuqe).
+- **B-05 konfirmuar:** `addition_starter` tashmë kishte `emoji:'➕'` — pa ndryshim.
+- **B-06 konfirmuar:** `LeaderboardScreen` tashmë tregonte të gjithë fëmijët me `isActive` highlight — pa ndryshim.
+
+### Tests
+- `test/features/tables/tables_inverse_mode_test.dart` rifaqosur: 12 → 19 teste (shumëzim/pjesëtim/mbledhje invers, entries, circle values, regresion klasik).
+
+### Validated
+- `fvm flutter test` — 141/141 ✅
+- `fvm flutter analyze` — No issues found ✅
+
+---
+
+## [1.10.0] - 2026-05-19 — Sprint 12: Raportet e Prindërve
+### Added
+- **`SyncService.pullWeeklyStats(uid, childId)`** — lexon historikun e 7 ditëve nga koleksioni Firestore `progress/{date}` dhe ndërton `WeeklyStatsState` me lista `points`, `accuracy`, `sessions`.
+- **`WeeklyStatsState`** (`lib/features/family/providers/`) — Riverpod `StateNotifierProvider`; menaxhon gjendjen e statistikave javore (loading/error/data).
+- **`ParentReportScreen`** zgjeruar me:
+  - `BarChart` (`fl_chart`) — pikët e 7 ditëve të fundit me gradientë cyan.
+  - `LineChart` (`fl_chart`) — saktësia % e 7 ditëve me spot cyan/red mbi 70%.
+  - `_ChildReportCard` — krahasim mes profileve fëmijësh (pikë totale, saktësi, sesione).
+  - `_RecentActivitySection` + `_ActivityRow` — 5 ditët e fundit me datë, pikë (⚡), saktësi%, numër sesionesh, renditje kronologjike inverse.
+- **Auto-sync pas sesionit:** `ChallengeScreen` thirr `SyncService.updateDailyStats()` fire-and-forget pas çdo sesioni të përfunduar (kur Firebase aktiv + autentikuar).
+- **`AuthService.updateLastSyncAt(DateTime)`** — lexon `ParentAccount` nga Hive, ruan me `lastSyncAt` të përditësuar.
+- **`AuthNotifier.refreshAccount()`** — rifreskon `ParentAccount` nga Hive dhe përditëson state.
+- **Indicator "Sinkronizuar Para X min"** në `SettingsScreen._CloudSyncSection` — shfaq `lastSyncAt` i formatuar (Tani / Para X min / Para X orë / dd/mm HH:MM).
+- **`fl_chart: ^0.69.0`** — paketë grafike për vizualizimin e statistikave prindërore.
+- **Firestore Security Rules** (`firestore.rules`) — `users/{uid}/**` aksesueshe vetëm nga `request.auth.uid == uid`.
+
+### Validated
+- `fvm flutter test` — 134/134 ✅
+- `fvm flutter analyze` — No issues found ✅
+
+---
+
 ## [1.9.0] - 2026-05-18 — Stabilization Update
 ### Fixed (UI Polish)
 - **B012 — PIN Dialog:** `hintStyle` i fushave të hyrjes së PIN-it vendosur me `color: Colors.white38` — hintText nuk dukej si tekst i plotë.
