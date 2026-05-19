@@ -245,6 +245,29 @@
 
 ---
 
+## Sprint 11.5: Bug-Fix & Polish — DONE
+**Versioni:** v1.10.1 | **Branch:** `fix/sprint-11-5-bugfix-polish`
+
+### Bug Fixes
+- [x] **B-01:** `simple_tables.dart` — Korrigjim `equationText` dhe `badgeSymbol` për shumëzim invers (`?×n=result`) dhe pjesëtim invers (`result÷?=tableNum`). Rrethi tregon vlerën e saktë (selectedTable për shumëzim, num/divisor për pjesëtim).
+- [x] **B-02:** `simple_tables.dart` — Mbledhja kalon `isInverseMode: isInverseMode` (ishte hardcoded `false`). `_buildVisibleEntries` gjeneron hyrje inverse për mbledhje (`?+n=tableNum → result=tableNum-n`).
+- [x] **B-03:** `badge_notification_overlay.dart` — `FilledButton` (sfond rozë i çelët, kontrast i ulët) zëvendësohet me `CosmicButton` (gradient magenta→violet, tekst i bardhë).
+- [x] **B-04:** `simple_tables.dart` — Shtim padding `EdgeInsets.fromLTRB(8,10,8,0)` brenda kartave tabelave.
+- [x] **B-05:** ~~Emoji i mungueshëm tek `addition_starter`~~ — Ishte tashmë `emoji: '➕'` → pa ndryshim.
+- [x] **B-06:** ~~Leaderboard tregon vetëm profilin aktiv~~ — Ishte tashmë duke treguar të gjithë fëmijët → pa ndryshim.
+- [x] **B-07:** `simple_tables.dart` — `fontSize: 16`, `maxLines: 2`, `overflow: TextOverflow.ellipsis` për formulën e kartës.
+- [x] **B-08:** `simple_tables.dart` — `shadow: Shadow(black54, blur:4)` mbi tekstin e formulës për kontrast mbi fondacione me ngjyra.
+- [x] **`_buildVisibleEntries` rindërtim inverse:** Pjesëtimi invers → 10 hyrje (`tableNum×mult`), mbledhja invers → `tableNum` hyrje (`tableNum-n`).
+
+### Unit Tests
+- [x] **T-01…T-19:** `test/features/tables/tables_inverse_mode_test.dart` — 19 teste (rifaqosur nga 12 → 19): shumëzim invers ekuacion+rreth, pjesëtim invers ekuacion+rreth+entries, mbledhje invers ekuacion+entries+badge, regresion klasik.
+
+### Validation
+- [x] `fvm flutter test` 141/141 ✅
+- [x] `fvm flutter analyze` 0 errors/warnings ✅
+
+---
+
 ## Sprint 13: Store Submission (Përgatitja e Lansimit) — PLANNED
 **Versioni target:** v1.11.0
 

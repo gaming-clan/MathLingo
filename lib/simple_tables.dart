@@ -83,9 +83,26 @@ class _OperationTablesScreenState
   List<({int operand, int result})> _buildVisibleEntries(
     _TableOperation operation,
     int Function(int, int) calculate,
-    int selectedTable,
-  ) {
+    int selectedTable, {
+    bool isInverseMode = false,
+  }) {
     final entries = <({int operand, int result})>[];
+
+    // Mbledhja invers: ?+n=tableNum → result=tableNum-n, n në 1..tableNum
+    if (isInverseMode && operation == _TableOperation.addition) {
+      for (var n = 1; n <= selectedTable; n++) {
+        entries.add((operand: n, result: selectedTable - n));
+      }
+      return entries;
+    }
+
+    // Pjesëtimi invers: (tableNum×mult)÷?=tableNum → mult 1..10
+    if (isInverseMode && operation == _TableOperation.division) {
+      for (var multiplier = 1; multiplier <= 10; multiplier++) {
+        entries.add((operand: multiplier, result: selectedTable * multiplier));
+      }
+      return entries;
+    }
 
     for (var operand = 1; operand <= 10; operand++) {
       if (operation == _TableOperation.subtraction && selectedTable < operand) {
@@ -214,7 +231,7 @@ class _OperationTablesScreenState
         (a, b) => a + b,
         Colors.green,
         selectedTable,
-        isInverseMode: false,
+        isInverseMode: isInverseMode,
         showNumberSelector: showNumberSelector,
       ),
       _buildOperationTable(
@@ -361,24 +378,29 @@ class _OperationTablesScreenState
     bool isInverseMode = false,
   }) {
     final l10n = AppLocalizations.of(context);
-    final entries = _buildVisibleEntries(operation, calculate, selectedTable);
+    final entries = _buildVisibleEntries(
+      operation,
+      calculate,
+      selectedTable,
+      isInverseMode: isInverseMode,
+    );
     final operationLabel = operation.label(l10n);
 
     // Funksioni që ndërton tekstin e ekuacionit per çdo hyrje të tabelës.
-    // Modaliteti invers: mbledhja (N/A), zbritja → "? + b = a",
-    // shumëzimi → "? ÷ b = a" (bulbla tregon a*b = përgjigja e saktë),
-    // pjesëtimi → "? × b = a"
-    String equationText(int num) {
+    // Klasik: "tableNum OP n = result"
+    // Invers: mbledhja/zbritja → "? + n = tableNum",
+    //         shumëzimi → "? × n = result", pjesëtimi → "result ÷ ? = tableNum"
+    String equationText(int num, int result) {
       if (isInverseMode) {
-        if (operation == _TableOperation.subtraction) {
+        if (operation == _TableOperation.addition ||
+            operation == _TableOperation.subtraction) {
           return '? + $num = $selectedTable';
         }
         if (operation == _TableOperation.multiplication) {
-          // "? ÷ num = selectedTable" → ? = selectedTable * num = calculate(a,b) ✓
-          return '? ÷ $num = $selectedTable';
+          return '? × $num = $result';
         }
         if (operation == _TableOperation.division) {
-          return '? × $num = $selectedTable';
+          return '$result ÷ ? = $selectedTable';
         }
       }
       return '$selectedTable ${operation.symbol} $num';
@@ -387,9 +409,10 @@ class _OperationTablesScreenState
     // Badge symbol ndryshon gjithashtu në modalitetin invers
     String badgeSymbol() {
       if (isInverseMode) {
+        if (operation == _TableOperation.addition) return '+';
         if (operation == _TableOperation.subtraction) return '+';
-        if (operation == _TableOperation.multiplication) return '÷';
-        if (operation == _TableOperation.division) return '×';
+        if (operation == _TableOperation.multiplication) return '×';
+        if (operation == _TableOperation.division) return '÷';
       }
       return operation.symbol;
     }
@@ -534,15 +557,29 @@ class _OperationTablesScreenState
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
-                                  equationText(num),
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w900,
-                                    color: CosmicColors.onSurface,
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(8, 10, 8, 0),
+                                  child: Text(
+                                    equationText(num, result),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900,
+                                      color: CosmicColors.onSurface,
+                                      height: 1.2,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black54,
+                                          blurRadius: 4,
+                                          offset: Offset(0, 1),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 12),
+                                const SizedBox(height: 8),
                                 Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
@@ -550,7 +587,15 @@ class _OperationTablesScreenState
                                     color: color,
                                   ),
                                   child: Text(
-                                    '$result',
+                                    isInverseMode
+                                        ? (operation ==
+                                                _TableOperation.multiplication
+                                            ? '$selectedTable'
+                                            : operation ==
+                                                    _TableOperation.division
+                                                ? '$num'
+                                                : '$result')
+                                        : '$result',
                                     style: const TextStyle(
                                       fontSize: 32,
                                       fontWeight: FontWeight.w900,

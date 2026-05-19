@@ -1,96 +1,254 @@
-// A-05: Unit tests për logjikën e tabelave inverse
-// Verifikon: modaliteti invers ndryshon formulimin e pyetjes por e mban
-// përgjigjen (result) të njëjtë me atë klasike.
+// Sprint 11.5 · Unit tests për logjikën e tabelave inverse (B-01, B-02)
+// Verifikon:
+//   - formulimet e ekuacioneve klasike vs inverse (string formatting)
+//   - vlerat e rrethit (answer) për çdo modalitet
+//   - gjenerimin e hyrjeve (_buildVisibleEntries) për inverse mbledhje/pjesëtim
+//   - badge symbols klasike vs inverse
 
 import 'package:flutter_test/flutter_test.dart';
 
 // ---------------------------------------------------------------------------
-// Logjika e tabelave është brenda widget-it; këtu testojmë domenin e vogël:
-//   - ekuacionet klasike vs inverse (string formatting)
-//   - isInverseMode toggle state
+// Domain helpers — pasqyrojnë logjikën e simple_tables.dart
 // ---------------------------------------------------------------------------
 
-String classicEquation(int selectedTable, String op, int num) =>
-    '$selectedTable $op $num';
+enum _Op { addition, subtraction, multiplication, division }
 
-String inverseEquationForSubtraction(int selectedTable, int num) =>
-    '? + $num = $selectedTable';
+String equationText({
+  required _Op operation,
+  required bool isInverseMode,
+  required int selectedTable,
+  required int num,
+  required int result,
+}) {
+  if (isInverseMode) {
+    if (operation == _Op.addition || operation == _Op.subtraction) {
+      return '? + $num = $selectedTable';
+    }
+    if (operation == _Op.multiplication) {
+      return '? × $num = $result';
+    }
+    if (operation == _Op.division) {
+      return '$result ÷ ? = $selectedTable';
+    }
+  }
+  const symbols = {
+    _Op.addition: '+',
+    _Op.subtraction: '−',
+    _Op.multiplication: '×',
+    _Op.division: '÷',
+  };
+  return '$selectedTable ${symbols[operation]} $num';
+}
 
-String inverseEquationForDivision(int selectedTable, int num) =>
-    '? × $num = $selectedTable';
+String badgeSymbol({required _Op operation, required bool isInverseMode}) {
+  if (isInverseMode) {
+    if (operation == _Op.addition || operation == _Op.subtraction) return '+';
+    if (operation == _Op.multiplication) return '×';
+    if (operation == _Op.division) return '÷';
+  }
+  const symbols = {
+    _Op.addition: '+',
+    _Op.subtraction: '−',
+    _Op.multiplication: '×',
+    _Op.division: '÷',
+  };
+  return symbols[operation]!;
+}
+
+int circleValue({
+  required _Op operation,
+  required bool isInverseMode,
+  required int selectedTable,
+  required int num,
+  required int result,
+}) {
+  if (isInverseMode) {
+    if (operation == _Op.multiplication) return selectedTable;
+    if (operation == _Op.division) return num;
+    return result; // mbledhje & zbritje: result është përgjigja
+  }
+  return result;
+}
+
+/// Pasqyron _buildVisibleEntries() për mbledhje inverse
+List<({int operand, int result})> buildAdditionInverseEntries(int tableNum) {
+  return [
+    for (var n = 1; n <= tableNum; n++) (operand: n, result: tableNum - n),
+  ];
+}
+
+/// Pasqyron _buildVisibleEntries() për pjesëtim inverse
+List<({int operand, int result})> buildDivisionInverseEntries(int tableNum) {
+  return [
+    for (var m = 1; m <= 10; m++) (operand: m, result: tableNum * m),
+  ];
+}
+
+// ---------------------------------------------------------------------------
 
 void main() {
-  group('Tabelat — modaliteti klasik', () {
-    test('mbledhje: 8 + 3', () {
-      expect(classicEquation(8, '+', 3), '8 + 3');
+  // ── B-01: Shumëzim Invers ─────────────────────────────────────────────────
+  group('B-01 · Shumëzim Invers (tabela 4)', () {
+    const t = 4;
+
+    test('equationText: ? × n = result (jo ÷)', () {
+      // entry: operand=2, result=8
+      final txt = equationText(
+        operation: _Op.multiplication,
+        isInverseMode: true,
+        selectedTable: t,
+        num: 2,
+        result: 8,
+      );
+      expect(txt, '? × 2 = 8');
+      expect(txt.contains('÷'), isFalse,
+          reason: 'Nuk duhet të përmbajë ÷ në shumëzim invers');
     });
 
-    test('zbritje: 8 − 3', () {
-      expect(classicEquation(8, '−', 3), '8 − 3');
+    test('circle tregon selectedTable (4), jo result', () {
+      final cv = circleValue(
+        operation: _Op.multiplication,
+        isInverseMode: true,
+        selectedTable: t,
+        num: 3,
+        result: 12,
+      );
+      expect(cv, t);
     });
 
-    test('shumëzim: 4 × 3', () {
-      expect(classicEquation(4, '×', 3), '4 × 3');
-    });
-
-    test('pjesëtim: 12 ÷ 3', () {
-      expect(classicEquation(12, '÷', 3), '12 ÷ 3');
-    });
-  });
-
-  group('Tabelat — modaliteti invers', () {
-    test('zbritje → "? + 3 = 8" (invers i mbledhjes)', () {
-      expect(inverseEquationForSubtraction(8, 3), '? + 3 = 8');
-    });
-
-    test('zbritje → "? + 7 = 15"', () {
-      expect(inverseEquationForSubtraction(15, 7), '? + 7 = 15');
-    });
-
-    test('pjesëtim → "? × 3 = 12" (plotëso shumëzimin)', () {
-      expect(inverseEquationForDivision(12, 3), '? × 3 = 12');
-    });
-
-    test('pjesëtim → "? × 4 = 20"', () {
-      expect(inverseEquationForDivision(20, 4), '? × 4 = 20');
-    });
-  });
-
-  group('Tabelat — konsistencë e përgjigjes (result)', () {
-    test('zbritje klasike dhe inverse kanë të njëjtin result', () {
-      // 8 − 3 = 5  ↔  ? + 3 = 8  →  ? = 5
-      const selectedTable = 8;
-      const num = 3;
-      final classicResult = selectedTable - num;
-      // Në modalitetin invers, answer = selectedTable - num (i njëjtë)
-      final inverseAnswer = selectedTable - num;
-      expect(classicResult, inverseAnswer);
-    });
-
-    test('pjesëtim klasik dhe invers kanë të njëjtin result', () {
-      // 12 ÷ 3 = 4  ↔  ? × 3 = 12  →  ? = 4
-      const selectedTable = 12;
-      const num = 3;
-      final classicResult = selectedTable ~/ num;
-      final inverseAnswer = selectedTable ~/ num;
-      expect(classicResult, inverseAnswer);
+    test('badgeSymbol: ×, jo ÷', () {
+      expect(badgeSymbol(operation: _Op.multiplication, isInverseMode: true),
+          '×');
     });
   });
 
-  group('TablesState — isInverseMode', () {
-    test('fillim: isInverseMode == false', () {
-      // Domeni i thjeshtë — TablesState nuk importohet këtu, por kontrakta e
-      // defaults-it: false.
-      const initialInverseMode = false;
-      expect(initialInverseMode, isFalse);
+  // ── B-01: Pjesëtim Invers ─────────────────────────────────────────────────
+  group('B-01 · Pjesëtim Invers (tabela 4)', () {
+    const t = 4;
+
+    test('equationText: dividend ÷ ? = 4 (jo ?×n=4)', () {
+      // entry: operand=3, result=12  (4×3=12)
+      final txt = equationText(
+        operation: _Op.division,
+        isInverseMode: true,
+        selectedTable: t,
+        num: 3,
+        result: 12,
+      );
+      expect(txt, '12 ÷ ? = 4');
     });
 
-    test('toggle ndryshon vlerën', () {
-      var isInverseMode = false;
-      isInverseMode = !isInverseMode;
-      expect(isInverseMode, isTrue);
-      isInverseMode = !isInverseMode;
-      expect(isInverseMode, isFalse);
+    test('circle tregon divisor (num), jo selectedTable', () {
+      final cv = circleValue(
+        operation: _Op.division,
+        isInverseMode: true,
+        selectedTable: t,
+        num: 3,
+        result: 12,
+      );
+      expect(cv, 3);
+    });
+
+    test('badgeSymbol: ÷, jo ×', () {
+      expect(
+          badgeSymbol(operation: _Op.division, isInverseMode: true), '÷');
+    });
+
+    test('buildDivisionInverseEntries gjeneron 10 hyrje', () {
+      final entries = buildDivisionInverseEntries(t);
+      expect(entries.length, 10);
+    });
+
+    test('buildDivisionInverseEntries: entries[0] = (operand:1, result:4)', () {
+      final e = buildDivisionInverseEntries(t);
+      expect(e[0].operand, 1);
+      expect(e[0].result, 4); // 4×1=4
+    });
+
+    test('buildDivisionInverseEntries: entries[2] = (operand:3, result:12)', () {
+      final e = buildDivisionInverseEntries(t);
+      expect(e[2].operand, 3);
+      expect(e[2].result, 12); // 4×3=12
+    });
+  });
+
+  // ── B-02: Mbledhje Invers ─────────────────────────────────────────────────
+  group('B-02 · Mbledhje Invers (tabela 4)', () {
+    const t = 4;
+
+    test('equationText: ? + n = 4', () {
+      final txt = equationText(
+        operation: _Op.addition,
+        isInverseMode: true,
+        selectedTable: t,
+        num: 1,
+        result: 3,
+      );
+      expect(txt, '? + 1 = 4');
+    });
+
+    test('buildAdditionInverseEntries: entries[0].answer == 3 (?+1=4)', () {
+      final e = buildAdditionInverseEntries(t);
+      expect(e[0].operand, 1);
+      expect(e[0].result, 3); // 4-1=3
+    });
+
+    test('buildAdditionInverseEntries: entries[1].answer == 2 (?+2=4)', () {
+      final e = buildAdditionInverseEntries(t);
+      expect(e[1].operand, 2);
+      expect(e[1].result, 2); // 4-2=2
+    });
+
+    test('buildAdditionInverseEntries: entries[3].answer == 0 (?+4=4)', () {
+      final e = buildAdditionInverseEntries(t);
+      expect(e[3].operand, 4);
+      expect(e[3].result, 0); // 4-4=0
+    });
+
+    test('buildAdditionInverseEntries gjeneron tableNum hyrje', () {
+      final e = buildAdditionInverseEntries(t);
+      expect(e.length, t); // 4 hyrje (n=1,2,3,4)
+    });
+
+    test('badgeSymbol: +', () {
+      expect(
+          badgeSymbol(operation: _Op.addition, isInverseMode: true), '+');
+    });
+  });
+
+  // ── Modaliteti klasik (regresion) ─────────────────────────────────────────
+  group('Klasik — regresion', () {
+    test('shumëzim klasik: 4 × 3 = 12', () {
+      final txt = equationText(
+        operation: _Op.multiplication,
+        isInverseMode: false,
+        selectedTable: 4,
+        num: 3,
+        result: 12,
+      );
+      expect(txt, '4 × 3');
+    });
+
+    test('zbritje klasike: 8 − 3', () {
+      final txt = equationText(
+        operation: _Op.subtraction,
+        isInverseMode: false,
+        selectedTable: 8,
+        num: 3,
+        result: 5,
+      );
+      expect(txt, '8 − 3');
+    });
+
+    test('badge klasik shumëzim: ×', () {
+      expect(
+          badgeSymbol(operation: _Op.multiplication, isInverseMode: false),
+          '×');
+    });
+
+    test('badge klasik pjesëtim: ÷', () {
+      expect(
+          badgeSymbol(operation: _Op.division, isInverseMode: false), '÷');
     });
   });
 }
