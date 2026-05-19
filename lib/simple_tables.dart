@@ -68,6 +68,29 @@ extension _TableOperationX on _TableOperation {
   }
 }
 
+extension _TableOperationTheme on _TableOperation {
+  Color get cardBackground => switch (this) {
+    _TableOperation.addition => const Color(0xB3143214),
+    _TableOperation.subtraction => const Color(0xB3321414),
+    _TableOperation.multiplication => const Color(0xB332260E),
+    _TableOperation.division => const Color(0xB30E2234),
+  };
+
+  Color get cardBorderColor => switch (this) {
+    _TableOperation.addition => const Color(0x802D6E2D),
+    _TableOperation.subtraction => const Color(0x808B2D2D),
+    _TableOperation.multiplication => const Color(0x808B5A10),
+    _TableOperation.division => const Color(0x8010508B),
+  };
+
+  Color get cardTextColor => switch (this) {
+    _TableOperation.addition => const Color(0xFF6EE86E),
+    _TableOperation.subtraction => const Color(0xFFFF8080),
+    _TableOperation.multiplication => const Color(0xFFFFB84D),
+    _TableOperation.division => const Color(0xFF4DB8FF),
+  };
+}
+
 // Simple Operation Tables Screen
 class OperationTablesScreen extends ConsumerStatefulWidget {
   const OperationTablesScreen({super.key});
@@ -100,6 +123,14 @@ class _OperationTablesScreenState
     if (isInverseMode && operation == _TableOperation.division) {
       for (var multiplier = 1; multiplier <= 10; multiplier++) {
         entries.add((operand: multiplier, result: selectedTable * multiplier));
+      }
+      return entries;
+    }
+
+    // Zbritja invers: selectedTable−n=?, n=1..table-1 (shmang rezultat=0)
+    if (isInverseMode && operation == _TableOperation.subtraction) {
+      for (var n = 1; n < selectedTable; n++) {
+        entries.add((operand: n, result: selectedTable - n));
       }
       return entries;
     }
@@ -229,7 +260,6 @@ class _OperationTablesScreenState
       _buildOperationTable(
         _TableOperation.addition,
         (a, b) => a + b,
-        Colors.green,
         selectedTable,
         isInverseMode: isInverseMode,
         showNumberSelector: showNumberSelector,
@@ -237,7 +267,6 @@ class _OperationTablesScreenState
       _buildOperationTable(
         _TableOperation.subtraction,
         (a, b) => a - b,
-        Colors.red,
         selectedTable,
         isInverseMode: isInverseMode,
         showNumberSelector: showNumberSelector,
@@ -245,7 +274,6 @@ class _OperationTablesScreenState
       _buildOperationTable(
         _TableOperation.multiplication,
         (a, b) => a * b,
-        Colors.orange,
         selectedTable,
         isInverseMode: isInverseMode,
         showNumberSelector: showNumberSelector,
@@ -253,7 +281,6 @@ class _OperationTablesScreenState
       _buildOperationTable(
         _TableOperation.division,
         (a, b) => a ~/ b,
-        Colors.blue,
         selectedTable,
         isInverseMode: isInverseMode,
         showNumberSelector: showNumberSelector,
@@ -372,7 +399,6 @@ class _OperationTablesScreenState
   Widget _buildOperationTable(
     _TableOperation operation,
     int Function(int, int) calculate,
-    Color color,
     int selectedTable, {
     bool showNumberSelector = true,
     bool isInverseMode = false,
@@ -392,9 +418,11 @@ class _OperationTablesScreenState
     //         shumëzimi → "? × n = result", pjesëtimi → "result ÷ ? = tableNum"
     String equationText(int num, int result) {
       if (isInverseMode) {
-        if (operation == _TableOperation.addition ||
-            operation == _TableOperation.subtraction) {
+        if (operation == _TableOperation.addition) {
           return '? + $num = $selectedTable';
+        }
+        if (operation == _TableOperation.subtraction) {
+          return '$selectedTable − $num = ?';
         }
         if (operation == _TableOperation.multiplication) {
           return '? × $num = $result';
@@ -406,15 +434,27 @@ class _OperationTablesScreenState
       return '$selectedTable ${operation.symbol} $num';
     }
 
-    // Badge symbol ndryshon gjithashtu në modalitetin invers
-    String badgeSymbol() {
-      if (isInverseMode) {
-        if (operation == _TableOperation.addition) return '+';
-        if (operation == _TableOperation.subtraction) return '+';
-        if (operation == _TableOperation.multiplication) return '×';
-        if (operation == _TableOperation.division) return '÷';
+    // Vlera e zbulimit — numri që i përgjigjet '?'
+    int revealValue(int num, int result) {
+      if (!isInverseMode) return result;
+      return switch (operation) {
+        _TableOperation.multiplication => selectedTable,
+        _TableOperation.division => num,
+        _ => result,
+      };
+    }
+
+    // Teksti i snackbar-it kur karta zbulohet (ekuacioni i plotë)
+    String snackText(int num, int result) {
+      if (!isInverseMode) {
+        return '$selectedTable ${operation.symbol} $num = $result';
       }
-      return operation.symbol;
+      return switch (operation) {
+        _TableOperation.addition => '$result + $num = $selectedTable',
+        _TableOperation.subtraction => '$selectedTable − $num = $result',
+        _TableOperation.multiplication => '$selectedTable × $num = $result',
+        _TableOperation.division => '$result ÷ $num = $selectedTable',
+      };
     }
 
     return Column(
@@ -446,48 +486,49 @@ class _OperationTablesScreenState
           ),
         ),
         if (showNumberSelector)
-          SizedBox(
-            height: 60,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: 12,
-              itemBuilder: (context, index) {
-                int num = index + 1;
-                final isSelected = selectedTable == num;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: ElevatedButton(
-                    onPressed: () =>
-                        ref.read(tablesProvider.notifier).selectTable(num),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isSelected
-                          ? color
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: List.generate(12, (index) {
+                final n = index + 1;
+                final isSelected = selectedTable == n;
+                final accentColor = operation.cardTextColor;
+                return GestureDetector(
+                  onTap: () =>
+                      ref.read(tablesProvider.notifier).selectTable(n),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 120),
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? operation.cardBackground
                           : CosmicColors.surfaceHighest,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 14,
-                      ),
-                      elevation: isSelected ? 12 : 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(
-                          color: isSelected ? Colors.white : color,
-                          width: 2,
-                        ),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: isSelected
+                            ? accentColor
+                            : const Color(0x33FFFFFF),
+                        width: isSelected ? 1.5 : 1,
                       ),
                     ),
-                    child: Text(
-                      '$num',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
+                    child: Center(
+                      child: Text(
+                        '$n',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: isSelected
+                              ? accentColor
+                              : CosmicColors.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ),
                 );
-              },
+              }),
             ),
           ),
         const SizedBox(height: 24),
@@ -504,134 +545,18 @@ class _OperationTablesScreenState
                 padding: EdgeInsets.fromLTRB(hPad, 16, hPad, 32),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: columns,
-                  childAspectRatio: constraints.maxWidth >= 700 ? 1.25 : 0.82,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
+                  childAspectRatio: 1.0,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
                 ),
                 itemCount: entries.length,
                 itemBuilder: (context, index) {
                   final entry = entries[index];
-                  final num = entry.operand;
-                  final result = entry.result;
-                  return Card(
-                    color: color.withValues(alpha: 0.2),
-                    elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color: color, width: 3),
-                    ),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(16),
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              l10n.tablesEquationSnackBar(
-                                selectedTable,
-                                badgeSymbol(),
-                                num,
-                                result,
-                              ),
-                            ),
-                            duration: const Duration(seconds: 1),
-                            backgroundColor: color,
-                            behavior: SnackBarBehavior.floating,
-                            margin: _tableSnackBarMargin,
-                          ),
-                        );
-                      },
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  color.withValues(alpha: 0.15),
-                                  color.withValues(alpha: 0.05),
-                                ],
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 10, 8, 0),
-                                  child: Text(
-                                    equationText(num, result),
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w900,
-                                      color: CosmicColors.onSurface,
-                                      height: 1.2,
-                                      shadows: [
-                                        Shadow(
-                                          color: Colors.black54,
-                                          blurRadius: 4,
-                                          offset: Offset(0, 1),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: color,
-                                  ),
-                                  child: Text(
-                                    isInverseMode
-                                        ? (operation ==
-                                                _TableOperation.multiplication
-                                            ? '$selectedTable'
-                                            : operation ==
-                                                    _TableOperation.division
-                                                ? '$num'
-                                                : '$result')
-                                        : '$result',
-                                    style: const TextStyle(
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // C2: badge simboli operacionit (WCAG non-color encoding)
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: color,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                badgeSymbol(),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  return _TableCard(
+                    equationText: equationText(entry.operand, entry.result),
+                    revealValue: revealValue(entry.operand, entry.result),
+                    snackText: snackText(entry.operand, entry.result),
+                    operation: operation,
                   );
                 },
               );
@@ -639,6 +564,136 @@ class _OperationTablesScreenState
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Kartë individuale tabele — zbulimi i përgjigjes me trokitje.
+/// Trokitje e parë: zbulon përgjigjen + snackbar me ekuacionin e plotë.
+/// Trokitje e dytë: fsheh përgjigjen.
+class _TableCard extends StatefulWidget {
+  const _TableCard({
+    required this.equationText,
+    required this.revealValue,
+    required this.snackText,
+    required this.operation,
+  });
+
+  final String equationText;
+  final int revealValue;
+  final String snackText;
+  final _TableOperation operation;
+
+  @override
+  State<_TableCard> createState() => _TableCardState();
+}
+
+class _TableCardState extends State<_TableCard> {
+  bool _revealed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final op = widget.operation;
+    final accentColor = op.cardTextColor;
+    final bgColor = op.cardBackground;
+    final borderColor = op.cardBorderColor;
+
+    return GestureDetector(
+      onTap: () {
+        if (!_revealed) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                widget.snackText,
+                style: TextStyle(
+                  color: accentColor,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              duration: const Duration(seconds: 1),
+              backgroundColor: CosmicColors.surfaceHighest,
+              behavior: SnackBarBehavior.floating,
+              margin: _tableSnackBarMargin,
+            ),
+          );
+        }
+        setState(() => _revealed = !_revealed);
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: _revealed ? accentColor.withValues(alpha: 0.5) : borderColor,
+            width: 1.5,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                widget.equationText,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  height: 1.2,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Container(
+                width: 28,
+                height: 1,
+                color: accentColor.withValues(alpha: 0.4),
+              ),
+              const SizedBox(height: 6),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: _revealed
+                    ? Column(
+                        key: const ValueKey('revealed'),
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '=',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: accentColor.withValues(alpha: 0.7),
+                              letterSpacing: 0.05,
+                            ),
+                          ),
+                          Text(
+                            '${widget.revealValue}',
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w900,
+                              color: accentColor,
+                              height: 1.0,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(
+                        key: const ValueKey('hidden'),
+                        width: 40,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: borderColor.withValues(alpha: 0.7),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

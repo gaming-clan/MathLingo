@@ -299,6 +299,37 @@ Finalizimi i të gjitha aseteve dhe konfiguracioneve të nevojshme për publikim
 
 ---
 
+## Sprint 14: Ridizenjimi i Kartave të Tabelave — DONE
+**Versioni:** v2.0.1 | **Branch:** `feature/sprint-14-table-redesign`
+
+### Qëllimi
+Ridizenjim i plotë i UI kartave të tabelave bazuar në mockup HTML: tema me ngjyra për çdo operacion, mekanizëm zbulimi me trokitje, selektor numrash kompakt, zbritje invers e saktë.
+
+### Track A — Ridizenjimi i Kartave (`simple_tables.dart`)
+- [x] **A-01:** `_TableOperationTheme` extension — `cardBackground`, `cardBorderColor`, `cardTextColor` per operacion (gjelbër/kuq/portokallë/kaltër).
+- [x] **A-02:** `_TableCard` StatefulWidget — `_revealed` state, `AnimatedContainer`, `AnimatedSwitcher`, zbulim me trokitje.
+- [x] **A-03:** Trokitje e parë zbulon përgjigjen + SnackBar me ekuacionin e plotë; trokitje e dytë fsheh.
+- [x] **A-04:** Selektor numrash `Wrap` 36×36 `AnimatedContainer` (zëvendëson `ListView` me `ElevatedButton`).
+- [x] **A-05:** `GridView` `childAspectRatio: 1.0` (karta katrore), `spacing: 10`.
+- [x] **A-06:** Hequr parametri `Color color` nga `_buildOperationTable` — ngjyrat vijnë nga extension.
+
+### Track B — Logjika Zbritje Invers (B-012/B-013 Fix)
+- [x] **B-01:** `_buildVisibleEntries` — rast i ri zbritje invers: `n=1..table-1` (shmanget `result=0`).
+- [x] **B-02:** `revealValue()` dhe `snackText()` — zëvendësojnë `badgeSymbol()` me logjikë të saktë per operacion.
+- [x] **B-03:** `equationText` zbritje invers → `'$selectedTable − $num = ?'` (jo `'? + $num = $selectedTable'`).
+
+### Track C — Unit Tests
+- [x] **C-01:** `tables_inverse_mode_test.dart` — fix helper `equationText` (zbritje invers = `4 − 2 = ?`).
+- [x] **C-02:** `tables_inverse_mode_test.dart` — fix helper `badgeSymbol` (zbritje invers = `−`).
+- [x] **C-03:** `tables_inverse_mode_test.dart` — shtohet `buildSubtractionInverseEntries` helper.
+- [x] **C-04:** Grup i ri testesh `B-03 · Zbritje Invers (tabela 4)` — 5 teste të reja.
+
+### Validation
+- [x] `fvm flutter test` 146/146 ✅ (+5 teste të reja)
+- [x] `fvm flutter analyze` 0 warnings/errors ✅ (3 `info` pre-existing në test file)
+
+---
+
 ## 🏆 v2.0.0 — Lansimi Zyrtar (Go-to-Market)
 **Target:** Google Play Store — Shqipëri
 

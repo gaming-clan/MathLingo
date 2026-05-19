@@ -21,8 +21,11 @@ String equationText({
   required int result,
 }) {
   if (isInverseMode) {
-    if (operation == _Op.addition || operation == _Op.subtraction) {
+    if (operation == _Op.addition) {
       return '? + $num = $selectedTable';
+    }
+    if (operation == _Op.subtraction) {
+      return '$selectedTable − $num = ?';
     }
     if (operation == _Op.multiplication) {
       return '? × $num = $result';
@@ -42,7 +45,8 @@ String equationText({
 
 String badgeSymbol({required _Op operation, required bool isInverseMode}) {
   if (isInverseMode) {
-    if (operation == _Op.addition || operation == _Op.subtraction) return '+';
+    if (operation == _Op.addition) return '+';
+    if (operation == _Op.subtraction) return '−';
     if (operation == _Op.multiplication) return '×';
     if (operation == _Op.division) return '÷';
   }
@@ -81,6 +85,13 @@ List<({int operand, int result})> buildAdditionInverseEntries(int tableNum) {
 List<({int operand, int result})> buildDivisionInverseEntries(int tableNum) {
   return [
     for (var m = 1; m <= 10; m++) (operand: m, result: tableNum * m),
+  ];
+}
+
+/// Pasqyron _buildVisibleEntries() për zbritje inverse (n=1..tableNum-1)
+List<({int operand, int result})> buildSubtractionInverseEntries(int tableNum) {
+  return [
+    for (var n = 1; n < tableNum; n++) (operand: n, result: tableNum - n),
   ];
 }
 
@@ -249,6 +260,46 @@ void main() {
     test('badge klasik pjesëtim: ÷', () {
       expect(
           badgeSymbol(operation: _Op.division, isInverseMode: false), '÷');
+    });
+  });
+
+  // ── B-03: Zbritje Invers ──────────────────────────────────────────────────────
+  group('B-03 · Zbritje Invers (tabela 4)', () {
+    const t = 4;
+
+    test('equationText: 4 − 2 = ?', () {
+      final txt = equationText(
+        operation: _Op.subtraction,
+        isInverseMode: true,
+        selectedTable: t,
+        num: 2,
+        result: 2,
+      );
+      expect(txt, '4 − 2 = ?');
+      expect(txt.contains('+'), isFalse,
+          reason: 'Nuk duhet të përmbajë + në zbritje invers');
+    });
+
+    test('buildSubtractionInverseEntries: table-1 hyrje', () {
+      final e = buildSubtractionInverseEntries(t);
+      expect(e.length, t - 1); // 3 hyrje (n=1,2,3; jo n=4 sepse 4−4=0)
+    });
+
+    test('buildSubtractionInverseEntries: entries[0] = (1, 3)', () {
+      final e = buildSubtractionInverseEntries(t);
+      expect(e[0].operand, 1);
+      expect(e[0].result, 3); // 4-1=3
+    });
+
+    test('buildSubtractionInverseEntries: entries[2] = (3, 1)', () {
+      final e = buildSubtractionInverseEntries(t);
+      expect(e[2].operand, 3);
+      expect(e[2].result, 1); // 4-3=1
+    });
+
+    test('badgeSymbol: − (jo +)', () {
+      expect(
+          badgeSymbol(operation: _Op.subtraction, isInverseMode: true), '−');
     });
   });
 }
