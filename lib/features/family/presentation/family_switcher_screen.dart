@@ -41,7 +41,7 @@ class _FamilySwitcherScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Kush luan sot?',
+              'Kush nis misionin sot?',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: CosmicColors.primaryContainer,
                   ),
@@ -51,13 +51,13 @@ class _FamilySwitcherScreenState
               children: [
                 Expanded(
                   child: Text(
-                    'Zgjidh profilin ose shto fëmijë të ri.',
+                    'Zgjidh profilin ose shto një fëmijë të ri.',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.bar_chart, size: 18),
-                  label: const Text('Raporti'),
+                  label: const Text('Raporti javor'),
                   style: TextButton.styleFrom(
                     foregroundColor: CosmicColors.tertiaryContainer,
                   ),
@@ -127,7 +127,7 @@ class _FamilySwitcherScreenState
             const Divider(color: CosmicColors.outlineVariant),
             const SizedBox(height: 8),
             Text(
-              'Zona e Prindërit',
+                  'Zona e prindit',
               style: TextStyle(
                 color: CosmicColors.onSurfaceVariant,
                 fontSize: 12,
@@ -155,7 +155,7 @@ class _FamilySwitcherScreenState
       builder: (ctx) => AlertDialog(
         backgroundColor: CosmicColors.surface,
         title: Text(
-          'Fshi ${child.pseudonym}?',
+          'Të fshihet ${child.pseudonym}?',
           style: const TextStyle(color: CosmicColors.onSurface),
         ),
         content: const Text(
@@ -323,7 +323,7 @@ class _ParentPinTile extends StatelessWidget {
             : CosmicColors.onSurfaceVariant,
       ),
       title: Text(
-        hasPin ? 'PIN i konfiguruar' : 'Vendos PIN Prindëror',
+        hasPin ? 'PIN-i është i konfiguruar' : 'Vendos PIN-in prindëror',
         style: TextStyle(
           color: CosmicColors.onSurface,
           fontWeight: FontWeight.w600,
@@ -331,7 +331,7 @@ class _ParentPinTile extends StatelessWidget {
       ),
       subtitle: Text(
         hasPin
-            ? 'Tap për të ndryshuar PIN-in.'
+            ? 'Trokit për të ndryshuar PIN-in.'
             : 'Mbron shtimin/fshirjen e profileve dhe raportin.',
         style: TextStyle(color: CosmicColors.onSurfaceVariant, fontSize: 12),
       ),

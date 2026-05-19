@@ -1,25 +1,25 @@
 {
   "@@locale": "sq",
-  "appTitle": "MathLingo - Aventura e Matematikës",
+  "appTitle": "MathLingo - Udhëtimi i matematikës",
   "commonPointsLabel": "Pikët",
   "commonAccuracyLabel": "Saktësia",
   "commonContinue": "Vazhdo",
-  "tabDailyChallenge": "Sfida e Ditës",
+  "tabDailyChallenge": "Sfida e ditës",
   "tabLessons": "Mësime",
   "tabTables": "Tabelat",
   "tabProgress": "Progresi",
-  "dashboardWelcomeTitle": "Mirësevini!",
-  "dashboardWelcomeSubtitle": "Zgjedh një mënyrë për të mësuar matematikën - më lehtë ose më sfiduese.",
+  "dashboardWelcomeTitle": "Mirë se vjen!",
+  "dashboardWelcomeSubtitle": "Mirë se vjen në stacionin kozmik. Zgjidh rrugëtimin tënd në matematikë: i lehtë ose sfidues.",
   "dashboardDailyChallengeTitle": "Gjeometria Bazë",
   "dashboardDailyChallengeDescription": "Mësoni format dhe llogaritni sipërfaqe të thjeshta me ndihmën e mikut tuaj AI.",
   "dashboardStartChallenge": "Fillo Sfidën",
-  "dashboardGamifyChip": "Argëto Ushtrimet",
-  "dashboardGamifyTitle": "Fotografo ose Shkruaj Ushtrimin",
-  "dashboardGamifyDescription": "Fotografo ekuacionin që nuk e kupton, shkruaje direkt, dhe merrni zgjidhje argëtuese që të bëjnë matematikën më të lehtë për të kuptuar!",
-  "dashboardStartAdventure": "Filloi Aventurën",
-  "dashboardProgressModuleTitle": "Progresi i Modulit",
-  "dashboardProgressAbstractAlgebra": "Algjebra Abstrakte",
-  "dashboardProgressMathematicalAnalysis": "Analiza Matematike",
+  "dashboardGamifyChip": "Argëto ushtrimet",
+  "dashboardGamifyTitle": "Fotografo ose shkruaj ushtrimin",
+  "dashboardGamifyDescription": "Fotografo ekuacionin që të duket i vështirë, ose shkruaje drejtpërdrejt, dhe Stitch do të të udhëheqë hap pas hapi drejt zgjidhjes.",
+  "dashboardStartAdventure": "Nis aventurën",
+  "dashboardProgressModuleTitle": "Progresi i moduleve",
+  "dashboardProgressAbstractAlgebra": "Algjebra abstrakte",
+  "dashboardProgressMathematicalAnalysis": "Analiza matematike",
   "dashboardProgressPointsLabel": "Pikë totale: {points}",
   "@dashboardProgressPointsLabel": {
     "placeholders": {
@@ -36,13 +36,13 @@
       }
     }
   },
-  "dashboardQuickActionsTitle": "Veprime të Shpejta",
+  "dashboardQuickActionsTitle": "Veprime të shpejta",
   "dashboardProfileComingSoon": "Profili do të shtohet së shpejti.",
   "dashboardNotificationsComingSoon": "Njoftimet do të shtohen së shpejti.",
-  "dashboardOperationAddition": "Mbledhje",
-  "dashboardOperationSubtraction": "Zbritje",
-  "dashboardOperationMultiplication": "Shumëzim",
-  "dashboardOperationDivision": "Pjesëtim",
+  "dashboardOperationAddition": "Mbledhja",
+  "dashboardOperationSubtraction": "Zbritja",
+  "dashboardOperationMultiplication": "Shumëzimi",
+  "dashboardOperationDivision": "Pjesëtimi",
   "challengeKicker": "ALGJEBRA BAZË",
   "challengeTitle": "Zgjidh ekuacionin",
   "challengeScoreLabel": "Pikët: {score}",
@@ -182,12 +182,12 @@
       }
     }
   },
-  "lessonsToolsTitle": "Mjetet e Llogaritjes",
+  "lessonsToolsTitle": "Mjetet e llogaritjes",
   "progressPageTitle": "Bravo!",
   "progressPageSubtitle": "Progresi yt po rritet çdo ditë.",
   "progressPageTotalPointsLabel": "Pikët totale",
   "progressPageAverageAccuracyLabel": "Saktësia mesatare",
-  "tablesTitle": "Tabelat Matematikore",
+  "tablesTitle": "Tabelat e matematikës",
   "tablesSubtitle": "Praktiko dhe zotëro të gjitha operacionet",
   "tablesTabAddition": "Mbledhje +",
   "tablesTabSubtraction": "Zbritje -",
@@ -218,29 +218,29 @@
       }
     }
   },
-  "gamifyScreenTitle": "Argëto Ushtrimet",
-  "gamifyInputTitle": "Fotografo ose Shkruaj Ushtrimin",
+  "gamifyScreenTitle": "Argëto ushtrimet",
+  "gamifyInputTitle": "Fotografo ose shkruaj ushtrimin",
   "gamifyInputSubtitle": "Mund ta fotografosh ose ta shkruash ushtrimin. OCR funksionon më mirë me tekst të shtypur dhe imazhe të qarta.",
   "gamifyClear": "Fshij",
   "gamifySolve": "Zgjidh",
-  "gamifySolutionTitle": "✨ Zgjidhja Argëtuese ✨",
-  "gamifyRecognizedTextLabel": "Teksti i Njohur:",
+  "gamifySolutionTitle": "Zgjidhja kozmike",
+  "gamifyRecognizedTextLabel": "Teksti i njohur:",
   "gamifyCameraButton": "Fotografo",
   "gamifyGalleryButton": "Galeria",
-  "gamifyWriteExerciseLabel": "Shkruaj Ushtrimin",
+  "gamifyWriteExerciseLabel": "Shkruaj ushtrimin",
   "gamifyExerciseHint": "Shembull: 15 + 7",
   "gamifyRecognizedPlaceholder": "Ekuacioni u identifikua nga imazhi...",
   "gamifyOcrProcessing": "Po lexoj tekstin nga imazhi...",
   "gamifyOcrNoTextDetected": "Nuk u gjet tekst në imazh. Provo një foto më të qartë ose shkruaje ushtrimin manualisht.",
   "gamifyOcrNoEquationFound": "Nuk u gjet asnjë ekuacion matematikor në imazh.",
-  "gamifyOcrProcessingError": "Gabim gjatë leximit të tekstit: {error}",
+  "gamifyOcrProcessingError": "Ndodhi një parregullsi gjatë leximit të tekstit: {error}",
   "@gamifyOcrProcessingError": {
     "placeholders": {
       "error": {}
     }
   },
-  "gamifyEmptyEquationError": "Ju lutemi shkruani ose fotografoni një ekuacion.",
-  "gamifyImagePickError": "Gabim në zgjedhjen e imazhit: {error}",
+  "gamifyEmptyEquationError": "Të lutem, shkruaj ose fotografo një ekuacion.",
+  "gamifyImagePickError": "Ndodhi një parregullsi gjatë zgjedhjes së imazhit: {error}",
   "@gamifyImagePickError": {
     "placeholders": {
       "error": {}
@@ -258,7 +258,7 @@
     }
   },
   "gamifyDivisionByZero": "Pjesëtimi me zero nuk lejohet.",
-  "gamifyDivisionNeedsWholeResult": "Ky pjesëtim nuk jep rezultat të plotë ({num1} ÷ {num2}). Zgjidh një ushtrim që ndahet pa mbetje.",
+  "gamifyDivisionNeedsWholeResult": "Ky pjesëtim nuk jep numër të plotë ({num1} ÷ {num2}). Zgjidh një ushtrim që pjesëtohet pa mbetje.",
   "@gamifyDivisionNeedsWholeResult": {
     "placeholders": {
       "num1": {
@@ -269,7 +269,7 @@
       }
     }
   },
-  "gamifyAdditionSolution": "🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} + {num2} = ?\n\n📚 HAPI I PARË: Imagjinoni {num1} ballona që ngrihen në qiell!\n🎈 HAPI I DYTË: Shtojmë edhe {num2} ballona - tani kemi {answer} në total!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Çdo shifër në {answer} përfaqëson një yll në qiellin e natës! 🌟",
+  "gamifyAdditionSolution": "Misioni kozmik i zgjidhjes\n\nEkuacioni: {num1} + {num2} = ?\n\nHapi 1: Imagjino {num1} yje në orbitë.\nHapi 2: Shto edhe {num2} yje.\nPërgjigjja: {answer}.\n\nStitch të kujton: te mbledhja i bashkojmë të gjitha pjesët në një tërësi.",
   "@gamifyAdditionSolution": {
     "placeholders": {
       "num1": {
@@ -283,7 +283,7 @@
       }
     }
   },
-  "gamifySubtractionSolution": "🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} - {num2} = ?\n\n🍎 HAPI I PARË: Kemi {num1} mollë të shijshme në një kosh!\n😋 HAPI I DYTË: Hamë {num2} mollë - mbeten {answer} mollë të shijshme!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: {answer} janë mollët që mbeten për piknikun tënd! 🍎",
+  "gamifySubtractionSolution": "Misioni kozmik i zgjidhjes\n\nEkuacioni: {num1} - {num2} = ?\n\nHapi 1: Nisemi me {num1} njësi.\nHapi 2: Heqim {num2} njësi.\nPërgjigjja: {answer}.\n\nStitch të kujton: te zbritja gjejmë sa mbetet pas heqjes.",
   "@gamifySubtractionSolution": {
     "placeholders": {
       "num1": {
@@ -297,7 +297,7 @@
       }
     }
   },
-  "gamifyMultiplicationSolution": "🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} × {num2} = ?\n\n🏗️ HAPI I PARË: Ndërtojmë një fort me {num1} kube në çdo rresht!\n🏰 HAPI I DYTË: Forti ka {num2} rreshta - në total {answer} kube!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Shumëzimi është si të ndërtosh me blloqe - sa më shumë rreshta, aq më i madh forti! 📦",
+  "gamifyMultiplicationSolution": "Misioni kozmik i zgjidhjes\n\nEkuacioni: {num1} × {num2} = ?\n\nHapi 1: Krijo {num2} grupe të barabarta.\nHapi 2: Në çdo grup vendos {num1} njësi.\nPërgjigjja: {answer}.\n\nStitch të kujton: shumëzimi është mbledhje e përsëritur.",
   "@gamifyMultiplicationSolution": {
     "placeholders": {
       "num1": {
@@ -311,7 +311,7 @@
       }
     }
   },
-  "gamifyDivisionSolution": "🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: {num1} ÷ {num2} = ?\n\n🍕 HAPI I PARË: Kemi {num1} pjesë pice për t’i ndarë!\n👨‍👩‍👧‍👦 HAPI I DYTË: I ndajmë mes {num2} shokëve - secili merr {answer} pjesë!\n✨ PËRGJIGJA FINALE: {answer}\n\n💡 TRIKU ARGËTUES: Pjesëtimi është si të ndash një surprizë - çdo mik merr pjesën e vet! 🎉",
+  "gamifyDivisionSolution": "Misioni kozmik i zgjidhjes\n\nEkuacioni: {num1} ÷ {num2} = ?\n\nHapi 1: Merr {num1} njësi për t'i ndarë.\nHapi 2: Ndaji në {num2} grupe të barabarta.\nPërgjigjja: {answer}.\n\nStitch të kujton: pjesëtimi tregon sa merr çdo grup.",
   "@gamifyDivisionSolution": {
     "placeholders": {
       "num1": {
@@ -325,13 +325,13 @@
       }
     }
   },
-  "gamifyGenericSolution": "🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni juaj: \"{exercise}\"\n\n📚 Duket si një sfidë interesante!\n🧮 Këtu janë disa këshilla për ta zgjidhur:\n\n1. 🔍 Shikoni me kujdes numrat në ekuacion\n2. 🧠 Mendoni se çfarë operacioni të përdorni (+, -, ×, ÷)\n3. ✍️ Shkruani hap pas hapi\n4. ✅ Kontrolloni përgjigjen tuaj\n\n💡 Kujtohuni: Matematika është një lojë argëtuese! 🎮\n\nPër shembull:\n- 5 + 3 = 8 (Mbledhje)\n- 10 - 4 = 6 (Zbritje)\n- 7 × 2 = 14 (Shumëzim)\n- 12 ÷ 3 = 4 (Pjesëtim)",
+  "gamifyGenericSolution": "Misioni kozmik i zgjidhjes\n\nShprehja jote: \"{exercise}\"\n\nKjo sfidë kërkon pak më shumë vëzhgim.\n1. Vëzhgo numrat dhe shenjat matematikore.\n2. Përcakto veprimin: mbledhja, zbritja, shumëzimi ose pjesëtimi.\n3. Zgjidhe hap pas hapi.\n4. Kontrollo rezultatin në fund.\n\nStitch të kujton: çdo ushtrim ndahet në hapa të vegjël dhe të qartë.",
   "@gamifyGenericSolution": {
     "placeholders": {
       "exercise": {}
     }
   },
-  "gamifyInvalidSolution": "🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni: \"{exercise}\"\n\nHmm, duhet të jetë më i qartë! 🤔\n📝 Përpiquni ta rishkruani ekuacionin me numra dhe operacione të qarta.\n\nShembuj të mirë:\n✅ \"5 + 3\"\n✅ \"10 - 7\"\n✅ \"6 * 4\"\n✅ \"20 / 5\"\n\nPërpiquni përsëri! 💪",
+  "gamifyInvalidSolution": "Misioni kozmik i zgjidhjes\n\nShprehja: \"{exercise}\"\n\nKjo shprehje nuk u lexua qartë. Provoje përsëri me numra dhe veprime të plota.\n\nShembuj të vlefshëm:\n- \"5 + 3\"\n- \"10 - 7\"\n- \"6 * 4\"\n- \"20 / 5\"\n\nStitch pret komandën tënde të radhës.",
   "@gamifyInvalidSolution": {
     "placeholders": {
       "exercise": {}
@@ -352,7 +352,7 @@
   "fractionFiveEighths": "pesë të tetat (⅝)",
   "fractionSevenEighths": "shtatë të tetat (⅞)",
   "dashboardFractionsChip": "Fraksionet",
-  "dashboardFractionsTitle": "Mëso Fraksionet",
+  "dashboardFractionsTitle": "Mëso fraksionet",
   "dashboardFractionsDescription": "Identifiko fraksionet duke shikuar figura vizuale si tarte dhe shirita të ndarë.",
   "dashboardFractionsButton": "Fillo sfidën",
   "gamifySymbolicSolution": "✨ SHPREHJE ALGJEBRIKE ✨\n\nShprehja: {exercise}\n\n🔤 Kjo është një shprehje me ndryshore, jo një llogaritje me numra të gatshëm.\n🧩 Termat {leftOperand} dhe {rightOperand} duhen zëvendësuar me vlera për të gjetur përgjigjen.\n\n📘 Shembull:\nNëse a = 3 dhe b = 4, atëherë a^2 + b^2 = 3^2 + 4^2 = 9 + 16 = 25.\n\n💡 Pa vlerat e ndryshoreve, shprehja nuk ka një përgjigje numerike të vetme.",
@@ -380,25 +380,43 @@
     }
   },
 
-  "authSignUpTitle": "Krijo Llogari Prindi",
+  "authSignUpTitle": "Krijo llogari prindi",
   "@authSignUpTitle": {},
 
-  "authSignInTitle": "Hyrja e Prindit",
+  "authSignInTitle": "Hyrja e prindit",
   "@authSignInTitle": {},
+
+  "authSignInSubtitle": "Hyr për të sinkronizuar progresin në pajisje të shumta.",
+  "@authSignInSubtitle": {},
+
+  "authSignUpSubtitle": "Rezervo progresin e fëmijëve në cloud.",
+  "@authSignUpSubtitle": {},
 
   "authEmailLabel": "Email-i i prindit",
   "@authEmailLabel": {},
 
+  "authEmailHint": "prindi@shembull.com",
+  "@authEmailHint": {},
+
   "authPasswordLabel": "Fjalëkalimi",
   "@authPasswordLabel": {},
+
+  "authPasswordHint": "Min. 8 karaktere, 1 numër",
+  "@authPasswordHint": {},
+
+  "authWeakPasswordHint": "Min. 8 karaktere dhe 1 numër.",
+  "@authWeakPasswordHint": {},
 
   "authConfirmPasswordLabel": "Konfirmo fjalëkalimin",
   "@authConfirmPasswordLabel": {},
 
+  "authConfirmPasswordHint": "Shkruaje sërish fjalëkalimin",
+  "@authConfirmPasswordHint": {},
+
   "authSignUpButton": "Regjistrohu",
   "@authSignUpButton": {},
 
-  "authSignInButton": "Hyni",
+  "authSignInButton": "Hyr",
   "@authSignInButton": {},
 
   "authSigningUp": "Duke u regjistruar...",
@@ -407,14 +425,23 @@
   "authSigningIn": "Duke hyrë...",
   "@authSigningIn": {},
 
-  "authHaveAccount": "Keni llogari? Hyni këtu",
+  "authHaveAccount": "Ke llogari? Hyr këtu",
   "@authHaveAccount": {},
 
-  "authNoAccount": "Keni nevojë për llogari? Regjistrohuni",
+  "authNoAccount": "Nuk ke llogari? Regjistrohu",
   "@authNoAccount": {},
 
   "authForgotPassword": "Harruat fjalëkalimin?",
   "@authForgotPassword": {},
+
+  "authResetEmailEnterFirst": "Shkruaj fillimisht email-in.",
+  "@authResetEmailEnterFirst": {},
+
+  "authResetEmailSent": "Email-i i rivendosjes u dërgua.",
+  "@authResetEmailSent": {},
+
+  "authResetEmailError": "Ndodhi një gabim. Kontrollo email-in.",
+  "@authResetEmailError": {},
 
   "authPrivacyNote": "Të dhënat ruhen me enkriptim. Nuk ndahen me palë të treta.",
   "@authPrivacyNote": {},
@@ -455,10 +482,10 @@
   "authErrorEmptyFields": "Plotësoni të gjitha fushat.",
   "@authErrorEmptyFields": {},
 
-  "syncEnabled": "Sinkronizimi Cloud është aktiv",
+  "syncEnabled": "Sinkronizimi në cloud është aktiv",
   "@syncEnabled": {},
 
-  "syncDisabled": "Sinkronizimi Cloud nuk është aktiv",
+  "syncDisabled": "Sinkronizimi në cloud nuk është aktiv",
   "@syncDisabled": {},
 
   "syncLastSync": "Sinkronizim i fundit: {date}",
@@ -468,30 +495,30 @@
     }
   },
 
-  "authDeleteAccountTitle": "Fshi Llogarinë Cloud",
+  "authDeleteAccountTitle": "Fshi llogarinë në cloud",
   "@authDeleteAccountTitle": {},
 
   "authDeleteAccountConfirm": "Kjo do të fshijë llogarinë tuaj dhe të gjitha të dhënat nga cloud. Veprimi nuk mund të zhbëhet.",
   "@authDeleteAccountConfirm": {},
 
-  "authDeleteAccountButton": "Fshi Llogarinë",
+  "authDeleteAccountButton": "Fshi llogarinë",
   "@authDeleteAccountButton": {},
 
-  "authSignOutButton": "Dil nga Llogaria",
+  "authSignOutButton": "Dil nga llogaria",
   "@authSignOutButton": {},
 
-  "parentReportTitle": "Raporti Javor",
+  "parentReportTitle": "Raporti javor",
   "@parentReportTitle": {},
 
-  "weeklyTrend": "Tendenca e Javës",
+  "weeklyTrend": "Tendenca e javës",
   "@weeklyTrend": {},
 
-  "dailyPoints": "Pikët Ditorë",
+  "dailyPoints": "Pikët ditore",
   "@dailyPoints": {},
 
-  "accuracyTrend": "Tendenca e Saktësisë",
+  "accuracyTrend": "Tendenca e saktësisë",
   "@accuracyTrend": {},
 
-  "noDataYet": "Luaj sfidën e parë për të parë progresin këtu!",
+  "noDataYet": "Nis sfidën e parë për të parë progresin këtu.",
   "@noDataYet": {}
 }

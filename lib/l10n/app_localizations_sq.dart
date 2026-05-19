@@ -9,7 +9,7 @@ class AppLocalizationsSq extends AppLocalizations {
   AppLocalizationsSq([String locale = 'sq']) : super(locale);
 
   @override
-  String get appTitle => 'MathLingo - Aventura e Matematikës';
+  String get appTitle => 'MathLingo - Udhëtimi i matematikës';
 
   @override
   String get commonPointsLabel => 'Pikët';
@@ -21,7 +21,7 @@ class AppLocalizationsSq extends AppLocalizations {
   String get commonContinue => 'Vazhdo';
 
   @override
-  String get tabDailyChallenge => 'Sfida e Ditës';
+  String get tabDailyChallenge => 'Sfida e ditës';
 
   @override
   String get tabLessons => 'Mësime';
@@ -33,11 +33,11 @@ class AppLocalizationsSq extends AppLocalizations {
   String get tabProgress => 'Progresi';
 
   @override
-  String get dashboardWelcomeTitle => 'Mirësevini!';
+  String get dashboardWelcomeTitle => 'Mirë se vjen!';
 
   @override
   String get dashboardWelcomeSubtitle =>
-      'Zgjedh një mënyrë për të mësuar matematikën - më lehtë ose më sfiduese.';
+      'Mirë se vjen në stacionin kozmik. Zgjidh rrugëtimin tënd në matematikë: i lehtë ose sfidues.';
 
   @override
   String get dashboardDailyChallengeTitle => 'Gjeometria Bazë';
@@ -50,26 +50,26 @@ class AppLocalizationsSq extends AppLocalizations {
   String get dashboardStartChallenge => 'Fillo Sfidën';
 
   @override
-  String get dashboardGamifyChip => 'Argëto Ushtrimet';
+  String get dashboardGamifyChip => 'Argëto ushtrimet';
 
   @override
-  String get dashboardGamifyTitle => 'Fotografo ose Shkruaj Ushtrimin';
+  String get dashboardGamifyTitle => 'Fotografo ose shkruaj ushtrimin';
 
   @override
   String get dashboardGamifyDescription =>
-      'Fotografo ekuacionin që nuk e kupton, shkruaje direkt, dhe merrni zgjidhje argëtuese që të bëjnë matematikën më të lehtë për të kuptuar!';
+      'Fotografo ekuacionin që të duket i vështirë, ose shkruaje drejtpërdrejt, dhe Stitch do të të udhëheqë hap pas hapi drejt zgjidhjes.';
 
   @override
-  String get dashboardStartAdventure => 'Filloi Aventurën';
+  String get dashboardStartAdventure => 'Nis aventurën';
 
   @override
-  String get dashboardProgressModuleTitle => 'Progresi i Modulit';
+  String get dashboardProgressModuleTitle => 'Progresi i moduleve';
 
   @override
-  String get dashboardProgressAbstractAlgebra => 'Algjebra Abstrakte';
+  String get dashboardProgressAbstractAlgebra => 'Algjebra abstrakte';
 
   @override
-  String get dashboardProgressMathematicalAnalysis => 'Analiza Matematike';
+  String get dashboardProgressMathematicalAnalysis => 'Analiza matematike';
 
   @override
   String dashboardProgressPointsLabel(int points) {
@@ -82,7 +82,7 @@ class AppLocalizationsSq extends AppLocalizations {
   }
 
   @override
-  String get dashboardQuickActionsTitle => 'Veprime të Shpejta';
+  String get dashboardQuickActionsTitle => 'Veprime të shpejta';
 
   @override
   String get dashboardProfileComingSoon => 'Profili do të shtohet së shpejti.';
@@ -92,16 +92,16 @@ class AppLocalizationsSq extends AppLocalizations {
       'Njoftimet do të shtohen së shpejti.';
 
   @override
-  String get dashboardOperationAddition => 'Mbledhje';
+  String get dashboardOperationAddition => 'Mbledhja';
 
   @override
-  String get dashboardOperationSubtraction => 'Zbritje';
+  String get dashboardOperationSubtraction => 'Zbritja';
 
   @override
-  String get dashboardOperationMultiplication => 'Shumëzim';
+  String get dashboardOperationMultiplication => 'Shumëzimi';
 
   @override
-  String get dashboardOperationDivision => 'Pjesëtim';
+  String get dashboardOperationDivision => 'Pjesëtimi';
 
   @override
   String get challengeKicker => 'ALGJEBRA BAZË';
@@ -234,7 +234,7 @@ class AppLocalizationsSq extends AppLocalizations {
   }
 
   @override
-  String get lessonsToolsTitle => 'Mjetet e Llogaritjes';
+  String get lessonsToolsTitle => 'Mjetet e llogaritjes';
 
   @override
   String get progressPageTitle => 'Bravo!';
@@ -249,7 +249,7 @@ class AppLocalizationsSq extends AppLocalizations {
   String get progressPageAverageAccuracyLabel => 'Saktësia mesatare';
 
   @override
-  String get tablesTitle => 'Tabelat Matematikore';
+  String get tablesTitle => 'Tabelat e matematikës';
 
   @override
   String get tablesSubtitle => 'Praktiko dhe zotëro të gjitha operacionet';
@@ -285,10 +285,10 @@ class AppLocalizationsSq extends AppLocalizations {
   }
 
   @override
-  String get gamifyScreenTitle => 'Argëto Ushtrimet';
+  String get gamifyScreenTitle => 'Argëto ushtrimet';
 
   @override
-  String get gamifyInputTitle => 'Fotografo ose Shkruaj Ushtrimin';
+  String get gamifyInputTitle => 'Fotografo ose shkruaj ushtrimin';
 
   @override
   String get gamifyInputSubtitle =>
@@ -301,10 +301,10 @@ class AppLocalizationsSq extends AppLocalizations {
   String get gamifySolve => 'Zgjidh';
 
   @override
-  String get gamifySolutionTitle => '✨ Zgjidhja Argëtuese ✨';
+  String get gamifySolutionTitle => 'Zgjidhja kozmike';
 
   @override
-  String get gamifyRecognizedTextLabel => 'Teksti i Njohur:';
+  String get gamifyRecognizedTextLabel => 'Teksti i njohur:';
 
   @override
   String get gamifyCameraButton => 'Fotografo';
@@ -313,7 +313,7 @@ class AppLocalizationsSq extends AppLocalizations {
   String get gamifyGalleryButton => 'Galeria';
 
   @override
-  String get gamifyWriteExerciseLabel => 'Shkruaj Ushtrimin';
+  String get gamifyWriteExerciseLabel => 'Shkruaj ushtrimin';
 
   @override
   String get gamifyExerciseHint => 'Shembull: 15 + 7';
@@ -335,16 +335,16 @@ class AppLocalizationsSq extends AppLocalizations {
 
   @override
   String gamifyOcrProcessingError(Object error) {
-    return 'Gabim gjatë leximit të tekstit: $error';
+    return 'Ndodhi një parregullsi gjatë leximit të tekstit: $error';
   }
 
   @override
   String get gamifyEmptyEquationError =>
-      'Ju lutemi shkruani ose fotografoni një ekuacion.';
+      'Të lutem, shkruaj ose fotografo një ekuacion.';
 
   @override
   String gamifyImagePickError(Object error) {
-    return 'Gabim në zgjedhjen e imazhit: $error';
+    return 'Ndodhi një parregullsi gjatë zgjedhjes së imazhit: $error';
   }
 
   @override
@@ -357,37 +357,37 @@ class AppLocalizationsSq extends AppLocalizations {
 
   @override
   String gamifyDivisionNeedsWholeResult(int num1, int num2) {
-    return 'Ky pjesëtim nuk jep rezultat të plotë ($num1 ÷ $num2). Zgjidh një ushtrim që ndahet pa mbetje.';
+    return 'Ky pjesëtim nuk jep numër të plotë ($num1 ÷ $num2). Zgjidh një ushtrim që pjesëtohet pa mbetje.';
   }
 
   @override
   String gamifyAdditionSolution(int num1, int num2, int answer) {
-    return '🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: $num1 + $num2 = ?\n\n📚 HAPI I PARË: Imagjinoni $num1 ballona që ngrihen në qiell!\n🎈 HAPI I DYTË: Shtojmë edhe $num2 ballona - tani kemi $answer në total!\n✨ PËRGJIGJA FINALE: $answer\n\n💡 TRIKU ARGËTUES: Çdo shifër në $answer përfaqëson një yll në qiellin e natës! 🌟';
+    return 'Misioni kozmik i zgjidhjes\n\nEkuacioni: $num1 + $num2 = ?\n\nHapi 1: Imagjino $num1 yje në orbitë.\nHapi 2: Shto edhe $num2 yje.\nPërgjigjja: $answer.\n\nStitch të kujton: te mbledhja i bashkojmë të gjitha pjesët në një tërësi.';
   }
 
   @override
   String gamifySubtractionSolution(int num1, int num2, int answer) {
-    return '🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: $num1 - $num2 = ?\n\n🍎 HAPI I PARË: Kemi $num1 mollë të shijshme në një kosh!\n😋 HAPI I DYTË: Hamë $num2 mollë - mbeten $answer mollë të shijshme!\n✨ PËRGJIGJA FINALE: $answer\n\n💡 TRIKU ARGËTUES: $answer janë mollët që mbeten për piknikun tënd! 🍎';
+    return 'Misioni kozmik i zgjidhjes\n\nEkuacioni: $num1 - $num2 = ?\n\nHapi 1: Nisemi me $num1 njësi.\nHapi 2: Heqim $num2 njësi.\nPërgjigjja: $answer.\n\nStitch të kujton: te zbritja gjejmë sa mbetet pas heqjes.';
   }
 
   @override
   String gamifyMultiplicationSolution(int num1, int num2, int answer) {
-    return '🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: $num1 × $num2 = ?\n\n🏗️ HAPI I PARË: Ndërtojmë një fort me $num1 kube në çdo rresht!\n🏰 HAPI I DYTË: Forti ka $num2 rreshta - në total $answer kube!\n✨ PËRGJIGJA FINALE: $answer\n\n💡 TRIKU ARGËTUES: Shumëzimi është si të ndërtosh me blloqe - sa më shumë rreshta, aq më i madh forti! 📦';
+    return 'Misioni kozmik i zgjidhjes\n\nEkuacioni: $num1 × $num2 = ?\n\nHapi 1: Krijo $num2 grupe të barabarta.\nHapi 2: Në çdo grup vendos $num1 njësi.\nPërgjigjja: $answer.\n\nStitch të kujton: shumëzimi është mbledhje e përsëritur.';
   }
 
   @override
   String gamifyDivisionSolution(int num1, int num2, int answer) {
-    return '🎮 ZGJIDHJA ARGËTUESE E EKUACIONIT 🎮\n\nEkuacioni: $num1 ÷ $num2 = ?\n\n🍕 HAPI I PARË: Kemi $num1 pjesë pice për t’i ndarë!\n👨‍👩‍👧‍👦 HAPI I DYTË: I ndajmë mes $num2 shokëve - secili merr $answer pjesë!\n✨ PËRGJIGJA FINALE: $answer\n\n💡 TRIKU ARGËTUES: Pjesëtimi është si të ndash një surprizë - çdo mik merr pjesën e vet! 🎉';
+    return 'Misioni kozmik i zgjidhjes\n\nEkuacioni: $num1 ÷ $num2 = ?\n\nHapi 1: Merr $num1 njësi për t\'i ndarë.\nHapi 2: Ndaji në $num2 grupe të barabarta.\nPërgjigjja: $answer.\n\nStitch të kujton: pjesëtimi tregon sa merr çdo grup.';
   }
 
   @override
   String gamifyGenericSolution(Object exercise) {
-    return '🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni juaj: \"$exercise\"\n\n📚 Duket si një sfidë interesante!\n🧮 Këtu janë disa këshilla për ta zgjidhur:\n\n1. 🔍 Shikoni me kujdes numrat në ekuacion\n2. 🧠 Mendoni se çfarë operacioni të përdorni (+, -, ×, ÷)\n3. ✍️ Shkruani hap pas hapi\n4. ✅ Kontrolloni përgjigjen tuaj\n\n💡 Kujtohuni: Matematika është një lojë argëtuese! 🎮\n\nPër shembull:\n- 5 + 3 = 8 (Mbledhje)\n- 10 - 4 = 6 (Zbritje)\n- 7 × 2 = 14 (Shumëzim)\n- 12 ÷ 3 = 4 (Pjesëtim)';
+    return 'Misioni kozmik i zgjidhjes\n\nShprehja jote: \"$exercise\"\n\nKjo sfidë kërkon pak më shumë vëzhgim.\n1. Vëzhgo numrat dhe shenjat matematikore.\n2. Përcakto veprimin: mbledhja, zbritja, shumëzimi ose pjesëtimi.\n3. Zgjidhe hap pas hapi.\n4. Kontrollo rezultatin në fund.\n\nStitch të kujton: çdo ushtrim ndahet në hapa të vegjël dhe të qartë.';
   }
 
   @override
   String gamifyInvalidSolution(Object exercise) {
-    return '🎮 ZGJIDHJA ARGËTUESE 🎮\n\nEkuacioni: \"$exercise\"\n\nHmm, duhet të jetë më i qartë! 🤔\n📝 Përpiquni ta rishkruani ekuacionin me numra dhe operacione të qarta.\n\nShembuj të mirë:\n✅ \"5 + 3\"\n✅ \"10 - 7\"\n✅ \"6 * 4\"\n✅ \"20 / 5\"\n\nPërpiquni përsëri! 💪';
+    return 'Misioni kozmik i zgjidhjes\n\nShprehja: \"$exercise\"\n\nKjo shprehje nuk u lexua qartë. Provoje përsëri me numra dhe veprime të plota.\n\nShembuj të vlefshëm:\n- \"5 + 3\"\n- \"10 - 7\"\n- \"6 * 4\"\n- \"20 / 5\"\n\nStitch pret komandën tënde të radhës.';
   }
 
   @override
@@ -436,7 +436,7 @@ class AppLocalizationsSq extends AppLocalizations {
   String get dashboardFractionsChip => 'Fraksionet';
 
   @override
-  String get dashboardFractionsTitle => 'Mëso Fraksionet';
+  String get dashboardFractionsTitle => 'Mëso fraksionet';
 
   @override
   String get dashboardFractionsDescription =>
@@ -473,25 +473,44 @@ class AppLocalizationsSq extends AppLocalizations {
   }
 
   @override
-  String get authSignUpTitle => 'Krijo Llogari Prindi';
+  String get authSignUpTitle => 'Krijo llogari prindi';
 
   @override
-  String get authSignInTitle => 'Hyrja e Prindit';
+  String get authSignInTitle => 'Hyrja e prindit';
+
+  @override
+  String get authSignInSubtitle =>
+      'Hyr për të sinkronizuar progresin në pajisje të shumta.';
+
+  @override
+  String get authSignUpSubtitle => 'Rezervo progresin e fëmijëve në cloud.';
 
   @override
   String get authEmailLabel => 'Email-i i prindit';
 
   @override
+  String get authEmailHint => 'prindi@shembull.com';
+
+  @override
   String get authPasswordLabel => 'Fjalëkalimi';
+
+  @override
+  String get authPasswordHint => 'Min. 8 karaktere, 1 numër';
+
+  @override
+  String get authWeakPasswordHint => 'Min. 8 karaktere dhe 1 numër.';
 
   @override
   String get authConfirmPasswordLabel => 'Konfirmo fjalëkalimin';
 
   @override
+  String get authConfirmPasswordHint => 'Shkruaje sërish fjalëkalimin';
+
+  @override
   String get authSignUpButton => 'Regjistrohu';
 
   @override
-  String get authSignInButton => 'Hyni';
+  String get authSignInButton => 'Hyr';
 
   @override
   String get authSigningUp => 'Duke u regjistruar...';
@@ -500,13 +519,22 @@ class AppLocalizationsSq extends AppLocalizations {
   String get authSigningIn => 'Duke hyrë...';
 
   @override
-  String get authHaveAccount => 'Keni llogari? Hyni këtu';
+  String get authHaveAccount => 'Ke llogari? Hyr këtu';
 
   @override
-  String get authNoAccount => 'Keni nevojë për llogari? Regjistrohuni';
+  String get authNoAccount => 'Nuk ke llogari? Regjistrohu';
 
   @override
   String get authForgotPassword => 'Harruat fjalëkalimin?';
+
+  @override
+  String get authResetEmailEnterFirst => 'Shkruaj fillimisht email-in.';
+
+  @override
+  String get authResetEmailSent => 'Email-i i rivendosjes u dërgua.';
+
+  @override
+  String get authResetEmailError => 'Ndodhi një gabim. Kontrollo email-in.';
 
   @override
   String get authPrivacyNote =>
@@ -552,10 +580,10 @@ class AppLocalizationsSq extends AppLocalizations {
   String get authErrorEmptyFields => 'Plotësoni të gjitha fushat.';
 
   @override
-  String get syncEnabled => 'Sinkronizimi Cloud është aktiv';
+  String get syncEnabled => 'Sinkronizimi në cloud është aktiv';
 
   @override
-  String get syncDisabled => 'Sinkronizimi Cloud nuk është aktiv';
+  String get syncDisabled => 'Sinkronizimi në cloud nuk është aktiv';
 
   @override
   String syncLastSync(Object date) {
@@ -563,30 +591,30 @@ class AppLocalizationsSq extends AppLocalizations {
   }
 
   @override
-  String get authDeleteAccountTitle => 'Fshi Llogarinë Cloud';
+  String get authDeleteAccountTitle => 'Fshi llogarinë në cloud';
 
   @override
   String get authDeleteAccountConfirm =>
       'Kjo do të fshijë llogarinë tuaj dhe të gjitha të dhënat nga cloud. Veprimi nuk mund të zhbëhet.';
 
   @override
-  String get authDeleteAccountButton => 'Fshi Llogarinë';
+  String get authDeleteAccountButton => 'Fshi llogarinë';
 
   @override
-  String get authSignOutButton => 'Dil nga Llogaria';
+  String get authSignOutButton => 'Dil nga llogaria';
 
   @override
-  String get parentReportTitle => 'Raporti Javor';
+  String get parentReportTitle => 'Raporti javor';
 
   @override
-  String get weeklyTrend => 'Tendenca e Javës';
+  String get weeklyTrend => 'Tendenca e javës';
 
   @override
-  String get dailyPoints => 'Pikët Ditorë';
+  String get dailyPoints => 'Pikët ditore';
 
   @override
-  String get accuracyTrend => 'Tendenca e Saktësisë';
+  String get accuracyTrend => 'Tendenca e saktësisë';
 
   @override
-  String get noDataYet => 'Luaj sfidën e parë për të parë progresin këtu!';
+  String get noDataYet => 'Nis sfidën e parë për të parë progresin këtu.';
 }

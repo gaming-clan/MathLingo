@@ -54,10 +54,10 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: MathLingoApp()));
 
     expect(find.text('MathLingo'), findsOneWidget);
-    expect(find.text('Sfida e Ditës'), findsWidgets);
-    expect(find.text('Mirësevini!'), findsOneWidget);
-    expect(find.text('Progresi i Modulit'), findsOneWidget);
-    expect(find.text('Veprime të Shpejta'), findsOneWidget);
+    expect(find.text('Sfida e ditës'), findsWidgets);
+    expect(find.text('Mirë se vjen!'), findsOneWidget);
+    expect(find.text('Progresi i moduleve'), findsOneWidget);
+    expect(find.text('Veprime të shpejta'), findsOneWidget);
     expect(find.text('Fillo Sfidën'), findsOneWidget);
   });
 
@@ -72,15 +72,15 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: MathLingoApp()));
 
     expect(find.byType(DashboardScreen), findsOneWidget);
-    expect(find.text('Veprime të Shpejta'), findsOneWidget);
+    expect(find.text('Veprime të shpejta'), findsOneWidget);
 
     await tester.tap(find.text('Mësime'));
     await tester.pump();
-    expect(find.text('Mjetet e Llogaritjes'), findsOneWidget);
+    expect(find.text('Mjetet e llogaritjes'), findsOneWidget);
 
     await tester.tap(find.text('Tabelat'));
     await tester.pump();
-    expect(find.text('Tabelat Matematikore'), findsOneWidget);
+    expect(find.text('Tabelat e matematikës'), findsOneWidget);
 
     await tester.tap(find.text('Progresi'));
     await tester.pump();

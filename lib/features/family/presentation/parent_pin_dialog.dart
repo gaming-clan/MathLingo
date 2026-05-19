@@ -60,7 +60,7 @@ class _ParentPinDialogState extends State<ParentPinDialog> {
     return AlertDialog(
       backgroundColor: CosmicColors.surface,
       title: Text(
-        'PIN Prindëror',
+        'PIN-i prindëror',
         style: TextStyle(
           color: CosmicColors.onSurface,
           fontWeight: FontWeight.bold,
@@ -174,7 +174,7 @@ class _SetParentPinDialogState extends State<SetParentPinDialog> {
     return AlertDialog(
       backgroundColor: CosmicColors.surface,
       title: Text(
-        'Vendos PIN Prindëror',
+        'Vendos PIN-in prindëror',
         style: TextStyle(
           color: CosmicColors.onSurface,
           fontWeight: FontWeight.bold,
@@ -184,7 +184,7 @@ class _SetParentPinDialogState extends State<SetParentPinDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'PIN-i mbron veprimet administrative (shto / fshi fëmijë).',
+            'PIN-i mbron veprimet administrative (shto ose fshi fëmijë).',
             style: TextStyle(color: CosmicColors.onSurfaceVariant),
           ),
           const SizedBox(height: 16),

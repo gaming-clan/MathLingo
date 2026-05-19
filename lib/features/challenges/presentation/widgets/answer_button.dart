@@ -10,9 +10,18 @@ class AnswerButton extends StatelessWidget {
     required this.onPressed,
   });
 
-  final int value;
+  final num value;
   final Color color;
   final VoidCallback onPressed;
+
+  String get _displayValue {
+    if (value is int) return value.toString();
+    final d = value.toDouble();
+    if (d == d.roundToDouble()) {
+      return d.toInt().toString();
+    }
+    return d.toStringAsFixed(1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +34,7 @@ class AnswerButton extends StatelessWidget {
       ),
       onPressed: onPressed,
       child: Text(
-        value.toString(),
+        _displayValue,
         style: TextStyle(
           color: color,
           fontSize: 28,

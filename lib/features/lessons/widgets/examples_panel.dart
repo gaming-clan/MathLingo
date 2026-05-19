@@ -46,7 +46,7 @@ class ExamplesPanel extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    'Shembuj',
+                    'Shembuj praktikë',
                     style: TextStyle(
                       color: CosmicColors.secondaryContainer,
                       fontSize: 12,
@@ -127,7 +127,7 @@ class _ExampleCardState extends State<_ExampleCard>
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Bravo! ${widget.example.equation}'),
+        content: Text('Shkëlqyeshëm! ${widget.example.equation}'),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
         margin: const EdgeInsets.only(bottom: 16, left: 16, right: 16),

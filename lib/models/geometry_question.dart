@@ -21,8 +21,8 @@ class GeometryQuestion {
   final GeometryCalculationType calculationType;
   final String prompt;
   final String measurement;
-  final int answer;
-  final List<int> options;
+  final double answer;
+  final List<double> options;
   final int width;
   final int height;
 }

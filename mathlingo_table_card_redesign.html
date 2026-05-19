@@ -1,0 +1,351 @@
+
+<style>
+  :root {
+    --cosmic-bg: #101126;
+    --cosmic-surface: #1D1E33;
+    --cosmic-surface-high: #27283E;
+    --cosmic-surface-highest: #32334A;
+    --cosmic-primary: #BC13FE;
+    --cosmic-cyan: #00EEFC;
+    --cosmic-text: #FFFFFF;
+    --cosmic-text-muted: #EEEBFF;
+    --cosmic-outline: rgba(255,255,255,0.12);
+  }
+
+  .demo-wrap {
+    background: var(--cosmic-bg);
+    border-radius: 16px;
+    padding: 24px;
+    font-family: var(--font-sans);
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cosmic-text-muted);
+    opacity: 0.5;
+    margin-bottom: 12px;
+  }
+
+  .ops-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .op-pill {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    color: var(--cosmic-text-muted);
+    background: var(--cosmic-surface-high);
+    transition: all 0.15s;
+  }
+  .op-pill.active-add { background: #1a3a1a; border-color: #2d6e2d; color: #6ee86e; }
+  .op-pill.active-sub { background: #3a1a1a; border-color: #8b2d2d; color: #ff8080; }
+  .op-pill.active-mul { background: #3a2a10; border-color: #8b5c10; color: #ffb84d; }
+  .op-pill.active-div { background: #10253a; border-color: #10508b; color: #4db8ff; }
+
+  .mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: var(--cosmic-surface-high);
+    border: 1px solid var(--cosmic-primary);
+    color: var(--cosmic-primary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.15s;
+  }
+  .mode-toggle:hover { background: rgba(188,19,254,0.12); }
+  .mode-toggle i { font-size: 14px; }
+
+  .table-selector {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .num-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1.5px solid transparent;
+    background: var(--cosmic-surface-high);
+    color: var(--cosmic-text-muted);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .num-btn:hover { border-color: rgba(255,255,255,0.2); }
+  .num-btn.active-add { background: #1a3a1a; border-color: #2d6e2d; color: #6ee86e; }
+  .num-btn.active-sub { background: #3a1a1a; border-color: #8b2d2d; color: #ff8080; }
+  .num-btn.active-mul { background: #3a2a10; border-color: #8b5c10; color: #ffb84d; }
+  .num-btn.active-div { background: #10253a; border-color: #10508b; color: #4db8ff; }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+
+  .eq-card {
+    aspect-ratio: 1/1;
+    border-radius: 14px;
+    border: 1px solid var(--card-border, rgba(255,255,255,0.08));
+    background: var(--card-bg, var(--cosmic-surface));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.12s, border-color 0.12s;
+    position: relative;
+    overflow: hidden;
+    padding: 8px;
+    gap: 6px;
+  }
+  .eq-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--card-glow, transparent);
+    opacity: 0;
+    transition: opacity 0.15s;
+    border-radius: 13px;
+  }
+  .eq-card:hover::before { opacity: 1; }
+  .eq-card:hover { transform: scale(1.04); border-color: var(--card-border-hover, rgba(255,255,255,0.2)); }
+  .eq-card:active { transform: scale(0.97); }
+
+  .eq-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--cosmic-text);
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .eq-divider {
+    width: 28px;
+    height: 1px;
+    background: var(--card-accent, rgba(255,255,255,0.15));
+    border-radius: 1px;
+  }
+
+  .eq-answer {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--card-accent-text, #fff);
+    line-height: 1;
+  }
+
+  .eq-hidden {
+    width: 40px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--card-accent, rgba(255,255,255,0.18));
+  }
+
+  .revealed .eq-hidden { display: none; }
+  .revealed .eq-answer-wrap { display: flex !important; }
+
+  .eq-answer-wrap {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .eq-answer-small {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--card-accent-text, rgba(255,255,255,0.6));
+    letter-spacing: 0.05em;
+  }
+
+  .snackbar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--cosmic-surface-highest);
+    border: 1px solid var(--snack-border, rgba(255,255,255,0.15));
+    color: var(--cosmic-text);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 99;
+  }
+  .snackbar.show { transform: translateX(-50%) translateY(0); }
+</style>
+
+<div class="demo-wrap">
+  <h2 class="sr-only">Mockup i ri i kartave të tabelave matematikore për MathLingo</h2>
+
+  <div class="section-label">Operacioni</div>
+  <div class="ops-row" id="ops-row">
+    <button class="op-pill active-add" data-op="add" onclick="setOp('add')">+ Mbledhje</button>
+    <button class="op-pill" data-op="sub" onclick="setOp('sub')">− Zbritje</button>
+    <button class="op-pill" data-op="mul" onclick="setOp('mul')">× Shumëzim</button>
+    <button class="op-pill" data-op="div" onclick="setOp('div')">÷ Pjesëtim</button>
+  </div>
+
+  <button class="mode-toggle" onclick="toggleMode()">
+    <i class="ti ti-switch-horizontal" aria-hidden="true"></i>
+    <span id="mode-label">Modalitet Invers</span>
+  </button>
+
+  <div class="section-label">Tabela</div>
+  <div class="table-selector" id="num-selector"></div>
+
+  <div class="section-label">Kartat</div>
+  <div class="cards-grid" id="cards-grid"></div>
+</div>
+
+<div class="snackbar" id="snackbar"></div>
+
+<script>
+const COLORS = {
+  add: { bg:'rgba(20,50,20,0.7)', border:'rgba(45,110,45,0.5)', borderH:'rgba(110,232,110,0.5)', glow:'rgba(45,110,45,0.12)', accent:'#2d6e2d', text:'#6ee86e', badge:'add' },
+  sub: { bg:'rgba(50,20,20,0.7)', border:'rgba(139,45,45,0.5)', borderH:'rgba(255,120,120,0.5)', glow:'rgba(139,45,45,0.12)', accent:'#8b2d2d', text:'#ff8080', badge:'sub' },
+  mul: { bg:'rgba(50,38,14,0.7)', border:'rgba(139,90,16,0.5)', borderH:'rgba(255,184,77,0.5)', glow:'rgba(139,90,16,0.12)', accent:'#8b5c10', text:'#ffb84d', badge:'mul' },
+  div: { bg:'rgba(14,34,52,0.7)', border:'rgba(16,80,139,0.5)', borderH:'rgba(77,184,255,0.5)', glow:'rgba(16,80,139,0.12)', accent:'#10508b', text:'#4db8ff', badge:'div' },
+};
+
+let currentOp = 'add';
+let currentTable = 5;
+let isInverse = false;
+
+function getEntries(op, table) {
+  const out = [];
+  if (op === 'add') {
+    if (isInverse) {
+      for (let n = 1; n <= table; n++) out.push({ eq: `? + ${n} = ${table}`, ans: table - n });
+    } else {
+      for (let n = 1; n <= 10; n++) out.push({ eq: `${table} + ${n}`, ans: table + n });
+    }
+  } else if (op === 'sub') {
+    if (isInverse) {
+      for (let n = 1; n < table; n++) out.push({ eq: `${table} − ${n} = ?`, ans: table - n });
+    } else {
+      for (let n = 1; n <= table; n++) out.push({ eq: `${table} − ${n}`, ans: table - n });
+    }
+  } else if (op === 'mul') {
+    if (isInverse) {
+      for (let n = 1; n <= 10; n++) out.push({ eq: `? × ${n} = ${table * n}`, ans: table });
+    } else {
+      for (let n = 1; n <= 10; n++) out.push({ eq: `${table} × ${n}`, ans: table * n });
+    }
+  } else {
+    if (isInverse) {
+      for (let m = 1; m <= 10; m++) out.push({ eq: `${table * m} ÷ ? = ${table}`, ans: m });
+    } else {
+      for (let n = 1; n <= 10; n++) {
+        if (table % n === 0) out.push({ eq: `${table} ÷ ${n}`, ans: table / n });
+      }
+    }
+  }
+  return out;
+}
+
+function renderNumSelector() {
+  const el = document.getElementById('num-selector');
+  el.innerHTML = '';
+  for (let i = 1; i <= 12; i++) {
+    const b = document.createElement('button');
+    b.className = 'num-btn' + (i === currentTable ? ` active-${currentOp}` : '');
+    b.textContent = i;
+    b.onclick = () => { currentTable = i; renderAll(); };
+    el.appendChild(b);
+  }
+}
+
+function renderCards() {
+  const grid = document.getElementById('cards-grid');
+  const c = COLORS[currentOp];
+  const entries = getEntries(currentOp, currentTable);
+  grid.innerHTML = '';
+
+  entries.forEach(({ eq, ans }) => {
+    const card = document.createElement('div');
+    card.className = 'eq-card';
+    card.style.setProperty('--card-bg', c.bg);
+    card.style.setProperty('--card-border', c.border);
+    card.style.setProperty('--card-border-hover', c.borderH);
+    card.style.setProperty('--card-glow', c.glow);
+    card.style.setProperty('--card-accent', c.accent);
+    card.style.setProperty('--card-accent-text', c.text);
+
+    card.innerHTML = `
+      <div class="eq-text">${eq}</div>
+      <div class="eq-divider"></div>
+      <div class="eq-hidden"></div>
+      <div class="eq-answer-wrap">
+        <div class="eq-answer-small">= </div>
+        <div class="eq-answer">${ans}</div>
+      </div>
+    `;
+
+    card.onclick = () => {
+      if (!card.classList.contains('revealed')) {
+        card.classList.add('revealed');
+        showSnackbar(`${eq} = ${ans}`, c.border);
+      } else {
+        card.classList.remove('revealed');
+      }
+    };
+
+    grid.appendChild(card);
+  });
+}
+
+let snackTimer;
+function showSnackbar(text, borderColor) {
+  const s = document.getElementById('snackbar');
+  s.textContent = text;
+  s.style.setProperty('--snack-border', borderColor);
+  s.classList.add('show');
+  clearTimeout(snackTimer);
+  snackTimer = setTimeout(() => s.classList.remove('show'), 1400);
+}
+
+function setOp(op) {
+  currentOp = op;
+  document.querySelectorAll('.op-pill').forEach(p => {
+    p.className = 'op-pill' + (p.dataset.op === op ? ` active-${op}` : '');
+  });
+  renderAll();
+}
+
+function toggleMode() {
+  isInverse = !isInverse;
+  document.getElementById('mode-label').textContent = isInverse ? 'Modalitet Klasik' : 'Modalitet Invers';
+  renderAll();
+}
+
+function renderAll() {
+  renderNumSelector();
+  renderCards();
+}
+
+renderAll();
+</script>

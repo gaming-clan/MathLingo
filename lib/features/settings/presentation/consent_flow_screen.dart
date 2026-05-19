@@ -6,15 +6,15 @@ import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
 import '../../../shared/widgets/glass_panel.dart';
 
-/// P-04 — Ekrani i Pelqimit Prindëror për aktivizimin e Cloud Sync.
+/// P-04 — Ekrani i pëlqimit prindëror për aktivizimin e sinkronizimit në cloud.
 ///
 /// Shfaqet para aktivizimit të çdo shërbimi cloud (Sprint 10B).
-/// Kthen `true` nëse prindi ka dhënë pelqimin e plotë.
+/// Kthen `true` nëse prindi ka dhënë pëlqimin e plotë.
 class ConsentFlowScreen extends StatefulWidget {
   const ConsentFlowScreen({super.key});
 
   /// Hap [ConsentFlowScreen] si dialog të plotë.
-  /// Kthen `true` nëse pelqimi u dha, `false` nëse u anulua.
+  /// Kthen `true` nëse pëlqimi u dha, `false` nëse u anulua.
   static Future<bool> show(BuildContext context) async {
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
@@ -55,15 +55,15 @@ class _ConsentFlowScreenState extends State<ConsentFlowScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Aktivizo Sinkronizimin',
+              'Aktivizo sinkronizimin',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: CosmicColors.primaryContainer,
                   ),
             ),
             const SizedBox(height: 8),
             const Text(
-              'Sinkronizimi cloud ju lejon të aksesoni progresin e fëmijëve '
-              'tuaj nga çdo pajisje. Kjo kërkon pelqimin tuaj si prind.',
+              'Sinkronizimi në cloud ju lejon të qaseni te progresi i fëmijëve '
+              'tuaj nga çdo pajisje. Kjo kërkon pëlqimin tuaj si prind.',
               style: TextStyle(color: CosmicColors.onSurfaceVariant),
             ),
             const SizedBox(height: 24),
@@ -83,7 +83,7 @@ class _ConsentFlowScreenState extends State<ConsentFlowScreen> {
                     title: 'Siguria',
                     body:
                         'Të dhënat kodohen gjatë transmetimit. '
-                        'Vetëm llogarinë tuaj e prindërit ka akses.',
+                        'Vetëm llogaria juaj e prindit ka qasje.',
                   ),
                   _ConsentInfo(
                     icon: Icons.delete_outline,
@@ -96,7 +96,7 @@ class _ConsentFlowScreenState extends State<ConsentFlowScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            // Checkboxet e pelqimit
+            // Kutitë e pëlqimit
             GlassPanel(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Column(
@@ -134,7 +134,7 @@ class _ConsentFlowScreenState extends State<ConsentFlowScreen> {
             ),
             const SizedBox(height: 32),
             CosmicButton(
-              label: _isSaving ? 'Duke konfirmuar...' : 'Konfirmo dhe Vazhdo',
+              label: _isSaving ? 'Duke konfirmuar...' : 'Konfirmo dhe vazhdo',
               onPressed: (_canProceed && !_isSaving) ? _onConfirm : null,
             ),
             const SizedBox(height: 12),
@@ -142,7 +142,7 @@ class _ConsentFlowScreenState extends State<ConsentFlowScreen> {
               child: TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: const Text(
-                  'Anulo — mbaj vetëm lokal',
+                  'Anulo dhe mbaj vetëm lokalisht',
                   style: TextStyle(color: CosmicColors.onSurfaceVariant),
                 ),
               ),
@@ -209,12 +209,12 @@ class AgeVerificationGate {
       builder: (ctx) => AlertDialog(
         backgroundColor: CosmicColors.surface,
         title: const Text(
-          'Kërkohet Prindi',
+          'Kërkohet prindi',
           style: TextStyle(color: CosmicColors.onSurface),
         ),
         content: const Text(
           'Ky seksion kërkon konfigurim nga prindi ose kujdestari ligjor.\n\n'
-          'Lëre prindërin tënd të konfigurojë këtë funksion.',
+          'Lëre prindin tënd ta konfigurojë këtë funksion.',
           style: TextStyle(color: CosmicColors.onSurfaceVariant),
         ),
         actions: [
