@@ -6,7 +6,7 @@
 |---|---|
 | Emri i projektit | MathLingo |
 | Lloji i dokumentit | SSOT - Single Source of Truth |
-| Versioni i dokumentit | 1.10.1 |
+| Versioni i dokumentit | 2.0.1 |
 | Data | 19 Maj 2026 |
 | Gjuha e dokumentit | Shqip |
 | Audienca | Zhvillues, QA, UI/UX, Product, stakeholders |
@@ -517,7 +517,7 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 | Sfida aritmetike | Implementuar | 4 operacione, 3 nivele, DistractorEngine pedagogjik (Sprint 7 B-01/B-02) |
 | Sfida gjeometrike | Implementuar | 5 forma, area/perimetër (Sprint 7 D-02), CustomPainter me raport dimensional korrekt (D-01), painter custom, scoring aktiv |
 | Results screen | Implementuar | Pikë, saktësi, kthim në dashboard |
-| Tabelat matematikore | Implementuar | Zbritja shmang negativet, pjesëtimi pa mbetje, modalitet invers (Sprint 7 A-01–A-04) |
+| Tabelat matematikore | Implementuar | Zbritja shmang negativet, pjesëtimi pa mbetje, modalitet invers (Sprint 7 A-01–A-04); ridizenjim kartave (Sprint 14): `_TableCard` zbulim interaktiv, `_TableOperationTheme` ngjyra per operacion |
 | Gamify me input manual | Implementuar | Parser funksional për operacione bazë |
 | Gamify me kamerë/galeri | Implementuar pjesërisht | Input-i merret me ML Kit OCR; OCR shkrim dore është kufizim i njohur i ML Kit |
 | OCR printed text | Implementuar | `_processImage()` me fallback pipeline + preprocesim |
@@ -543,14 +543,14 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 | Vizualizimi Grilë Shumëzimi | Implementuar | `MultiplicationGridPainter` me animacion sekuencial |
 | Android Release Signing | Implementuar | `mathlingo-release.jks`; `key.properties` gitignored; `build.gradle.kts` i konfiguruar |
 | Raportet Prindërore | Implementuar | `ParentReportScreen` me BarChart/LineChart (`fl_chart`), auto-sync, `_RecentActivitySection` |
-| Testim unit | Implementuar | 141 teste kalin ✅ |
+| Testim unit | Implementuar | 146 teste kalin ✅ |
 | Integration tests | Jo të implementuara | Mungojnë flows fundorë (Deferred) |
 
 ### 8.2 Statusi i QA dhe build-it
 
 | Fusha | Statusi aktual |
 |---|---|
-| `fvm flutter test` | 141/141 ✅ (19 Maj 2026) |
+| `fvm flutter test` | 146/146 ✅ (19 Maj 2026) |
 | `fvm flutter analyze` | 0 issues ✅ (19 Maj 2026) |
 | Android Release Signing | Konfiguruar — `mathlingo-release.jks` |
 | Firebase Registered | ✅ — 5 platforma në projekt `mathlingo-90084` |
@@ -567,7 +567,7 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 
 ## 9. Çfarë konsiderohet e përfunduar dhe çfarë jo
 
-### 9.1 E përfunduar — Release Candidate v1.10.1
+### 9.1 E përfunduar — Release Candidate v2.0.1
 
 - Identiteti vizual Cosmic Dark, tema autoritative `CosmicColors`.
 - Dashboard me navigim të qartë dhe kartat e të gjitha moduleve.
@@ -575,7 +575,7 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 - Sfida gjeometrike me 5 forma, area/perimetër, `GeometryHintChip`, `CustomPainter`.
 - Sfida "Gjej X-in" (MissingX) për të menduarit inversal.
 - Fraksionet vizuale (pie + bar) me `FractionPainter` dhe `FractionGenerator`.
-- Tabelat me modalitet klasik dhe invers (mbledhje, zbritje, shumëzim, pjesëtim) — logjika inverse e verifikuar pas Sprint 11.5.
+- Tabelat me modalitet klasik dhe invers (mbledhje, zbritje, shumëzim, pjesëtim) — logjika inverse e verifikuar; ridizenjim i plotë kartave (Sprint 14) me `_TableCard` interaktiv, `_TableOperationTheme`, selektor numrash kompakt.
 - Moduli Gamify me OCR ML Kit (printed text), fallback pipeline, parser simbolik dhe kuadratik.
 - Sistem familjar: profila fëmijësh, PIN protection, `FamilySwitcherScreen`, `ParentReportScreen`.
 - Raportet e prindërve me grafik (`BarChart` + `LineChart` nga `fl_chart`), statistika javore, seksion aktiviteti i fundit, auto-sync.
@@ -589,7 +589,7 @@ Ky seksion përshkruan gjendjen reale të projektit në kohën e hartimit të SS
 - `flutter_localizations` + ARB + 200+ strings shqip.
 - Persistencë lokale me Hive (pa codegen) për të gjitha modulet.
 - Arkitekturë Feature-Based me Domain/Service/Provider/Presentation shtresë.
-- 141 teste kalojnë; 0 issues analyze.
+- 146 teste kalojnë; 0 issues analyze.
 
 ### 9.2 Deferred — Jo e përfunduar
 

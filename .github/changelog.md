@@ -1,5 +1,28 @@
 # 📝 Changelog - MathLingo
 
+## [2.0.1] - 2026-05-19 — Sprint 14: Ridizenjimi i Kartave të Tabelave
+### Changed
+- **`_TableCard` Widget i ri:** Kartat e tabelave ndërtuar nga e para si `StatefulWidget` me mekanizëm zbulimi me trokitje: trokitje e parë zbulon përgjigjen me `AnimatedSwitcher` + SnackBar me ekuacionin e plotë; trokitje e dytë fsheh. `AnimatedContainer` me kufi dhe ngjyrë adaptive sipas operacionit.
+- **`_TableOperationTheme` extension:** ngjyra unike per operacion — `cardBackground`, `cardBorderColor`, `cardTextColor` (gjelbër/kuq/portokallë/kaltër).
+- **Selektor numrash kompakt:** `ListView` me `ElevatedButton` zëvendësohet me `Wrap` prej 36×36 `AnimatedContainer` buttons me ngjyrë operacioni.
+- **GridView layout:** `childAspectRatio: 1.0` (karta katrore), `mainAxisSpacing: 10`, `crossAxisSpacing: 10`.
+- **Hequr `Color color` parametri** nga `_buildOperationTable` — ngjyrat vijnë nga `_TableOperationTheme`.
+
+### Fixed
+- **B-S14-01 — SnackBar formula:** SnackBar tregonte `l10n.tablesEquationSnackBar(...)` me parametra gabim; tani `snackText()` ndërton formulën e saktë per operacion dhe modalitet (p.sh. `5 × 3 = 15`, `15 ÷ ? = 5`).
+- **B-S14-02 — Zbritje Invers Ekuacioni:** `equationText` për zbritje invers tregonte `'? + $num = $selectedTable'` (identik me mbledhjen invers); korrigjuar në `'$selectedTable − $num = ?'`.
+- **B-S14-03 — Zbritje Invers Hyrjet:** `_buildVisibleEntries` nuk kishte rast special për zbritje invers — kthehej te logjika generike; tani gjeneron `n=1..table-1` (shmanget `result=0`, p.sh. `4−4=0`).
+- **`badgeSymbol` zbritje invers:** `badgeSymbol()` kthente `'+'` për zbritje invers; zëvendësohet tërësisht me `revealValue()` + `snackText()` me logjikë të saktë.
+
+### Tests
+- `tables_inverse_mode_test.dart` — +5 teste zbritje invers: ekuacion, entries, badgeSymbol; 19 → 24 teste totale.
+
+### Validated
+- `fvm flutter test` — 146/146 ✅
+- `fvm flutter analyze` — 0 warnings/errors ✅
+
+---
+
 ## [1.10.1] - 2026-05-19 — Sprint 11.5: Bug-Fix & Polish
 ### Fixed
 - **B-01 — Shumëzim Invers:** `equationText` tregonte gabimisht `?÷n=tableNum`; korrigjuar në `?×n=result`. `badgeSymbol` ishte `÷`; korrigjuar në `×`. Rrethi tregonte `result`; korrigjuar në `selectedTable`.
