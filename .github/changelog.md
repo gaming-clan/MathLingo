@@ -1,4 +1,18 @@
 # 📝 Changelog - MathLingo
+#
+## [2.1.0] - 2026-05-20
+### Fixed
+- **B012:** `weeklyStatsProvider` kthente listë bosh kur cloud mungonte. U implementua fallback automatik në Hive — `getLocalWeeklyStats()` në `family_profile_repository.dart` agregon sesionet lokale të 7 ditëve të fundit dhe i mapëson në `DailyStats`. Grafikët shfaqin të dhëna reale edhe offline.
+- **B013:** Dimensione hardcoded (`EdgeInsets.all(10)`, `width: 80`, `EdgeInsets.all(40)` etj.) në `parent_report_screen.dart` u zëvendësuan me `AdaptiveLayout.scalePadding`.
+- **B014:** Identifikuesit `uid` dhe `child.id` shfaqeshin të plotë në `debugPrint` të `sync_service.dart`. U maskuan me prefix 8 karaktere; u shtuan komente `// GDPR`.
+
+### Added
+- Teste të reja: `weekly_stats_provider_test.dart` (5 skenarë: cloud aktiv, fallback Hive, listë bosh, renditje kronologjike, child i gabuar) dhe `parent_report_navigation_test.dart` (PIN i saktë/gabuar, pa PIN, pseudonim në UI). Suite totale: 159 teste, kalon.
+- Tekst informues në `family_setup_screen.dart` për modelin single-family per device.
+- Seksion i dedikuar në `SSOT_MathLingo.md` — *"Modeli i pajisjes dhe familjes"* — dokumenton vendimin Opsioni 1.
+
+### Security
+- Masking GDPR i identifikuesve në layer-in e sinkronizimit (`sync_service.dart`).
 
 ## [2.0.1] - 2026-05-19 — Sprint 14: Ridizenjimi i Kartave të Tabelave
 ### Changed

@@ -300,6 +300,16 @@ Finalizimi i të gjitha aseteve dhe konfiguracioneve të nevojshme për publikim
 ---
 
 ## Sprint 14: Ridizenjimi i Kartave të Tabelave — DONE
+#
+## Sprint 14.1: Parent Report Hardening (v2.1.0) — DONE
+**Versioni:** v2.1.0 | **Data:** 20 Maj 2026 | **Branch:** `feature/sprint-14.1-parent-report-hardening`
+- [x] **Task 1:** Fallback offline për `weeklyStatsProvider` — Hive si burim alternativ kur cloud mungon. *(B012)*
+- [x] **Task 2:** Teste të reja — `weekly_stats_provider_test.dart` + `parent_report_navigation_test.dart` (159 teste total, kalon). *(zero mbulim → plotë)*
+- [x] **Task 3:** Zëvendësimi i dimensioneve hardcoded me `AdaptiveLayout.scalePadding` në `parent_report_screen.dart`. *(B013)*
+- [x] **Task 4:** Masking GDPR i identifikuesve (`uid`, `child.id`) në loget e `sync_service.dart`. *(B014)*
+- [x] **Task 5:** Vendimi shumë-prindëror — Opsioni 1 (single-family per device) i dokumentuar në `family_setup_screen.dart` dhe `SSOT_MathLingo.md`.
+
+**Skedarët e prekur:** `family_profile_repository.dart`, `weekly_stats_provider.dart`, `sync_service.dart`, `parent_report_screen.dart`, `family_setup_screen.dart`, `SSOT_MathLingo.md`, `weekly_stats_provider_test.dart`, `parent_report_navigation_test.dart`
 **Versioni:** v2.0.1 | **Branch:** `feature/sprint-14-table-redesign`
 
 ### Qëllimi
