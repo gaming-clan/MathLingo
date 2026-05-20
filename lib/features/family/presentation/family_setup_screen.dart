@@ -167,6 +167,17 @@ class _FamilySetupScreenState extends ConsumerState<FamilySetupScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 8),
+            Center(
+              child: Text(
+                'Ky aplikacion konfigurohet për një familje për pajisje.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: CosmicColors.onSurfaceVariant.withValues(alpha: 0.6),
+                  fontSize: 12,
+                ),
+              ),
+            ),
           ],
         ),
       ),

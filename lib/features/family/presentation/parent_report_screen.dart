@@ -26,6 +26,10 @@ String _dayLabel(String date) {
   }
 }
 
+double _scaled(BuildContext context, double value) {
+  return AdaptiveLayout.scalePadding(context, value);
+}
+
 // ─── Screen ──────────────────────────────────────────────────────────────────
 
 /// Raporti javor i prindërit — grafiku i pikëve dhe saktësisë.
@@ -70,7 +74,7 @@ class _ParentReportScreenState extends ConsumerState<ParentReportScreen> {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(10),
+                          padding: EdgeInsets.all(_scaled(context, 10)),
                           decoration: BoxDecoration(
                             color: CosmicColors.primaryContainer
                                 .withValues(alpha: 0.12),
@@ -86,7 +90,7 @@ class _ParentReportScreenState extends ConsumerState<ParentReportScreen> {
                             size: 24,
                           ),
                         ),
-                        const SizedBox(width: 14),
+                        SizedBox(width: _scaled(context, 14)),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,24 +116,24 @@ class _ParentReportScreenState extends ConsumerState<ParentReportScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 28),
+                    SizedBox(height: _scaled(context, 28)),
 
                     // ── Grafiku javor ────────────────────────────────────
                     _WeeklySection(state: weeklyState, l10n: l10n),
-                    const SizedBox(height: 28),
+                    SizedBox(height: _scaled(context, 28)),
 
                     // ── A-04: Aktiviteti i Fundit ─────────────────────────
                     _RecentActivitySection(state: weeklyState, l10n: l10n),
-                    const SizedBox(height: 28),
+                    SizedBox(height: _scaled(context, 28)),
 
                     // ── Statistika per-child ─────────────────────────────
                     ...family.children.map(
                       (child) => Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: EdgeInsets.only(bottom: _scaled(context, 16)),
                         child: _ChildReportCard(child: child),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: _scaled(context, 24)),
                   ],
                 ),
               ),
@@ -178,7 +182,7 @@ class _RecentActivitySection extends StatelessWidget {
     final reversed = recent.reversed.toList();
 
     return GlassPanel(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(_scaled(context, 20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -189,7 +193,7 @@ class _RecentActivitySection extends StatelessWidget {
                 size: 16,
                 color: CosmicColors.primaryContainer,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: _scaled(context, 8)),
               Text(
                 'Aktiviteti i Fundit',
                 style: const TextStyle(
@@ -200,7 +204,7 @@ class _RecentActivitySection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: _scaled(context, 14)),
           ...reversed.map((day) => _ActivityRow(stats: day)),
         ],
       ),
@@ -228,11 +232,11 @@ class _ActivityRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final accuracyPct = (stats.avgAccuracy * 100).round();
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: _scaled(context, 6)),
       child: Row(
         children: [
           SizedBox(
-            width: 80,
+            width: _scaled(context, 80),
             child: Text(
               _label,
               style: const TextStyle(
@@ -241,13 +245,13 @@ class _ActivityRow extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: _scaled(context, 8)),
           Expanded(
             child: Row(
               children: [
                 const Icon(Icons.bolt_rounded,
                     size: 13, color: CosmicColors.primaryContainer),
-                const SizedBox(width: 3),
+                SizedBox(width: _scaled(context, 3)),
                 Text(
                   '${stats.totalPoints} pikë',
                   style: const TextStyle(
@@ -263,7 +267,7 @@ class _ActivityRow extends StatelessWidget {
             children: [
               const Icon(Icons.check_circle_outline_rounded,
                   size: 13, color: CosmicColors.secondaryContainer),
-              const SizedBox(width: 3),
+              SizedBox(width: _scaled(context, 3)),
               Text(
                 '$accuracyPct%',
                 style: const TextStyle(
@@ -274,7 +278,7 @@ class _ActivityRow extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: _scaled(context, 12)),
           Text(
             '${stats.sessionsCount} ses.',
             style: const TextStyle(
@@ -298,7 +302,7 @@ class _LoadingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassPanel(
-      padding: const EdgeInsets.all(40),
+      padding: EdgeInsets.all(_scaled(context, 40)),
       child: Center(
         child: Column(
           children: [
@@ -306,7 +310,7 @@ class _LoadingCard extends StatelessWidget {
               color: CosmicColors.primaryContainer,
               strokeWidth: 2.5,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: _scaled(context, 16)),
             const Text(
               'Po ngarkon statistikat...',
               style: TextStyle(
@@ -331,11 +335,14 @@ class _NoDataCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassPanel(
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+      padding: EdgeInsets.symmetric(
+        vertical: _scaled(context, 32),
+        horizontal: _scaled(context, 24),
+      ),
       child: Column(
         children: [
           const MascotFrame(size: 90),
-          const SizedBox(height: 16),
+          SizedBox(height: _scaled(context, 16)),
           Text(
             l10n.noDataYet,
             textAlign: TextAlign.center,
@@ -373,14 +380,14 @@ class _ChartsSection extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: _scaled(context, 12)),
         isWide
             ? Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                       child: _PointsBarChart(stats: stats, l10n: l10n)),
-                  const SizedBox(width: 12),
+                  SizedBox(width: _scaled(context, 12)),
                   Expanded(
                       child: _AccuracyLineChart(stats: stats, l10n: l10n)),
                 ],
@@ -388,7 +395,7 @@ class _ChartsSection extends StatelessWidget {
             : Column(
                 children: [
                   _PointsBarChart(stats: stats, l10n: l10n),
-                  const SizedBox(height: 12),
+                  SizedBox(height: _scaled(context, 12)),
                   _AccuracyLineChart(stats: stats, l10n: l10n),
                 ],
               ),
@@ -413,17 +420,22 @@ class _PointsBarChart extends StatelessWidget {
     final adjustedMax = (maxY < 10 ? 10.0 : maxY) * 1.25;
 
     return GlassPanel(
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 12),
+      padding: EdgeInsets.fromLTRB(
+        _scaled(context, 12),
+        _scaled(context, 16),
+        _scaled(context, 12),
+        _scaled(context, 12),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 4),
+            padding: EdgeInsets.only(left: _scaled(context, 4)),
             child: Row(
               children: [
                 const Icon(Icons.star_rounded,
                     size: 15, color: CosmicColors.primaryContainer),
-                const SizedBox(width: 6),
+                SizedBox(width: _scaled(context, 6)),
                 Text(
                   l10n.dailyPoints,
                   style: const TextStyle(
@@ -435,9 +447,9 @@ class _PointsBarChart extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: _scaled(context, 16)),
           SizedBox(
-            height: 160,
+            height: _scaled(context, 160),
             child: BarChart(
               BarChartData(
                 maxY: adjustedMax,
@@ -542,17 +554,22 @@ class _AccuracyLineChart extends StatelessWidget {
         .toList();
 
     return GlassPanel(
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 12),
+      padding: EdgeInsets.fromLTRB(
+        _scaled(context, 12),
+        _scaled(context, 16),
+        _scaled(context, 12),
+        _scaled(context, 12),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 4),
+            padding: EdgeInsets.only(left: _scaled(context, 4)),
             child: Row(
               children: [
                 const Icon(Icons.track_changes_rounded,
                     size: 15, color: CosmicColors.secondaryContainer),
-                const SizedBox(width: 6),
+                SizedBox(width: _scaled(context, 6)),
                 Text(
                   l10n.accuracyTrend,
                   style: const TextStyle(
@@ -564,9 +581,9 @@ class _AccuracyLineChart extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: _scaled(context, 16)),
           SizedBox(
-            height: 160,
+            height: _scaled(context, 160),
             child: LineChart(
               LineChartData(
                 minY: 0,
@@ -712,7 +729,7 @@ class _ChildReportCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassPanel(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(_scaled(context, 20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -720,8 +737,8 @@ class _ChildReportCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 52,
-                height: 52,
+                width: _scaled(context, 52),
+                height: _scaled(context, 52),
                 decoration: BoxDecoration(
                   color: CosmicColors.primaryContainer.withValues(alpha: 0.12),
                   border: Border.all(
@@ -737,7 +754,7 @@ class _ChildReportCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 14),
+              SizedBox(width: _scaled(context, 14)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -750,7 +767,7 @@ class _ChildReportCard extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: _scaled(context, 2)),
                     Text(
                       '${child.totalPoints} pikë totale',
                       style: const TextStyle(
@@ -763,7 +780,7 @@ class _ChildReportCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: _scaled(context, 20)),
 
           // Stats row
           Row(
@@ -774,7 +791,7 @@ class _ChildReportCard extends StatelessWidget {
                 value: '${child.completedSessions}',
                 color: CosmicColors.secondaryContainer,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: _scaled(context, 12)),
               _StatChip(
                 icon: Icons.track_changes_rounded,
                 label: 'Saktësi',
@@ -786,9 +803,9 @@ class _ChildReportCard extends StatelessWidget {
 
           // Module breakdown
           if (child.moduleHistory.isNotEmpty) ...[
-            const SizedBox(height: 20),
+            SizedBox(height: _scaled(context, 20)),
             const Divider(color: CosmicColors.outline, height: 1),
-            const SizedBox(height: 14),
+            SizedBox(height: _scaled(context, 14)),
             Text(
               'Sipas modulit',
               style: const TextStyle(
@@ -797,7 +814,7 @@ class _ChildReportCard extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: _scaled(context, 10)),
             ...child.moduleHistory.entries.map(
               (e) => _ModuleRow(moduleKey: e.key, data: e.value),
             ),
@@ -825,8 +842,10 @@ class _StatChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: EdgeInsets.symmetric(
+          horizontal: _scaled(context, 14),
+          vertical: _scaled(context, 12),
+        ),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.08),
           border: Border.all(color: color.withValues(alpha: 0.3)),
@@ -838,7 +857,7 @@ class _StatChip extends StatelessWidget {
             Row(
               children: [
                 Icon(icon, size: 16, color: color),
-                const SizedBox(width: 6),
+                SizedBox(width: _scaled(context, 6)),
                 Text(
                   label,
                   style: TextStyle(
@@ -849,7 +868,7 @@ class _StatChip extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: _scaled(context, 4)),
             Text(
               value,
               style: const TextStyle(
@@ -879,7 +898,7 @@ class _ModuleRow extends StatelessWidget {
         (data['totalAccuracy'] as num?)?.toDouble() ?? 0.0;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: _scaled(context, 8)),
       child: Row(
         children: [
           Expanded(
