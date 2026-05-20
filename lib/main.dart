@@ -8,6 +8,7 @@ import 'core/services/achievement_service.dart';
 import 'core/services/audio_service.dart';
 import 'core/services/family_profile_service.dart';
 import 'core/services/session_tracker.dart';
+import 'core/services/hive_consent_repository.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'shared/utils/user_progress_storage.dart';
@@ -19,6 +20,7 @@ Future<void> main() async {
   await FamilyProfileService.init();
   await AchievementService.init();
   await AudioService.init();
+  await HiveConsentRepository.init();
   runApp(const ProviderScope(child: MathLingoApp()));
 }
 

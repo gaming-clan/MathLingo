@@ -6,6 +6,7 @@ import '../../features/auth/providers/auth_provider.dart';
 import '../../features/auth/services/auth_service.dart';
 import '../../models/child_profile.dart';
 import '../services/firebase_init_service.dart';
+import '../services/hive_consent_repository.dart';
 import 'firestore_schema.dart';
 
 /// Shërbimi i sinkronizimit të të dhënave me Firestore.
@@ -19,17 +20,23 @@ class SyncService {
   SyncService(this._ref);
 
   final Ref _ref;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  FirebaseFirestore get _db => FirebaseFirestore.instance;
 
   // ─── Guard ───────────────────────────────────────────────────────────────
 
   bool _canSync() =>
       FirebaseInitService.isInitialized &&
+      HiveConsentRepository.hasValidConsentSync &&
       _ref.read(authProvider) is AuthStateAuthenticated;
 
   String? _currentUid() {
     final state = _ref.read(authProvider);
     return state is AuthStateAuthenticated ? state.account.uid : null;
+  }
+
+  String _maskedId(String id) {
+    if (id.length <= 8) return '$id...';
+    return '${id.substring(0, 8)}...';
   }
 
   // ─── Shkrim ──────────────────────────────────────────────────────────────
@@ -47,7 +54,8 @@ class SyncService {
         },
         SetOptions(merge: true),
       );
-      debugPrint('[Sync] Info fëmijës u sinkronizua: ${child.id}');
+      // GDPR: identifikuesit janë të maskuar në loge
+      debugPrint('[Sync] Info fëmijës u sinkronizua: ${_maskedId(child.id)}');
     } catch (e) {
       debugPrint('[Sync] Gabim syncChildInfo: $e');
     }
@@ -71,7 +79,8 @@ class SyncService {
         },
         SetOptions(merge: true),
       );
-      debugPrint('[Sync] Progresi u sinkronizua: ${child.id} ($today)');
+      // GDPR: identifikuesit janë të maskuar në loge
+      debugPrint('[Sync] Progresi u sinkronizua: ${_maskedId(child.id)} ($today)');
     } catch (e) {
       debugPrint('[Sync] Gabim syncChildProgress: $e');
     }
@@ -130,7 +139,9 @@ class SyncService {
 
         tx.set(docRef, payload, SetOptions(merge: true));
       });
-      debugPrint('[Sync] DailyStats u përditësua: ${child.id} ($today) +$sessionPoints pts');
+        // GDPR: identifikuesit janë të maskuar në loge
+        debugPrint(
+          '[Sync] DailyStats u përditësua: ${_maskedId(child.id)} ($today) +$sessionPoints pts');
       // B-02: Shëno kohën e sinkronizimit të fundit.
       final now = DateTime.now();
       await AuthService.updateLastSyncAt(now);
@@ -184,8 +195,8 @@ class SyncService {
   ///
   /// Zbaton GDPR Nenin 17 — e drejta e fshirjes.
   /// Thirrësi duhet të fshijë llogarinë Firebase Auth veçmas nëpërmjet AuthService.
-  Future<void> deleteAllUserData(String uid) async {
-    if (!FirebaseInitService.isInitialized) return;
+  Future<bool> deleteAllUserData(String uid) async {
+    if (!FirebaseInitService.isInitialized) return false;
     try {
       // Gjej të gjithë fëmijët e këtij prindi
       final childrenSnap = await _db
@@ -225,9 +236,12 @@ class SyncService {
       // Fshi dokumentin kryesor të prindit
       await _db.doc(FirestoreSchema.userDoc(uid)).delete();
 
-      debugPrint('[Sync] Të gjitha të dhënat u fshinë për uid: $uid');
+      // GDPR: identifikuesit janë të maskuar në loge
+      debugPrint('[Sync] Të gjitha të dhënat u fshinë për uid: ${_maskedId(uid)}');
+      return true;
     } catch (e) {
       debugPrint('[Sync] Gabim deleteAllUserData: $e');
+      return false;
     }
   }
 

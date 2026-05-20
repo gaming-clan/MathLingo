@@ -4,9 +4,12 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../colors.dart';
 import '../../../core/services/audio_service.dart';
+import '../../../core/services/cloud_account_deletion_service.dart';
 import '../../../core/services/data_export_service.dart';
 import '../../../core/services/family_profile_service.dart';
 import '../../../core/services/firebase_init_service.dart';
+import '../../../core/services/hive_consent_repository.dart';
+import '../../../core/sync/sync_service.dart';
 import '../../../features/achievements/presentation/badge_display_screen.dart';
 import '../../../features/auth/presentation/parent_signin_screen.dart';
 import '../../../features/auth/presentation/parent_signup_screen.dart';
@@ -16,6 +19,7 @@ import '../../../features/leaderboard/presentation/leaderboard_screen.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
 import '../../../shared/widgets/glass_panel.dart';
+import 'consent_flow_screen.dart';
 import 'delete_all_data_screen.dart';
 import 'privacy_policy_screen.dart';
 
@@ -58,6 +62,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Future<void> _onInitFirebase(BuildContext ctx, Widget destination) async {
+    if (FamilyProfileService.hasParentPin) {
+      final ok = await ParentPinDialog.verify(ctx);
+      if (!ok || !ctx.mounted) return;
+    } else {
+      final pinSaved = await SetParentPinDialog.show(ctx);
+      if (!pinSaved || !ctx.mounted) return;
+    }
+
+    final hasConsent = await HiveConsentRepository.hasValidConsent();
+    if (!hasConsent) {
+      if (!ctx.mounted) return;
+      final granted = await ConsentFlowScreen.show(ctx);
+      if (granted != true || !ctx.mounted) return;
+    }
+
     final ok = await FirebaseInitService.initialize();
     if (!ok) {
       if (!ctx.mounted) return;
@@ -72,7 +91,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       return;
     }
     if (!ctx.mounted) return;
-    // ignore: use_build_context_synchronously
     Navigator.of(ctx).push(
       MaterialPageRoute<void>(builder: (_) => destination),
     );
@@ -357,18 +375,90 @@ class _SettingsTile extends StatelessWidget {
 // Seksioni i sinkronizimit cloud
 // ---------------------------------------------------------------------------
 
-class _CloudSyncSection extends ConsumerWidget {
+class _CloudSyncSection extends ConsumerStatefulWidget {
   const _CloudSyncSection({required this.onInitFirebase});
 
   final Future<void> Function(BuildContext ctx, Widget destination)
       onInitFirebase;
 
-  Future<void> _onSignOut(WidgetRef ref) async {
+  @override
+  ConsumerState<_CloudSyncSection> createState() => _CloudSyncSectionState();
+}
+
+class _CloudSyncSectionState extends ConsumerState<_CloudSyncSection> {
+  static const _cloudAccountDeletionService = CloudAccountDeletionService();
+
+  bool _hasConsent = false;
+  bool _isLoadingConsent = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadConsent();
+  }
+
+  Future<void> _loadConsent() async {
+    final hasConsent = await HiveConsentRepository.hasValidConsent();
+    if (mounted) {
+      setState(() {
+        _hasConsent = hasConsent;
+        _isLoadingConsent = false;
+      });
+    }
+  }
+
+  Future<void> _onSignOut() async {
     await ref.read(authProvider.notifier).signOut();
   }
 
-  Future<void> _onDeleteCloudAccount(
-      BuildContext ctx, WidgetRef ref) async {
+  Future<void> _onRevokeConsent(BuildContext ctx) async {
+    final messenger = ScaffoldMessenger.of(ctx);
+    final confirmed = await showDialog<bool>(
+      context: ctx,
+      builder: (_) => AlertDialog(
+        backgroundColor: CosmicColors.surface,
+        title: const Text(
+          'Çaktivizo sinkronizimin cloud',
+          style: TextStyle(color: CosmicColors.onSurface),
+        ),
+        content: const Text(
+          'Kjo do të ndalojë sinkronizimin cloud në këtë pajisje. '
+          'Të dhënat lokale mbeten të paprekura.',
+          style: TextStyle(color: CosmicColors.onSurfaceVariant),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Anulo'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Çaktivizo'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !ctx.mounted) return;
+
+    await HiveConsentRepository.revokeConsent();
+    if (ref.read(authProvider) is AuthStateAuthenticated) {
+      await ref.read(authProvider.notifier).signOut();
+    }
+
+    if (!mounted) return;
+    setState(() => _hasConsent = false);
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text('Sinkronizimi cloud u çaktivizua për këtë pajisje.'),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 80),
+      ),
+    );
+  }
+
+  Future<void> _onDeleteCloudAccount(BuildContext ctx) async {
+    final messenger = ScaffoldMessenger.of(ctx);
     final confirmed = await showDialog<bool>(
       context: ctx,
       builder: (_) => AlertDialog(
@@ -396,7 +486,55 @@ class _CloudSyncSection extends ConsumerWidget {
       ),
     );
     if (confirmed != true || !ctx.mounted) return;
-    await ref.read(authProvider.notifier).deleteAccount();
+
+    final authState = ref.read(authProvider);
+    if (authState is! AuthStateAuthenticated) return;
+
+    final result = await _cloudAccountDeletionService.deleteAccount(
+      uid: authState.account.uid,
+      deleteCloudData: (uid) =>
+          ref.read(syncServiceProvider).deleteAllUserData(uid),
+      deleteAuthAccount: () => ref.read(authProvider.notifier).deleteAccount(),
+      revokeConsent: HiveConsentRepository.revokeConsent,
+    );
+    if (!ctx.mounted) return;
+
+    if (result == CloudAccountDeletionResult.success) {
+      if (mounted) {
+        setState(() => _hasConsent = false);
+      }
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Llogaria cloud dhe të dhënat e saj u fshinë me sukses.'),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.fromLTRB(16, 0, 16, 80),
+        ),
+      );
+      return;
+    }
+
+    if (result == CloudAccountDeletionResult.cloudCleanupFailed) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Të dhënat cloud nuk u fshinë ende. Llogaria nuk u prek. Provoni sërish.',
+          ),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.fromLTRB(16, 0, 16, 80),
+        ),
+      );
+      return;
+    }
+
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Fshirja e llogarisë cloud nuk përfundoi. Ju lutem provoni sërish.',
+        ),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 80),
+      ),
+    );
   }
 
   /// Formatimi shqip i kohës së sinkronizimit.
@@ -412,7 +550,7 @@ class _CloudSyncSection extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
 
     return Column(
@@ -421,7 +559,14 @@ class _CloudSyncSection extends ConsumerWidget {
         _SectionHeader(label: 'Sinkronizimi Cloud'),
         GlassPanel(
           padding: EdgeInsets.zero,
-          child: switch (authState) {
+          child: _isLoadingConsent
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              : switch (authState) {
             AuthStateAuthenticated(:final account) => Column(
                 children: [
                   _SettingsTile(
@@ -451,7 +596,17 @@ class _CloudSyncSection extends ConsumerWidget {
                     icon: Icons.logout_outlined,
                     title: 'Dil nga llogaria',
                     subtitle: 'Të dhënat lokale mbeten',
-                    onTap: () => _onSignOut(ref),
+                    onTap: _onSignOut,
+                  ),
+                  const Divider(
+                      height: 1,
+                      indent: 56,
+                      color: CosmicColors.outlineVariant),
+                  _SettingsTile(
+                    icon: Icons.sync_disabled_outlined,
+                    title: 'Çaktivizo sinkronizimin cloud',
+                    subtitle: 'Ndalon sinkronizimin pa fshirë të dhënat lokale',
+                    onTap: () => _onRevokeConsent(context),
                   ),
                   const Divider(
                       height: 1,
@@ -463,8 +618,7 @@ class _CloudSyncSection extends ConsumerWidget {
                     subtitle: 'Fshin llogarinë dhe të dhënat cloud',
                     iconColor: CosmicColors.error,
                     titleColor: CosmicColors.error,
-                    onTap: () =>
-                        _onDeleteCloudAccount(context, ref),
+                    onTap: () => _onDeleteCloudAccount(context),
                   ),
                 ],
               ),
@@ -474,7 +628,7 @@ class _CloudSyncSection extends ConsumerWidget {
                     icon: Icons.person_add_outlined,
                     title: 'Krijo llogari prindi',
                     subtitle: 'Rezervo progresin në cloud',
-                    onTap: () => onInitFirebase(
+                    onTap: () => widget.onInitFirebase(
                         context, const ParentSignUpScreen()),
                   ),
                   const Divider(
@@ -485,9 +639,21 @@ class _CloudSyncSection extends ConsumerWidget {
                     icon: Icons.login_outlined,
                     title: 'Hyr në llogari',
                     subtitle: 'Sinkronizo midis pajisjeve',
-                    onTap: () => onInitFirebase(
+                    onTap: () => widget.onInitFirebase(
                         context, const ParentSignInScreen()),
                   ),
+                  if (_hasConsent) ...[
+                    const Divider(
+                        height: 1,
+                        indent: 56,
+                        color: CosmicColors.outlineVariant),
+                    _SettingsTile(
+                      icon: Icons.sync_disabled_outlined,
+                      title: 'Hiq pëlqimin për cloud',
+                      subtitle: 'Ndalon sinkronizimin derisa të jepet sërish pëlqimi',
+                      onTap: () => _onRevokeConsent(context),
+                    ),
+                  ],
                 ],
               ),
           },

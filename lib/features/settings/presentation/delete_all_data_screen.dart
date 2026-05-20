@@ -6,6 +6,7 @@ import '../../../core/providers/family_provider.dart';
 import '../../../core/services/achievement_service.dart';
 import '../../../core/services/family_profile_service.dart';
 import '../../../core/services/firebase_init_service.dart';
+import '../../../core/services/hive_consent_repository.dart';
 import '../../../core/sync/sync_service.dart';
 import '../../../responsive.dart';
 import '../../../shared/utils/user_progress_storage.dart';
@@ -67,25 +68,44 @@ class _DeleteAllDataScreenState extends ConsumerState<DeleteAllDataScreen> {
     if (confirmed != true || !mounted) return;
 
     setState(() => _isDeleting = true);
+    final messenger = ScaffoldMessenger.of(context);
 
     // Mblidh child IDs para se të fshihet familja
     final family = FamilyProfileService.loadFamily();
     final childIds = family?.children.map((c) => c.id).toList() ?? [];
 
-    // Fshi progresin per cdo femije
-    await UserProgressStorage.deleteAllData(childIds: childIds);
-    await AchievementService.deleteAllData(childIds: childIds);
-
     // Fshi të dhënat cloud nëse prindi është i kyçur (GDPR Neni 17)
     if (FirebaseInitService.isInitialized) {
       final authState = ref.read(authProvider);
       if (authState is AuthStateAuthenticated) {
-        await ref
+        final deletedCloudData = await ref
             .read(syncServiceProvider)
             .deleteAllUserData(authState.account.uid);
+        if (!deletedCloudData) {
+          if (mounted) {
+            setState(() => _isDeleting = false);
+          }
+          messenger.showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Të dhënat cloud nuk u fshinë. Fshirja totale u ndal për të shmangur gjendje të pjesshme.',
+              ),
+              behavior: SnackBarBehavior.floating,
+              margin: EdgeInsets.fromLTRB(16, 0, 16, 80),
+            ),
+          );
+          return;
+        }
         await ref.read(authProvider.notifier).signOut();
       }
     }
+
+    // Fshi progresin per cdo femije
+    await UserProgressStorage.deleteAllData(childIds: childIds);
+    await AchievementService.deleteAllData(childIds: childIds);
+
+    // Fshi edhe consent-in e ruajtur lokalisht.
+    await HiveConsentRepository.revokeConsent();
 
     // Fshi të dhënat familjare (profil + PIN)
     await FamilyProfileService.deleteAllData();

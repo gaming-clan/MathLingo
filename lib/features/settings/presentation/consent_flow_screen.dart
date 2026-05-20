@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../colors.dart';
+import '../../../core/services/hive_consent_repository.dart';
 import '../../../responsive.dart';
 import '../../../shared/widgets/cosmic_button.dart';
 import '../../../shared/widgets/cosmic_top_bar.dart';
@@ -39,8 +40,12 @@ class _ConsentFlowScreenState extends State<ConsentFlowScreen> {
   Future<void> _onConfirm() async {
     if (!_canProceed) return;
     setState(() => _isSaving = true);
-    // Sprint 10B do të ruajë consent-in dhe do të aktivizojë cloud
-    // Për tani, kthehemi me true
+    await HiveConsentRepository.saveConsent(
+      ConsentRecord(
+        grantedAt: DateTime.now(),
+        version: ConsentVersion.current,
+      ),
+    );
     if (mounted) Navigator.of(context).pop(true);
   }
 

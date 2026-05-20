@@ -100,6 +100,16 @@ void main() {
     }
   });
 
+  test('trekendeshi gjenerohet me gjeresi cift dhe pergjigje te plote', () {
+    for (var i = 0; i < 250; i++) {
+      final q = generator.generate(Random(i + 401));
+      if (q.shape != GeometryShape.triangle) continue;
+
+      expect(q.width.isEven, isTrue);
+      expect(q.answer % 1, 0);
+    }
+  });
+
   test('drejtkendeshi dhe katrori mund te dalin si sipërfaqe ose perimeter', () {
     final seenRectangleTypes = <GeometryCalculationType>{};
     final seenSquareTypes = <GeometryCalculationType>{};
