@@ -44,16 +44,20 @@ class GeometryQuestionGenerator {
         }
         measurement = 'gjerësi $width, lartësi $height';
       case GeometryShape.triangle:
-        width = random.nextInt(8) + 3;
+        width = (random.nextInt(4) + 2) * 2;
         height = random.nextInt(7) + 2;
         var sideC = random.nextInt(8) + 3;
         while (!_isValidTriangle(width, height, sideC)) {
-          width = random.nextInt(8) + 3;
+          width = (random.nextInt(4) + 2) * 2;
           height = random.nextInt(7) + 2;
           sideC = random.nextInt(8) + 3;
         }
         calculationType = GeometryCalculationType.area;
-        answer = _roundToOneDecimal((width * height) / 2);
+        final doubledArea = width * height;
+        if (doubledArea.isOdd) {
+          throw StateError('Triangle area must be integral for beginner mode');
+        }
+        answer = (doubledArea / 2).toDouble();
         prompt = 'Sa është sipërfaqja e trekëndëshit?';
         measurement = 'brinjët $width, $height, $sideC';
       case GeometryShape.square:
