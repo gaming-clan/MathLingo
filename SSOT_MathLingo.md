@@ -55,6 +55,13 @@ MathLingo është një aplikacion edukativ i ndërtuar me Flutter për mësimin 
 - Çdo ekran duhet të jetë i lexueshëm dhe i përdorshëm në celular dhe tablet.
 - Elementët ndërveprues duhet të jenë të mëdhenj, të qartë dhe me feedback të menjëhershëm.
 
+### 3.4 Modeli i pajisjes dhe familjes
+
+- MathLingo mbështet një familje për pajisje (single-family device model).
+- Profilet e fëmijëve menaxhohen brenda së njëjtës familje në pajisje, jo si familje të ndara prindërore.
+- Veprimet administrative mbrohen me PIN prindëror kur PIN-i është konfiguruar.
+- Mbështetja për profile të ndara shumë-prindërore konsiderohet roadmap i sprint-eve të ardhshme dhe nuk është pjesë e versionit aktual.
+
 ## 4. Teknologjia e përdorur
 
 ### 4.1 Stack-u teknik i aprovuar

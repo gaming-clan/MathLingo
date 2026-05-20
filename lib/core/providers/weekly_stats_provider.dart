@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/daily_stats.dart';
+import '../repositories/family_profile_repository.dart';
 import '../providers/family_provider.dart';
 import '../sync/sync_service.dart';
 
@@ -42,7 +43,7 @@ class WeeklyStatsNotifier extends StateNotifier<WeeklyStatsState> {
   final Ref _ref;
 
   /// Ngarko statistikat për fëmijën aktiv.
-  /// Nëse nuk ka fëmijë aktiv ose sync nuk është i disponueshëm,
+  /// Nëse nuk ka fëmijë aktiv,
   /// vendos `WeeklyStatsLoaded([])` pa gabim.
   Future<void> load() async {
     final activeChild = _ref.read(familyProvider).activeChild;
@@ -53,20 +54,32 @@ class WeeklyStatsNotifier extends StateNotifier<WeeklyStatsState> {
 
     state = const WeeklyStatsLoading();
     try {
-      final rawList = await _ref
-          .read(syncServiceProvider)
-          .pullWeeklyStats(activeChild.id);
+      final syncService = _ref.read(syncServiceProvider);
+      final repository = _ref.read(familyProfileRepositoryProvider);
+      final rawList = await syncService.pullWeeklyStats(activeChild.id);
 
-      final stats = rawList
-          .map(DailyStats.fromMap)
-          .where((s) => s.date.isNotEmpty)
-          .toList()
+      final stats = rawList.isNotEmpty
+          ? rawList
+            .map(DailyStats.fromMap)
+            .where((s) => s.date.isNotEmpty)
+            .toList()
+          : [...await repository.getLocalWeeklyStats(activeChild.id)]
         // Rendisje kronologjike (e vjetër → e re) për grafikun
         ..sort((a, b) => a.date.compareTo(b.date));
 
       state = WeeklyStatsLoaded(stats);
     } catch (e) {
-      state = WeeklyStatsError('$e');
+      try {
+        final fallbackStats = [
+          ...await _ref
+              .read(familyProfileRepositoryProvider)
+              .getLocalWeeklyStats(activeChild.id),
+        ]
+          ..sort((a, b) => a.date.compareTo(b.date));
+        state = WeeklyStatsLoaded(fallbackStats);
+      } catch (_) {
+        state = WeeklyStatsError('$e');
+      }
     }
   }
 
