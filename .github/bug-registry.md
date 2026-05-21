@@ -29,6 +29,8 @@
 | B-01 (S14) | SnackBar tableve tregonte `l10n.tablesEquationSnackBar(...)` me parametra gabim — formula e shfaqur ishte e pasaktë për të gjitha modalitetet invers | **Mesatar** | Fixed | `simple_tables.dart` |
 | B-02 (S14) | Zbritje Invers `equationText` tregonte `'? + $num = $selectedTable'` (identik me mbledhjen invers); korrigjuar në `'$selectedTable − $num = ?'` | **Kritik** | Fixed | `simple_tables.dart` |
 | B-03 (S14) | Zbritje Invers nuk kishte rast special në `_buildVisibleEntries` — kthehej te logjika e mbledhjes; tani `n=1..table-1` (shmanget `4−4=0`) | **Kritik** | Fixed | `simple_tables.dart` |
+| BUG-GEO-01 | Pyetja e sipërfaqes së trekëndëshit jepte 3 brinjë (`brinjët a,b,c`) ndërsa formula kërkon bazë + lartësi; gabim pedagogjik për nivelin fillestar | **Kritik** | Fixed | `geometry_question_generator.dart` |
+| BUG-GEO-02 | Vizualizimi i trekëndëshit ishte statik dhe nuk pasqyronte dimensionet reale të pyetjes | **Mesatar** | Fixed | `geometry_shape_painter.dart` |
 
 ## Open / Monitor
 

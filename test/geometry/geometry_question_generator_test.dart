@@ -76,27 +76,23 @@ void main() {
     }
   });
 
-  test('trekendeshi gjenerohet me brinje valide sipas pabarazise', () {
+  test('trekendeshi jep baze dhe lartesi ne measurement', () {
     for (var i = 0; i < 250; i++) {
       final q = generator.generate(Random(i + 101));
       if (q.shape != GeometryShape.triangle) continue;
+
+      expect(q.measurement.contains('bazë'), isTrue);
+      expect(q.measurement.contains('lartësi'), isTrue);
+      expect(q.measurement.contains('brinjët'), isFalse);
 
       final numbers = RegExp(r'\d+')
           .allMatches(q.measurement)
           .map((m) => int.parse(m.group(0)!))
           .toList();
 
-      expect(numbers.length, 3);
-      final a = numbers[0];
-      final b = numbers[1];
-      final c = numbers[2];
-
-      expect(a, greaterThan(0));
-      expect(b, greaterThan(0));
-      expect(c, greaterThan(0));
-      expect(a + b > c, isTrue);
-      expect(a + c > b, isTrue);
-      expect(b + c > a, isTrue);
+      expect(numbers.length, 2);
+      expect(numbers[0], q.width);
+      expect(numbers[1], q.height);
     }
   });
 

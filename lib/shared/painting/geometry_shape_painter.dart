@@ -28,11 +28,12 @@ class GeometryShapePainter extends CustomPainter {
     final shapeWidth = size.width * 0.62;
     final shapeHeight = size.height * 0.58;
 
-    // D-01: për drejtkëndësh, respekto raportin e dimensioneve të pyetjes
-    // (nëse h > w, drejtkëndëshi duhet të duket vertikal dhe anasjelltas).
+    // D-01: respekto raportin e dimensioneve të pyetjes në forma me gjerësi/lartësi.
     double rectW = shapeWidth;
     double rectH = shapeHeight;
-    if (question.shape == GeometryShape.rectangle &&
+    if ((question.shape == GeometryShape.rectangle ||
+            question.shape == GeometryShape.triangle ||
+            question.shape == GeometryShape.parallelogram) &&
         question.width > 0 &&
         question.height > 0) {
       final aspectRatio = question.width / question.height;
@@ -68,10 +69,15 @@ class GeometryShapePainter extends CustomPainter {
         canvas.drawRRect(rounded, paint);
         canvas.drawRRect(rounded, stroke);
       case GeometryShape.triangle:
+        final triangleRect = Rect.fromCenter(
+          center: center,
+          width: rectW,
+          height: rectH,
+        );
         final path = Path()
-          ..moveTo(center.dx, rect.top)
-          ..lineTo(rect.right, rect.bottom)
-          ..lineTo(rect.left, rect.bottom)
+          ..moveTo(center.dx, triangleRect.top)
+          ..lineTo(triangleRect.right, triangleRect.bottom)
+          ..lineTo(triangleRect.left, triangleRect.bottom)
           ..close();
         canvas.drawPath(path, glow);
         canvas.drawPath(path, paint);

@@ -10,15 +10,6 @@ class GeometryQuestionGenerator {
     return double.parse(value.toStringAsFixed(1));
   }
 
-  static bool _isValidTriangle(int a, int b, int c) {
-    return a > 0 &&
-        b > 0 &&
-        c > 0 &&
-        (a + b > c) &&
-        (a + c > b) &&
-        (b + c > a);
-  }
-
   GeometryQuestion generate(math.Random random) {
     final shape =
         GeometryShape.values[random.nextInt(GeometryShape.values.length)];
@@ -44,14 +35,9 @@ class GeometryQuestionGenerator {
         }
         measurement = 'gjerësi $width, lartësi $height';
       case GeometryShape.triangle:
-        width = (random.nextInt(4) + 2) * 2;
-        height = random.nextInt(7) + 2;
-        var sideC = random.nextInt(8) + 3;
-        while (!_isValidTriangle(width, height, sideC)) {
-          width = (random.nextInt(4) + 2) * 2;
-          height = random.nextInt(7) + 2;
-          sideC = random.nextInt(8) + 3;
-        }
+        // Pedagogjikisht përdorim bazë + lartësi për formulën S = (b * h) / 2.
+        width = (random.nextInt(5) + 2) * 2;
+        height = random.nextInt(5) + 2;
         calculationType = GeometryCalculationType.area;
         final doubledArea = width * height;
         if (doubledArea.isOdd) {
@@ -59,7 +45,7 @@ class GeometryQuestionGenerator {
         }
         answer = (doubledArea / 2).toDouble();
         prompt = 'Sa është sipërfaqja e trekëndëshit?';
-        measurement = 'brinjët $width, $height, $sideC';
+        measurement = 'bazë $width, lartësi $height';
       case GeometryShape.square:
         width = random.nextInt(8) + 3;
         height = width;
